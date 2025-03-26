@@ -7,7 +7,7 @@ import vertexShader from './shader.vert';
 import fragmentShader from './shader.frag';
 
 // Particle settings
-const avgParticleSpeed = 0.5;
+const avgParticleSpeed = 0.6;
 const particleCount = 500;
 const depthRange = 4000;
 
@@ -137,7 +137,7 @@ function createParticles() {
 
 function createTextTexture(text: string) {
 	const canvas = document.createElement('canvas');
-	const scaleFactor = 2.0;
+	const scaleFactor = 0.7;
 
 	canvas.height = document.documentElement.clientHeight * scaleFactor;
 	canvas.width = canvas.height * 2;
@@ -148,7 +148,7 @@ function createTextTexture(text: string) {
 		throw new Error('Canvas context not found');
 	}
 
-	context.font = '600 120px Inter, sans-serif';
+	context.font = '600 80px "Pixelify Sans", sans-serif';
 
 	context.fillStyle = 'white';
 	context.textAlign = 'center';
@@ -180,11 +180,11 @@ function createKeywords() {
 	sceneState.keywordStrings.forEach((keyword) => {
 		const sprite = createKeywordSprite(keyword);
 		sprite.position.x =
-			(Math.random() * document.documentElement.clientWidth) / 5 -
-			document.documentElement.clientWidth / 10;
+			(Math.random() * document.documentElement.clientWidth) / 3 -
+			document.documentElement.clientWidth / 6;
 		sprite.position.y =
-			(Math.random() * document.documentElement.clientHeight) / 5 -
-			document.documentElement.clientHeight / 10;
+			(Math.random() * document.documentElement.clientHeight) / 3 -
+			document.documentElement.clientHeight / 6;
 		sprite.position.z = Math.random() * deltaZ - deltaZ / 5;
 		// sprite.position.z = 0;
 
