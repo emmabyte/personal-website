@@ -9,7 +9,7 @@ import fragmentShader from './shader.frag';
 // Particle settings
 const avgParticleSpeed = 0.5;
 const particleCount = 500;
-const depthRange = 1000;
+const depthRange = 4000;
 
 // Depth of Field (bokeh) settings
 const aperture = 0.000003;
@@ -140,7 +140,7 @@ function createTextTexture(text: string) {
 	const scaleFactor = 1.0;
 
 	canvas.height = document.documentElement.clientHeight * scaleFactor;
-	canvas.width = canvas.height * 2;
+	canvas.width = canvas.height * 3;
 
 	const context = canvas.getContext('2d');
 
