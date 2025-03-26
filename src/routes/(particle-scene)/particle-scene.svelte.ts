@@ -14,7 +14,7 @@ const depthRange = 4000;
 // Depth of Field (bokeh) settings
 const aperture = 0.000003;
 // const maxblur = 0.025;
-const maxblur = 0;
+const maxblur = 0.001;
 
 // Calculated Shared Variables
 const deltaZ = depthRange;
@@ -137,10 +137,10 @@ function createParticles() {
 
 function createTextTexture(text: string) {
 	const canvas = document.createElement('canvas');
-	const scaleFactor = 1.0;
+	const scaleFactor = 2.0;
 
 	canvas.height = document.documentElement.clientHeight * scaleFactor;
-	canvas.width = canvas.height * 3;
+	canvas.width = canvas.height * 2;
 
 	const context = canvas.getContext('2d');
 
@@ -148,7 +148,7 @@ function createTextTexture(text: string) {
 		throw new Error('Canvas context not found');
 	}
 
-	context.font = '600 50px Inter, sans-serif';
+	context.font = '600 120px Inter, sans-serif';
 
 	context.fillStyle = 'white';
 	context.textAlign = 'center';

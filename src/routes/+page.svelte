@@ -95,14 +95,16 @@
 <section bind:this={heroSection} class="relative h-screen w-full bg-black">
 	<canvas bind:this={canvas} class="absolute inset-0 z-10"></canvas>
 	<div class="absolute inset-0 z-20 flex flex-col items-center justify-center">
-		<div
-			class="animate-gradient group bg-[linear-gradient(to_right,#F77D25,#F7BB25,#F7A125,#F75925,#F7A125,#F7BB25,#F77D25)] bg-[length:200%_auto] bg-clip-text p-5 text-transparent drop-shadow-md"
-		>
-			<h1 class="text-6xl font-extrabold md:text-9xl">Shawn Long</h1>
-			<h3 class="font-semiboldm mt-4 rounded p-2 text-xl">
-				<span class="group-hover:animate-wave inline-block cursor-pointer text-black">👋</span> This
-				is a playground for Shawn's hobby projects
-			</h3>
+		<div class="mx-5 rounded border bg-zinc-950/80">
+			<div
+				class="animate-gradient group bg-[linear-gradient(to_right,#F77D25,#F7BB25,#F7A125,#F75925,#F7A125,#F7BB25,#F77D25)] bg-[length:200%_auto] bg-clip-text p-5 text-transparent drop-shadow-md"
+			>
+				<h1 class="text-6xl font-extrabold md:text-9xl">Shawn Long</h1>
+				<h3 class="font-semiboldm mt-4 rounded p-2 text-xl">
+					<span class="group-hover:animate-wave inline-block cursor-pointer text-black">👋</span> This
+					is a playground for Shawn's hobby projects
+				</h3>
+			</div>
 		</div>
 	</div>
 </section>
