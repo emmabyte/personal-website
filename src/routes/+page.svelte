@@ -80,7 +80,14 @@
 		'Google Workspace',
 		'Zoom',
 		'Figma',
-		'Tableau'
+		'Tableau',
+		'Data Pipelines',
+		'Data Analytics',
+		'Big Data',
+		'Data Engineering',
+		'Performance Optimization',
+		'Parallel Computing',
+		'Scalability'
 	];
 </script>
 
