@@ -64,7 +64,7 @@
 		'Linux Servers',
 		'Kubernetes',
 		'k8s',
-		'Google Cloud Platform',
+		'Google Cloud',
 		'GCP',
 		'CircleCI',
 		'Angular',
@@ -101,8 +101,9 @@
 			>
 				<h1 class="text-6xl font-extrabold md:text-9xl">Shawn Long</h1>
 				<h3 class="font-semiboldm mt-4 rounded p-2 text-xl">
-					<span class="group-hover:animate-wave inline-block cursor-pointer text-black">👋</span> This
-					is a playground for Shawn's hobby projects
+					<span class="group-hover:animate-wave inline-block cursor-pointer text-black">👋</span>
+					Hello! I'm an experienced fullstack developer with a passion for
+					<u class="border-b border-white">captivating</u> user experiences.
 				</h3>
 			</div>
 		</div>
