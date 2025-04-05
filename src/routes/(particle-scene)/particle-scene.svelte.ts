@@ -11,6 +11,8 @@ const avgParticleSpeed = 0.6;
 const particleCount = 500;
 const depthRange = 4000;
 
+export const cameraZStart = 100;
+
 // Depth of Field (bokeh) settings
 const aperture = 0.000003;
 // const maxblur = 0.025;
