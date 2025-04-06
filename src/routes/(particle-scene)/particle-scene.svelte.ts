@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
+import { keywords } from './keywords.json';
 
 import vertexShader from './shader.vert';
 import fragmentShader from './shader.frag';
@@ -276,7 +277,7 @@ function onWindowResize() {
 	);
 }
 
-export function initParticleScene(canvas: HTMLCanvasElement, keywords: string[]) {
+export function initParticleScene(canvas: HTMLCanvasElement) {
 	sceneState.scene = new THREE.Scene();
 	sceneState.keywordStrings = keywords;
 	createCamera();
