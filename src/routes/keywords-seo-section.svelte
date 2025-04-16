@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { keywords } from './(particle-scene)/keywords.json';
+	import { keywords } from '$lib/data/keywords.json';
 </script>
 
 <!-- Hidden Keywords Section for SEO since keywords display in Three.js Scene and not in the html -->

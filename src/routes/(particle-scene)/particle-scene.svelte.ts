@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
-import { keywords } from './keywords.json';
+import { keywords } from '$lib/data/keywords.json';
 
 import vertexShader from './shader.vert';
 import fragmentShader from './shader.frag';

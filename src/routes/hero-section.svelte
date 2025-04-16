@@ -2,9 +2,21 @@
 	import { initParticleScene, sceneState } from './(particle-scene)/particle-scene.svelte';
 	import { onMount } from 'svelte';
 	import { getXYFromScroll } from './(particle-scene)/util';
-	import Button from '$lib/components/ui/button/button.svelte';
+	import { Button } from '$lib/components/ui/button/index';
 	import Fa from 'svelte-fa';
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+
+	interface Props {
+		getInTouchHandler?: () => void;
+		downloadResumeHandler?: () => void;
+		scrollToExploreHandler?: () => void;
+	}
+
+	let {
+		getInTouchHandler = () => {},
+		downloadResumeHandler = () => {},
+		scrollToExploreHandler = () => {}
+	}: Props = $props();
 
 	let canvas: HTMLCanvasElement;
 	let heroSection: HTMLElement;
@@ -67,13 +79,15 @@
 					<u class="border-b border-white">captivating</u> user experiences.
 				</h3>
 				<div class="mt-4 flex gap-4">
-					<Button variant="default" class="rounded">Get in touch</Button>
-					<Button variant="outline" class="rounded text-white">Download Resume</Button>
+					<Button variant="default" onclick={getInTouchHandler}>Get in touch</Button>
+					<Button variant="outline" class="text-white" onclick={downloadResumeHandler}
+						>Download Resume</Button
+					>
 				</div>
 			</div>
 		</div>
 		<div class="mt-20 flex flex-col items-center justify-items-center gap-2">
-			<a href="#section1">Scroll to explore</a>
+			<button onclick={scrollToExploreHandler}>Scroll to explore</button>
 			<Fa icon={faChevronDown} size="lg" class="animate-bounce" />
 		</div>
 	</div>
