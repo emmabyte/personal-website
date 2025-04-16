@@ -1,0 +1,84 @@
+{
+	"projects": [
+		{
+			"imageSrcSet": "images/study-stack-400w.avif 400w, images/study-stack-600w.avif 600w, images/study-stack-800w.avif 800w, images/study-stack-1000w.avif 1000w, images/study-stack-1200w.avif 1200w",
+			"imageSizes": "(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1000px) 1000px, (min-width: 1001px) 1200px",
+			"imageAltText": "Two people in a meeting room, one in focus gesturing with their hands while seated at a wooden conference table. An open laptop displays a colorful screen, and a notebook with a smartphone on top rests nearby. The other person is blurred in the background, working on a laptop.",
+			"title": "StudyStack - Online Learning Platform",
+			"description": "An online learning platform built with SvelteKit on a cutting-edge infrastructure and built for scale. It includes a powerful admin panel, user authentication, and a rich set of features for both students and instructors.",
+			"badges": ["SvelteKit", "Vercel Edge", "PlanetScale", "Stripe"],
+			"github_link": "https://github.com/shawn636/study-stack",
+			"demo_link": "https://study-stack-demo.vercel.app/"
+		},
+		{
+			"imageSrcSet": "images/mini-ftp-400w.avif 400w, images/mini-ftp-600w.avif 600w, images/mini-ftp-800w.avif 800w, images/mini-ftp-1000w.avif 1000w, images/mini-ftp-1200w.avif 1200w",
+			"imageSizes": "(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1000px) 1000px, (min-width: 1001px) 1200px",
+			"imageAltText": "Stylized graphic of a purple shipping container labeled ‘FTP’ with a turquoise download arrow below it, next to the text ‘MiniFTP’ in cream and purple, set against a textured deep blue background",
+			"title": "MiniFTP - Simple & Secure Docker-Based FTP Server",
+			"description": "A portable, multi-arch FTP server built on Alpine with TLS encryption via Let’s Encrypt, advanced YAML-based config, and automated Docker builds synced to DockerHub. Secure, scriptable, and ready for anything from CI testing to cloud deployment.",
+			"badges": ["Go", "Docker", "GitHub Actions", "Certbot"],
+			"github_link": "https://github.com/shawn636/mini-ftp",
+			"demo_link": ""
+		},
+		{
+			"imageSrcSet": "images/stress-analyzer-400w.avif 400w, images/stress-analyzer-600w.avif 600w, images/stress-analyzer-800w.avif 800w, images/stress-analyzer-1000w.avif 1000w, images/stress-analyzer-1200w.avif 1200w",
+			"imageSizes": "(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1000px) 1000px, (min-width: 1001px) 1200px",
+			"imageAltText": "Stylized promotional graphic for ‘Stress Analyzer’ featuring a smartphone with a profile silhouette and brain icon, along with a colorful semi-circular gauge, set beside the app title and subtitle on a textured blue background.",
+			"title": "Stress Analyzer: An iOS App for Stress Management",
+			"description": "A full-stack Swift mental health app built with SwiftUI and Vapor. Lets users explore personality analytics through survey-based insights, backed by a RESTful Swift backend with in-memory data caching. Features automated testing via CircleCI across iOS architectures.",
+			"badges": ["Swift", "SwiftUI", "Vapor", "CircleCI"],
+			"github_link": "https://github.com/SwiftwareTeam",
+			"demo_link": ""
+		},
+		{
+			"imageSrcSet": "images/eight-puzzle-solver-400w.avif 400w, images/eight-puzzle-solver-600w.avif 600w, images/eight-puzzle-solver-800w.avif 800w, images/eight-puzzle-solver-1000w.avif 1000w, images/eight-puzzle-solver-1200w.avif 1200w",
+			"imageSizes": "(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1000px) 1000px, (min-width: 1001px) 1200px",
+			"imageAltText": "Stylized landscape graphic for ‘EightPuzzle Solver’. On the left, a beige 3x3 sliding tile puzzle grid is shown with bold black numbers and a red blank tile. On the right, the project title ‘EightPuzzle Solver’ appears in large, modern text, with the tagline ‘An AI-based pathfinding solver’ below. The background fades from cool blue on the left to warm orange on the right, with abstract wave patterns adding depth.",
+			"title": "EightPuzzle Solver: An AI-Based Pathfinding Solver",
+			"description": "A Python-based pathfinding solver for the classic sliding tile 8-puzzle. Implements Uniform Cost Search and A* with both Manhattan and Euclidean heuristics. Features a command-line interface, test suite, and modular architecture for experimenting with search algorithms in AI and game logic.",
+			"badges": ["Python", "AI", "A*", "Strategy Pattern"],
+			"github_link": "https://github.com/shawn636/EightPuzzleSearchAlgorithms",
+			"demo_link": ""
+		},
+		{
+			"imageSrcSet": "images/parallel-clustering-400w.avif 400w, images/parallel-clustering-600w.avif 600w, images/parallel-clustering-800w.avif 800w, images/parallel-clustering-1000w.avif 1000w, images/parallel-clustering-1200w.avif 1200w",
+			"imageSizes": "(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1000px) 1000px, (min-width: 1001px) 1200px",
+			"imageAltText": "A vibrant, stylized landscape illustration featuring the title “Parallel Clustering: Optimized K-Means in Swift” with the tagline “Optimized clustering with high performance and parallelism.” The background is a warm-toned sunset sky over rolling hills, with three circular data clusters in blue, orange, and magenta representing K-Means clustering. The Swift logo appears in the top right corner, symbolizing the language used for the implementation.",
+			"title": "Parallel Clustering: Optimized K-Means in Swift",
+			"description": "An optimized implementation of K-Means clustering in Swift, designed to test the limits of performance tuning, cache efficiency, and parallelism in high-dimensional data. Features custom centroid initialization, contiguous memory optimizations, and benchmark-tested clustering performance—built from the ground up with Swift’s concurrency model in mind.",
+			"badges": ["Swift", "Concurrency", "Performance Optimization", "K-Means Clustering"],
+			"github_link": "https://github.com/shawn636/Parallel-Clustering",
+			"demo_link": ""
+		},
+		{
+			"imageSrcSet": "images/fractal-explorer-400w.avif 400w, images/fractal-explorer-600w.avif 600w, images/fractal-explorer-800w.avif 800w, images/fractal-explorer-1000w.avif 1000w, images/fractal-explorer-1200w.avif 1200w",
+			"imageSizes": "(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1000px) 1000px, (min-width: 1001px) 1200px",
+			"imageAltText": "A digital illustration of the Mandelbrot fractal rendered in vivid colors ranging from deep purple and blue on the left to green, orange, and red on the right. The fractal’s signature bulb and tendrils are sharply defined in black, centered in the image. Bold white text overlaid on the fractal reads “Fractal Explorer” with the tagline “Interactive Mandelbrot visualization” beneath it.",
+			"title": "Fractal Explorer",
+			"description": "An interactive Mandelbrot fractal explorer built with C++ and Qt. Visualizes complex recursion with smooth gradients and real-time zooming, packaged as a cross-platform app for Windows and macOS.",
+			"badges": ["C++", "Qt", "Cmake", "Cross-Platform"],
+			"github_link": "https://github.com/shawn636/fractalExplorer",
+			"demo_link": ""
+		},
+		{
+			"imageSrcSet": "images/shell-based-social-media-400w.avif 400w, images/shell-based-social-media-600w.avif 600w, images/shell-based-social-media-800w.avif 800w, images/shell-based-social-media-1000w.avif 1000w, images/shell-based-social-media-1200w.avif 1200w",
+			"imageSizes": "(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1000px) 1000px, (min-width: 1001px) 1200px",
+			"imageAltText": "A stylized digital graphic with a dark terminal-inspired background and green monospaced text. The main heading reads “Shell-Based Social Media Platform,” followed by a tagline underneath: “Friend suggestions with graph algorithms & real-time message syncing.” Scattered terminal commands and artifacts enhance the retro shell interface aesthetic.",
+			"title": "Shell-Based Social Media Platform",
+			"description": "A shell-based social media platform built with Java and PostgreSQL. Features friend suggestions using graph algorithms and real-time message syncing across multiple sessions.",
+			"badges": ["Java", "PostgreSQL", "Graph Algorithms", "Real-Time Sync"],
+			"github_link": "https://github.com/shawn636/CS166-Online-Messaging-System",
+			"demo_link": ""
+		},
+		{
+			"imageSrcSet": "images/physics-engine-400w.avif 400w, images/physics-engine-600w.avif 600w, images/physics-engine-800w.avif 800w, images/physics-engine-1000w.avif 1000w, images/physics-engine-1200w.avif 1200w",
+			"imageSizes": "(max-width: 400px) 400px, (max-width: 600px) 600px, (max-width: 800px) 800px, (max-width: 1000px) 1000px, (min-width: 1001px) 1200px",
+			"imageAltText": "A retro-inspired digital graphic with a navy blue textured background featuring swirling patterns and geometric shapes. The bold title “Physics Engine Library” is centered in a cream serif font, with a smaller tagline beneath it describing the library’s features. Stylized icons such as an orange circle, a gear, and various triangles and lines represent motion and mechanics, reinforcing the physics theme in a minimalist, abstract way.",
+			"title": "Physics Engine Library",
+			"description": "A lightweight C++ physics engine library built with CMake, featuring unit tests via GoogleTest and CI integration through GitHub Actions. Focused on core simulation principles without rendering or graphics.",
+			"badges": ["C++", "CMake", "GoogleTest", "GitHub Actions"],
+			"github_link": "https://github.com/shawn636/PhysicsEngine",
+			"demo_link": ""
+		}
+	]
+}
