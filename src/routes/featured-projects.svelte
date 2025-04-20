@@ -27,7 +27,7 @@
 	$: visibleProjects = showAll ? projects : projects.slice(0, MAX_ITEMS);
 </script>
 
-<section id="projects" class="w-full py-12 md:py-24 lg:py-32">
+<section id="projects" class="w-full pb-6 pt-12 md:pb-12 md:pt-24 lg:pb-16 lg:pt-32">
 	<div class="container px-4 md:px-6">
 		<div class="flex flex-col items-center justify-center space-y-4 text-center">
 			<div class="space-y-2">
@@ -91,14 +91,14 @@
 						</div>
 					{/each}
 				</div>
+				{#if projects.length > MAX_ITEMS}
+					<div class="pt-6 text-center md:pt-12 lg:pt-16">
+						<Button onclick={() => (showAll = !showAll)}>
+							{showAll ? 'Show Less' : 'Show More'}
+						</Button>
+					</div>
+				{/if}
 			</div>
-			{#if projects.length > MAX_ITEMS}
-				<div class="mt-8 text-center">
-					<Button onclick={() => (showAll = !showAll)}>
-						{showAll ? 'Show Less' : 'Show More'}
-					</Button>
-				</div>
-			{/if}
 		</div>
 	</div>
 </section>
