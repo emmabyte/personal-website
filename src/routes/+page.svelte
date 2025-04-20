@@ -3,6 +3,7 @@
 	import HeroSection from './hero-section.svelte';
 	import AboutMe from './about-me.svelte';
 	import FeaturedProjects from './featured-projects.svelte';
+	import WorkHistory from './work-history.svelte';
 
 	function scrollToElement(element: HTMLElement, topBuffer: number) {
 		const elementRect = element.getBoundingClientRect();
@@ -18,11 +19,7 @@
 	getInTouchHandler={() => undefined}
 	downloadResumeHandler={() => undefined}
 />
-
-<!-- Additional Content Section -->
-<div bind:this={scrollToSection}>
-	<AboutMe />
-</div>
+<div bind:this={scrollToSection}><AboutMe /></div>
 <FeaturedProjects />
-
+<WorkHistory />
 <KeywordsSeoSection />
