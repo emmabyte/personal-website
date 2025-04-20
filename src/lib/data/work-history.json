@@ -81,8 +81,8 @@
 			"logo": "/images/spacex-white.svg",
 			"logoAltText": "White SpaceX logo featuring stylized lettering with a curved swoosh forming part of the ‘X’",
 			"includeLogoBorder": true,
-			"startDate": "Jun 2016",
-			"endDate": "Feb 2018",
+			"startDate": "November 2023",
+			"endDate": "",
 			"description": [
 				"Joined SpaceX at a Level II engineering position, selected for infrastructure team after dual team offers during onboarding",
 				"Worked on internal software infrastructure, including containerizing dev services and refining CI/CD pipelines",
