@@ -1,7 +1,18 @@
 <script lang="ts">
-	import { faBuilding, faQuestion } from '@fortawesome/free-solid-svg-icons';
+	import * as Accordion from '$lib/components/ui/accordion/index.js';
+	import * as HoverCard from '$lib/components/ui/hover-card/index.js';
+	import { faBuilding, faQuestion, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { workHistory } from '$lib/data/work-history.json';
+
+	// Check if mobile device or not
+	let isTouchDevice = $state(false);
+
+	$effect(() => {
+		if (typeof window !== 'undefined') {
+			isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+		}
+	});
 </script>
 
 <section id="work-history" class="w-full bg-muted/20 py-12 md:py-24 lg:py-32">
@@ -41,11 +52,34 @@
 							rel="noopener noreferrer"
 							class="text-lg font-medium hover:underline">{job.company}</a
 						>
-						<button
-							class="grid size-4 place-items-center rounded-full bg-white transition-all duration-150 hover:bg-muted-foreground/95"
-						>
-							<Fa icon={faQuestion} class="size-2 text-background" />
-						</button>
+						{#if job.faqs.length > 0 && !isTouchDevice}
+							<HoverCard.Root>
+								<HoverCard.Trigger
+									class="grid size-4 place-items-center rounded-full bg-white transition-all duration-150 hover:bg-muted-foreground/90"
+								>
+									<Fa icon={faQuestion} class="size-2 text-background" />
+								</HoverCard.Trigger>
+								<HoverCard.Content class="w-96">
+									<!-- Job FAQ Hover Card -->
+									<h3 class="mb-1 flex items-center text-lg font-medium">
+										<Fa icon={faQuestionCircle} class="mr-2 text-primary" />
+										Frequently Asked Questions
+									</h3>
+									<div class="rounded-md bg-background p-4 text-sm text-muted-foreground">
+										<Accordion.Root type="single">
+											{#each job.faqs as faq, index}
+												<Accordion.Item value={`item-${index}`}>
+													<Accordion.Trigger class="text-left text-foreground"
+														>{faq.question}</Accordion.Trigger
+													>
+													<Accordion.Content>{faq.answer}</Accordion.Content>
+												</Accordion.Item>
+											{/each}
+										</Accordion.Root>
+									</div></HoverCard.Content
+								>
+							</HoverCard.Root>
+						{/if}
 					</div>
 					<h3 class="mb-1 gap-2 text-3xl font-medium">
 						{job.role}
