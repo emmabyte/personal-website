@@ -84,7 +84,13 @@
 					<h3 class="mb-1 gap-2 text-3xl font-medium">
 						{job.role}
 					</h3>
-					<p class="mb-4 text-sm text-muted-foreground">{job.startDate} - {job.endDate}</p>
+					<p class="mb-4 text-sm text-muted-foreground">
+						{#if job.endDate !== ''}
+							{job.startDate} - {job.endDate}
+						{:else}
+							{job.startDate}
+						{/if}
+					</p>
 					<ul
 						class="flex list-inside list-disc flex-col gap-3 font-mono text-sm text-muted-foreground"
 					>
