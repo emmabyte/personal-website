@@ -4,6 +4,7 @@
 	import AboutMe from './about-me.svelte';
 	import FeaturedProjects from './featured-projects.svelte';
 	import WorkHistory from './work-history.svelte';
+	import GetInTouch from './get-in-touch.svelte';
 
 	function scrollToElement(element: HTMLElement, topBuffer: number) {
 		const elementRect = element.getBoundingClientRect();
@@ -23,3 +24,4 @@
 <FeaturedProjects />
 <WorkHistory />
 <KeywordsSeoSection />
+<GetInTouch />
