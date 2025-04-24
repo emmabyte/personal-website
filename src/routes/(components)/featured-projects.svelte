@@ -39,7 +39,7 @@
 				</p>
 			</div>
 			<div class="relative">
-				<div class="mx-auto grid max-w-5xl items-stretch gap-6 md:gap-12 lg:grid-cols-2">
+				<div class="mx-auto grid max-w-3xl items-stretch gap-6 md:gap-12 lg:grid-cols-2">
 					{#each visibleProjects as project (project.title)}
 						<!-- Wrapping each card in a native div to apply both in and out fly transitions and enforce full height -->
 						<div class="h-full" transition:fly={{ y: 16, duration: 250 }}>
