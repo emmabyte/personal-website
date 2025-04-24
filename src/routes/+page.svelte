@@ -1,10 +1,13 @@
 <script lang="ts">
-	import KeywordsSeoSection from './keywords-seo-section.svelte';
-	import HeroSection from './hero-section.svelte';
-	import AboutMe from './about-me.svelte';
-	import FeaturedProjects from './featured-projects.svelte';
-	import WorkHistory from './work-history.svelte';
-	import GetInTouch from './get-in-touch.svelte';
+	import AboutMe from './(components)/about-me.svelte';
+	import Contact from './(components)/(contact)/contact.svelte';
+	import FeaturedProjects from './(components)/featured-projects.svelte';
+	import HeroSection from './(components)/(hero-section)/hero-section.svelte';
+	import KeywordsSeoSection from './(components)/keywords-seo-section.svelte';
+	import type { PageData } from './$types';
+	import WorkHistory from './(components)/work-history.svelte';
+
+	let { data }: { data: PageData } = $props();
 
 	function scrollToElement(element: HTMLElement, topBuffer: number) {
 		const elementRect = element.getBoundingClientRect();
@@ -23,5 +26,5 @@
 <div bind:this={scrollToSection}><AboutMe /></div>
 <FeaturedProjects />
 <WorkHistory />
+<Contact {data} />
 <KeywordsSeoSection />
-<GetInTouch />

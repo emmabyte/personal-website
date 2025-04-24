@@ -1,8 +1,11 @@
 <script lang="ts">
 	import '../app.css';
+	import { Toaster } from '$lib/components/ui/sonner';
+
 	let { children } = $props();
 </script>
 
+<Toaster />
 <div
 	class="fixed top-0 z-30 flex h-16 w-full items-center justify-start gap-5 rounded border-b bg-zinc-900/40 p-5 text-white shadow-md"
 >
