@@ -65,7 +65,7 @@
 </script>
 
 <!-- Hero Section: Full Screen Banner -->
-<section bind:this={heroSection} class="relative h-screen w-full bg-black">
+<section id="hero" bind:this={heroSection} class="relative h-screen w-full bg-black">
 	<canvas bind:this={canvas} class="absolute inset-0 z-10"></canvas>
 	<div class="absolute inset-0 z-20 flex flex-col items-center justify-center">
 		<div class="mx-5 max-w-2xl rounded border bg-zinc-950/80">

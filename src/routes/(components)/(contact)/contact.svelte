@@ -10,7 +10,7 @@
 
 	let { data }: { data: { form: SuperValidated<Infer<ContactFormSchema>> } } = $props();
 	let emailCopied = $state(false);
-	const email = 'shawnlong636@gmaill.com';
+	const email = 'shawnlong636@gmail.com';
 
 	const socialLinks: SocialLink[] = [
 		{
