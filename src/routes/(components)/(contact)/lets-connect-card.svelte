@@ -32,16 +32,15 @@
 				employers.
 			</p>
 
-			<div class="mb-6 flex items-center gap-3 rounded-lg bg-muted p-4">
-				<!-- <Mail class="h-6 w-6 text-violet-500" /> -->
-				<Fa icon={faEnvelope} class="h-6 w-6 text-violet-500" />
-				<div class="flex-1">
-					<p class="text-sm font-medium text-muted-foreground">Email me at</p>
-					<p class="font-medium">{email}</p>
+			<div class="mb-6 flex flex-col gap-3 rounded-lg bg-muted p-4 sm:flex-row sm:items-center">
+				<Fa icon={faEnvelope} class="h-6 w-6 shrink-0 text-violet-500" />
+				<div class="min-w-0 flex-1">
+					<p class="truncate text-sm font-medium text-muted-foreground">Email me at</p>
+					<p class="break-all font-medium">{email}</p>
 				</div>
 				<Tooltip.Provider>
 					<Tooltip.Root>
-						<Tooltip.Trigger onclick={copyEmail} class="h-8 w-8">
+						<Tooltip.Trigger onclick={copyEmail} class="h-8 w-8 shrink-0">
 							{#if emailCopied}
 								<Fa icon={faCheck} class="h-4 w-4" />
 							{:else}
