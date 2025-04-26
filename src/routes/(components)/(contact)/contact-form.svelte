@@ -10,15 +10,69 @@
 	import Fa from 'svelte-fa';
 	import { Input } from '$lib/components/ui/input';
 	import { Textarea } from '$lib/components/ui/textarea';
+	import { toast } from 'svelte-sonner';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
+	const siteKey = '6LdpOCErAAAAAAHjxfVB27YpfygVc01LtIoE-VqP'; // Replace with your actual site key
+
 	let { data }: { data: { form: SuperValidated<Infer<ContactFormSchema>> } } = $props();
+	let formElement: HTMLFormElement;
 
 	const form = superForm(data.form, {
 		validators: zodClient(contactFormSchema)
 	});
 
 	const { form: formData, enhance } = form;
+
+	async function handleSubmit(event: Event) {
+		event.preventDefault();
+
+		if (typeof window.grecaptcha === 'undefined') {
+			toast.error('reCAPTCHA is not ready. Please try again later.');
+			return;
+		}
+
+		window.grecaptcha.ready(() => {
+			window.grecaptcha.execute(siteKey, { action: 'submit' }).then(async (token: string) => {
+				// const tokenInput = document.createElement('input');
+				// tokenInput.type = 'hidden';
+				// tokenInput.name = 'g-recaptcha-response';
+				// tokenInput.value = token;
+				// gReCaptchaInput.value = token; // one of these may be unnecessary
+				$formData.gRecaptchaResponse = token; // one of these may be unnecessary
+				// formElement.submit();
+
+				const { valid } = await form.validateForm();
+				if (!valid) {
+					toast.error('Please fill in all required fields.');
+					return;
+				}
+
+				// TODO: Set Loading Spinner
+				const response = await fetch('/api/contact', {
+					method: 'POST',
+					body: new FormData(formElement)
+				});
+
+				// TODO: Dismiss the Loading Spinner
+
+				if (response.ok) {
+					// reset the form
+					form.reset();
+
+					toast.success('Success', {
+						description: 'Message successfully sent.'
+					});
+				} else {
+					const error = await response.json();
+
+					toast.error('Error sending message', {
+						description: error.message || 'An unknown error occurred.'
+					});
+				}
+			});
+		});
+	}
 </script>
 
 <Card.Root>
@@ -28,7 +82,13 @@
 			Send a Message
 		</h3>
 
-		<form method="POST" class="space-y-5" use:enhance>
+		<form
+			bind:this={formElement}
+			method="POST"
+			class="space-y-5"
+			use:enhance
+			onsubmit={handleSubmit}
+		>
 			<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 				<Form.Field {form} name="name">
 					<Form.Control>
@@ -47,7 +107,7 @@
 							<Input {...props} bind:value={$formData.email} placeholder="your.email@example.com" />
 						{/snippet}
 					</Form.Control>
-					<Form.FieldErrors />
+					<Form.FieldErrors class="text-[#CF2614]" />
 				</Form.Field>
 			</div>
 
@@ -87,17 +147,12 @@
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Form.Field {form} name="captcha">
-				<Form.Control>
-					<Form.Label>Verification</Form.Label>
-					<!-- <ReCAPTCHA
-                          sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // This is a test key
-                          onChange={handleCaptchaChange}
-                          theme="dark"
-                        /> -->
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+			<input
+				type="hidden"
+				aria-hidden="true"
+				bind:value={$formData.gRecaptchaResponse}
+				name="gRecaptchaResponse"
+			/>
 
 			<div class="relative">
 				<Button type="submit">

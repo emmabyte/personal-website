@@ -9,22 +9,23 @@
 
 	let { data }: { data: PageData } = $props();
 
-	function scrollToElement(element: HTMLElement, topBuffer: number) {
+	function scrollToElement(element: HTMLElement, topBuffer: number = 0) {
 		const elementRect = element.getBoundingClientRect();
 		const scrollPos = elementRect.top - topBuffer;
 		window.scrollTo({ top: scrollPos });
 	}
 
 	let scrollToSection: HTMLElement;
+	let contactSection: HTMLElement;
 </script>
 
 <HeroSection
 	scrollToExploreHandler={() => scrollToElement(scrollToSection, 64)}
-	getInTouchHandler={() => undefined}
+	contactHandler={() => scrollToElement(contactSection)}
 	downloadResumeHandler={() => undefined}
 />
 <div bind:this={scrollToSection}><AboutMe /></div>
 <FeaturedProjects />
 <WorkHistory />
-<Contact {data} />
+<div bind:this={contactSection}><Contact {data} /></div>
 <KeywordsSeoSection />

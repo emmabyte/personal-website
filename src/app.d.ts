@@ -8,6 +8,9 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+	interface Window {
+		grecaptcha: typeof grecaptcha;
+	}
 }
 
 export {};

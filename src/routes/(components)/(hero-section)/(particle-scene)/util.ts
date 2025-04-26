@@ -24,14 +24,11 @@ export function getXYFromScroll(
 	const round = (num: number) => Math.round(num * 100) / 100;
 
 	const f = (gamma: number, beta: number) => {
-		console.log();
 		return round(maxRotationRadians * (Math.max(0, Math.min(gamma, beta)) / beta));
 	};
 
 	const phi = f(scrollPos, canvasEndPos);
 	const rho = cameraZStart; // Should only be the initial z position of the camera
-
-	console.log(`gamma: ${scrollPos}, beta: ${canvasEndPos}, phi: ${phi}, rho: ${rho}`);
 
 	const x = rho * Math.sin(phi);
 	const z = rho * Math.cos(phi);

@@ -6,7 +6,8 @@ export const contactFormSchema = z.object({
 	organization: z.string().min(2),
 	position: z.string().min(2),
 	message: z.string().min(10),
-	captcha: z.string().min(1)
+	gRecaptchaResponse: z.string().min(1)
 });
 
 export type ContactFormSchema = typeof contactFormSchema;
+export type ContactFormData = z.infer<typeof contactFormSchema>;
