@@ -7,13 +7,13 @@
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 	interface Props {
-		getInTouchHandler?: () => void;
+		contactHandler?: () => void;
 		downloadResumeHandler?: () => void;
 		scrollToExploreHandler?: () => void;
 	}
 
 	let {
-		getInTouchHandler = () => {},
+		contactHandler = () => {},
 		downloadResumeHandler = () => {},
 		scrollToExploreHandler = () => {}
 	}: Props = $props();
@@ -79,7 +79,7 @@
 					<u class="border-b border-white">captivating</u> user experiences.
 				</h3>
 				<div class="mt-4 flex gap-4">
-					<Button variant="default" onclick={getInTouchHandler}>Get in touch</Button>
+					<Button variant="default" onclick={contactHandler}>Get in touch</Button>
 					<Button variant="outline" class="text-white" onclick={downloadResumeHandler}
 						>Download Resume</Button
 					>

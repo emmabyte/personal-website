@@ -1,9 +1,16 @@
 <script lang="ts">
 	import '../app.css';
 	import { Toaster } from '$lib/components/ui/sonner';
+	import { PUBLIC_RECAPTCHA_SITE_KEY } from '$env/static/public';
 
 	let { children } = $props();
 </script>
+
+<svelte:head>
+	<script
+		src={`https://www.google.com/recaptcha/api.js?render=${PUBLIC_RECAPTCHA_SITE_KEY}`}
+	></script>
+</svelte:head>
 
 <Toaster />
 <div
