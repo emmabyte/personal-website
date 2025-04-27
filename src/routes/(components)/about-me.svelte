@@ -25,8 +25,8 @@
 				</p>
 				<p>
 					When I'm not coding, you can find me exploring hiking trails, experimenting with new
-					cooking recipes, or contributing to open-source projects that align with my values of
-					accessibility and inclusion in technology.
+					cooking recipes, or building a new project that aligns with my values of accessibility and
+					inclusion in technology.
 				</p>
 			</div>
 		</div>
