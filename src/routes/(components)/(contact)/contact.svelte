@@ -10,18 +10,18 @@
 
 	let { data }: { data: { form: SuperValidated<Infer<ContactFormSchema>> } } = $props();
 	let emailCopied = $state(false);
-	const email = 'shawnlong636@gmail.com';
+	const email = 'emmalong.dev@gmail.com';
 
 	const socialLinks: SocialLink[] = [
 		{
 			name: 'LinkedIn',
 			icon: faLinkedinIn,
-			url: 'https://www.linkedin.com/in/shawnlong636/'
+			url: 'https://www.linkedin.com/in/emmabyte/'
 		},
 		{
 			name: 'GitHub',
 			icon: faGithub,
-			url: 'https://github.com/shawn636'
+			url: 'https://github.com/emmabyte'
 		}
 	];
 
