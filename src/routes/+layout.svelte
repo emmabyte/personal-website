@@ -18,10 +18,10 @@
 >
 	<div class="jutify-start flex items-center gap-3">
 		<a href="#hero">
-			<div class="my-2 border-2 border-white p-1 text-3xl font-semibold tracking-wider">SL</div>
+			<div class="my-2 border-2 border-white p-1 text-3xl font-semibold tracking-wider">EL</div>
 		</a>
 		<div class="flex flex-col">
-			<h1 class="text-3xl font-bold">Shawn Long</h1>
+			<h1 class="text-3xl font-bold">Emma Long</h1>
 			<h2 class="text-xs">Software Engineer</h2>
 		</div>
 	</div>

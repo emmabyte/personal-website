@@ -7,7 +7,7 @@
 			"title": "StudyStack - Online Learning Platform",
 			"description": "An online learning platform built with SvelteKit on a cutting-edge infrastructure and built for scale. It includes a powerful admin panel, user authentication, and a rich set of features for both students and instructors.",
 			"badges": ["SvelteKit", "Vercel Edge", "PlanetScale", "Stripe"],
-			"github_link": "https://github.com/shawn636/study-stack",
+			"github_link": "https://github.com/emmabyte/study-stack",
 			"demo_link": "https://study-stack-demo.vercel.app/"
 		},
 		{
@@ -17,7 +17,7 @@
 			"title": "MiniFTP - Simple & Secure Docker-Based FTP Server",
 			"description": "A portable, multi-arch FTP server built on Alpine with TLS encryption via Let’s Encrypt, advanced YAML-based config, and automated Docker builds synced to DockerHub. Secure, scriptable, and ready for anything from CI testing to cloud deployment.",
 			"badges": ["Go", "Docker", "GitHub Actions", "Certbot"],
-			"github_link": "https://github.com/shawn636/mini-ftp",
+			"github_link": "https://github.com/emmabyte/mini-ftp",
 			"demo_link": ""
 		},
 		{
@@ -37,7 +37,7 @@
 			"title": "EightPuzzle Solver: An AI-Based Pathfinding Solver",
 			"description": "A Python-based pathfinding solver for the classic sliding tile 8-puzzle. Implements Uniform Cost Search and A* with both Manhattan and Euclidean heuristics. Features a command-line interface, test suite, and modular architecture for experimenting with search algorithms in AI and game logic.",
 			"badges": ["Python", "AI", "A*", "Strategy Pattern"],
-			"github_link": "https://github.com/shawn636/EightPuzzleSearchAlgorithms",
+			"github_link": "https://github.com/emmabyte/EightPuzzleSearchAlgorithms",
 			"demo_link": ""
 		},
 		{
@@ -47,7 +47,7 @@
 			"title": "Parallel Clustering: Optimized K-Means in Swift",
 			"description": "An optimized implementation of K-Means clustering in Swift, designed to test the limits of performance tuning, cache efficiency, and parallelism in high-dimensional data. Features custom centroid initialization, contiguous memory optimizations, and benchmark-tested clustering performance—built from the ground up with Swift’s concurrency model in mind.",
 			"badges": ["Swift", "Concurrency", "Performance Optimization", "K-Means Clustering"],
-			"github_link": "https://github.com/shawn636/Parallel-Clustering",
+			"github_link": "https://github.com/emmabyte/Parallel-Clustering",
 			"demo_link": ""
 		},
 		{
@@ -57,7 +57,7 @@
 			"title": "Fractal Explorer",
 			"description": "An interactive Mandelbrot fractal explorer built with C++ and Qt. Visualizes complex recursion with smooth gradients and real-time zooming, packaged as a cross-platform app for Windows and macOS.",
 			"badges": ["C++", "Qt", "Cmake", "Cross-Platform"],
-			"github_link": "https://github.com/shawn636/fractalExplorer",
+			"github_link": "https://github.com/emmabyte/fractalExplorer",
 			"demo_link": ""
 		},
 		{
@@ -67,7 +67,7 @@
 			"title": "Shell-Based Social Media Platform",
 			"description": "A shell-based social media platform built with Java and PostgreSQL. Features friend suggestions using graph algorithms and real-time message syncing across multiple sessions.",
 			"badges": ["Java", "PostgreSQL", "Graph Algorithms", "Real-Time Sync"],
-			"github_link": "https://github.com/shawn636/CS166-Online-Messaging-System",
+			"github_link": "https://github.com/emmabyte/CS166-Online-Messaging-System",
 			"demo_link": ""
 		},
 		{
@@ -77,7 +77,7 @@
 			"title": "Physics Engine Library",
 			"description": "A lightweight C++ physics engine library built with CMake, featuring unit tests via GoogleTest and CI integration through GitHub Actions. Focused on core simulation principles without rendering or graphics.",
 			"badges": ["C++", "CMake", "GoogleTest", "GitHub Actions"],
-			"github_link": "https://github.com/shawn636/PhysicsEngine",
+			"github_link": "https://github.com/emmabyte/PhysicsEngine",
 			"demo_link": ""
 		}
 	]

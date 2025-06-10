@@ -18,7 +18,7 @@
 	function downloadResume(): void {
 		const link = document.createElement('a');
 		link.href = '/documents/resume.pdf';
-		link.download = 'resume-shawn-long-april-2025.pdf';
+		link.download = 'resume-emma-long-june-2025.pdf';
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);

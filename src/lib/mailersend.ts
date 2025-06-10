@@ -5,7 +5,7 @@ export const mailersend = new MailerSend({
 	apiKey: MAILERSEND_API_KEY
 });
 
-export const platformNotificationEmail = { email: 'shawnlong636@gmail.com', name: 'Shawn Long' };
+export const platformNotificationEmail = { email: 'emmalong.dev@gmail.com', name: 'Emma Long' };
 export const emailDomain = 'test-51ndgwv7epxlzqx8.mlsender.net';
 
 export const templates = {
