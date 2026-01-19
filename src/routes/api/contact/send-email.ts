@@ -13,6 +13,7 @@ export const sendEmail = async (contactForm: SuperValidated<ContactFormData>): P
 			{
 				email: platformNotificationEmail.email,
 				data: {
+					name: platformNotificationEmail.name,
 					user: {
 						name: contactForm.data.name,
 						email: contactForm.data.email,
@@ -41,6 +42,7 @@ export const sendEmail = async (contactForm: SuperValidated<ContactFormData>): P
 		const emailParams = new EmailParams()
 			.setFrom(new Sender(`notifications@${emailDomain}`, 'MailerSend'))
 			.setTo(recipients)
+			.setReplyTo(new Sender(contactForm.data.email, contactForm.data.name))
 			.setSubject('New contact form submission')
 			.setTemplateId(templates.contactForm.id)
 			.setPersonalization(personalization);
