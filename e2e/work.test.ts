@@ -54,3 +54,21 @@ test('the secondary links stay clickable over the card overlay', async ({ page, 
 	expect(landed.url()).toBe('https://github.com/emmabyte-engineering/pulse');
 	expect(page.url()).not.toContain('/work/pulse');
 });
+
+test('keyboard focus on a card title link shows a visible indicator', async ({ page }) => {
+	await page.goto('/');
+	const link = card(page, 'Harbor').getByRole('link', { name: 'Harbor', exact: true });
+	for (let i = 0; i < 60; i++) {
+		await page.keyboard.press('Tab');
+		if (await link.evaluate((el) => el === document.activeElement)) break;
+	}
+	await expect(link).toBeFocused();
+	const indicator = await link.evaluate((el) => {
+		const own = getComputedStyle(el);
+		const after = getComputedStyle(el, '::after');
+		const visible = (s: CSSStyleDeclaration) =>
+			(s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) > 0) || s.boxShadow !== 'none';
+		return visible(own) || visible(after);
+	});
+	expect(indicator).toBe(true);
+});
