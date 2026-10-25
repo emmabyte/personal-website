@@ -54,16 +54,16 @@ The site exists to get the right people — recruiters, hiring managers, potenti
 
 Routes: `/` (the home page below) and `/work/{slug}` case-study pages for the four featured projects (see Selected work). Home-page sections run top to bottom as listed. Section numbers fix a prototype bug where Experience and Contact both said `04`.
 
-| # | Section | Anchor | Prototype source |
-|---|---|---|---|
-| — | Header | — | `site-header.tsx` |
-| — | Hero | `#top` | `hero.tsx` |
-| 01 | Selected work | `#work` | `projects.tsx` + new "More projects" list |
-| 02 | How I ship | `#process` | `process.tsx` |
-| 03 | Tools of the trade | `#stack` | `stack.tsx` |
-| 04 | Experience | `#experience` | `experience.tsx` + FAQ toggle + résumé link |
-| 05 | Contact | `#contact` | `contact.tsx` + contact form |
-| — | Footer | — | `site-footer.tsx` |
+| #   | Section            | Anchor        | Prototype source                            |
+| --- | ------------------ | ------------- | ------------------------------------------- |
+| —   | Header             | —             | `site-header.tsx`                           |
+| —   | Hero               | `#top`        | `hero.tsx`                                  |
+| 01  | Selected work      | `#work`       | `projects.tsx` + new "More projects" list   |
+| 02  | How I ship         | `#process`    | `process.tsx`                               |
+| 03  | Tools of the trade | `#stack`      | `stack.tsx`                                 |
+| 04  | Experience         | `#experience` | `experience.tsx` + FAQ toggle + résumé link |
+| 05  | Contact            | `#contact`    | `contact.tsx` + contact form                |
+| —   | Footer             | —             | `site-footer.tsx`                           |
 
 Content lives in a typed module (`src/lib/data/portfolio.ts` or similar — builder's choice of shape), replacing the current JSON files.
 
@@ -74,7 +74,7 @@ Content lives in a typed module (`src/lib/data/portfolio.ts` or similar — buil
 
 ### Hero
 
-- **Availability badge:** pulsing coral dot + text. *Text is an open item (see below); if Emma doesn't want one, omit the badge.*
+- **Availability badge:** pulsing coral dot + text. _Text is an open item (see below); if Emma doesn't want one, omit the badge._
 - **Name:** Emma Long.
 - **Scrambling role line** (draft): "Full-Stack Engineer", "Systems Architect", "DevOps Tinkerer", "Interface Builder". Screen-reader text: "Full-Stack Engineer".
 - **Intro (draft):** "I build reliable web products end to end — from CI/CD pipelines and edge APIs to interfaces people enjoy using. Right now I'm the sole engineer modernizing a decade-old platform at Haven Ministries."
@@ -83,16 +83,12 @@ Content lives in a typed module (`src/lib/data/portfolio.ts` or similar — buil
 - **Code card** (`about.ts`, draft):
   ```ts
   export const engineer = {
-    focus: 'full-stack',
-    frontend: ['SvelteKit', 'TypeScript'],
-    backend: ['Node', 'Go'],
-    data: 'PostgreSQL',
-    values: [
-      'pipelines before features',
-      'modernize in phases',
-      'sustainable pace, quality code',
-    ],
-  }
+  	focus: 'full-stack',
+  	frontend: ['SvelteKit', 'TypeScript'],
+  	backend: ['Node', 'Go'],
+  	data: 'PostgreSQL',
+  	values: ['pipelines before features', 'modernize in phases', 'sustainable pace, quality code']
+  };
   ```
 - **Stats row** (real numbers from Emma's own FAQ answers):
   - `2016` — First production work; full-time engineer since 2023 (draft). **Don't claim "10 years of development experience":** per Emma, dev work from 2016 to 2023 grew alongside an IT/analytics role and only became her full-time job in November 2023.
@@ -103,16 +99,16 @@ Content lives in a typed module (`src/lib/data/portfolio.ts` or similar — buil
 
 Section description (draft): "Products I've designed, built, and shipped, from schema to deploy."
 
-Approach (from the hiring research Emma accepted, `reports/Hiring views on AI built portfolios.md`, kept out of git): screeners now read the *explanation* of a project more than its code, and they look for judgment: constraints, trade-offs, rejected alternatives, verification. So each featured project carries its evidence in prose, and private work is described rather than shown.
+Approach (from the hiring research Emma accepted, `reports/Hiring views on AI built portfolios.md`, kept out of git): screeners now read the _explanation_ of a project more than its code, and they look for judgment: constraints, trade-offs, rejected alternatives, verification. So each featured project carries its evidence in prose, and private work is described rather than shown.
 
 **Four featured cards**, prototype card design (spotlight hover, `NN / YEAR`, title, summary, Role, Impact, tags, link row). **No cover images.** Years come from git history.
 
-| Project | Year | What it is (draft) | Role | Impact | Tags (draft) | Link row |
-|---|---|---|---|---|---|---|
-| Harbor | 2026 | Multi-tenant case-management SaaS for California human-services providers, starting with day and employment programs for adults with intellectual and developmental disabilities. Built to be HIPAA-compliant. In active development (Release 1). | *open* | *open* | SvelteKit, TypeScript, PostgreSQL, Docker | `harborcm.io` (if it's public-facing) · Private repo, walkthrough on request |
-| Emmabyte platform | 2025 | emmabyte.io: the company's marketing site plus a full CRM, client portal and admin. | *open* | *open* | SvelteKit, TypeScript, Tailwind CSS, PlanetScale | `emmabyte.io` · Private repo, walkthrough on request |
-| Tarot Tutor | 2026 | Subscription learning app with guided lesson tracks, a free in-browser first lesson, and Stripe-backed Pro plans. | *open* | *open* | SvelteKit, Supabase, Stripe, PostHog | `tarot-tutor.vercel.app` · Private repo, walkthrough on request |
-| Pulse | 2026 | Open-source observability platform that pulls logs, events and metrics from MailerSend, Vercel, PlanetScale and app code into one dashboard with search and alerting. It also has a hosted version, Pulse Cloud. | *open* | *open* | SvelteKit, Prisma, PostgreSQL, Docker | Source code: `github.com/emmabyte-engineering/pulse` |
+| Project           | Year | What it is (draft)                                                                                                                                                                                                                                | Role   | Impact | Tags (draft)                                     | Link row                                                                     |
+| ----------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Harbor            | 2026 | Multi-tenant case-management SaaS for California human-services providers, starting with day and employment programs for adults with intellectual and developmental disabilities. Built to be HIPAA-compliant. In active development (Release 1). | _open_ | _open_ | SvelteKit, TypeScript, PostgreSQL, Docker        | `harborcm.io` (if it's public-facing) · Private repo, walkthrough on request |
+| Emmabyte platform | 2025 | emmabyte.io: the company's marketing site plus a full CRM, client portal and admin.                                                                                                                                                               | _open_ | _open_ | SvelteKit, TypeScript, Tailwind CSS, PlanetScale | `emmabyte.io` · Private repo, walkthrough on request                         |
+| Tarot Tutor       | 2026 | Subscription learning app with guided lesson tracks, a free in-browser first lesson, and Stripe-backed Pro plans.                                                                                                                                 | _open_ | _open_ | SvelteKit, Supabase, Stripe, PostHog             | `tarot-tutor.vercel.app` · Private repo, walkthrough on request              |
+| Pulse             | 2026 | Open-source observability platform that pulls logs, events and metrics from MailerSend, Vercel, PlanetScale and app code into one dashboard with search and alerting. It also has a hosted version, Pulse Cloud.                                  | _open_ | _open_ | SvelteKit, Prisma, PostgreSQL, Docker            | Source code: `github.com/emmabyte-engineering/pulse`                         |
 
 Rules for the cards:
 
@@ -124,6 +120,7 @@ Rules for the cards:
 **Case studies:** each featured project gets one, covering the problem and constraints, Emma's role, a redrawn architecture diagram (no internal hostnames or client data), two or three key decisions with the alternatives she rejected, testing and verification, outcome, and for Harbor the compliance controls. Content is drafted from each repo's own docs (Harbor has `docs/technical/`, Tarot Tutor has `docs/superpowers/specs/`) and reviewed by Emma. **Format (Emma's decision): a dedicated page per featured project** at `/work/{slug}` (`harbor`, `emmabyte`, `tarot-tutor`, `pulse`). The featured card's main link goes to its case study. The live site and source links stay in the card's link row and are repeated on the page.
 
 Case-study page layout, in the prototype's vocabulary:
+
 - Same header and footer as the home page. Header nav anchors point back to `/#work` etc.
 - A "← All work" link back to `/#work`.
 - A heading block: mono `NN / YEAR` line, title, one-line summary, and a meta row (Role, Stack tags, Status, Links).
@@ -135,15 +132,15 @@ Case-study page layout, in the prototype's vocabulary:
 
 **"More projects" list** below the grid: one compact row each (title, year if known, one-line description, tags, link). Builder designs the row in the prototype's border and mono style.
 
-| Project | Year | Link |
-|---|---|---|
-| Task1 (syncs tasks between ClickUp, Jira and Asana) | 2026 | Private repo |
-| Accessibility Widget (drop-in, framework-agnostic accessibility preferences web component) | 2026 | `github.com/emmabyte-engineering/accessibility` |
-| Study Stack | 2025 | demo `study-stack-demo.vercel.app` · `github.com/emmabyte/study-stack` |
-| MiniFTP | from git, else omit | `github.com/emmabyte/mini-ftp` |
-| Parallel Clustering | from git, else omit | `github.com/emmabyte/Parallel-Clustering` |
-| Physics Engine Library | from git, else omit | `github.com/emmabyte/PhysicsEngine` |
-| Fractal Explorer | from git, else omit | `github.com/emmabyte/fractalExplorer` |
+| Project                                                                                    | Year                | Link                                                                   |
+| ------------------------------------------------------------------------------------------ | ------------------- | ---------------------------------------------------------------------- |
+| Task1 (syncs tasks between ClickUp, Jira and Asana)                                        | 2026                | Private repo                                                           |
+| Accessibility Widget (drop-in, framework-agnostic accessibility preferences web component) | 2026                | `github.com/emmabyte-engineering/accessibility`                        |
+| Study Stack                                                                                | 2025                | demo `study-stack-demo.vercel.app` · `github.com/emmabyte/study-stack` |
+| MiniFTP                                                                                    | from git, else omit | `github.com/emmabyte/mini-ftp`                                         |
+| Parallel Clustering                                                                        | from git, else omit | `github.com/emmabyte/Parallel-Clustering`                              |
+| Physics Engine Library                                                                     | from git, else omit | `github.com/emmabyte/PhysicsEngine`                                    |
+| Fractal Explorer                                                                           | from git, else omit | `github.com/emmabyte/fractalExplorer`                                  |
 
 Descriptions for the older projects come from the current `projects.json`, trimmed to one line. The older Swift and C++ projects predate coding agents and show fundamentals, so they stay. Dropped (my call, Emma can restore any of them): EightPuzzle Solver, Shell-Based Social Media Platform and Stress Analyzer, which were coursework or team class projects.
 
@@ -155,7 +152,7 @@ Descriptions for the older projects come from the current `projects.json`, trimm
   1. **Pipelines before features** — CI/CD with unit and end-to-end tests (Vitest, Playwright, GitHub Actions) goes in first, so every change after that ships safely.
   2. **Reproducible environments** — containerized, SSL-enabled dev environments mean a new engineer is productive on day one, not day five.
   3. **Modernize in phases** — stabilize first, then rebuild the critical flows, then replace the platform. Each phase delivers value on its own.
-- **"How I work with AI" note** (Emma accepted the research's recommendation of quiet, factual disclosure). This is one short plain paragraph under the three principles, not a card and not a headline, and it's the only place on the site that mentions AI. Draft: "I use AI coding agents for much of the implementation work. Architecture, security-sensitive code, test design and code review stay with me, and patient data, secrets and client code never go into a prompt." *Emma confirms the guardrails are accurate before launch.* It must stay consistent with public repos, whose commits may carry `Co-Authored-By: Claude` trailers.
+- **"How I work with AI" note** (Emma accepted the research's recommendation of quiet, factual disclosure). This is one short plain paragraph under the three principles, not a card and not a headline, and it's the only place on the site that mentions AI. Draft: "I use AI coding agents for much of the implementation work. Architecture, security-sensitive code, test design and code review stay with me, and patient data, secrets and client code never go into a prompt." _Emma confirms the guardrails are accurate before launch._ It must stay consistent with public repos, whose commits may carry `Co-Authored-By: Claude` trailers.
 
 ### 03 — Tools of the trade
 
@@ -177,13 +174,13 @@ Four columns (draft, drawn from Emma's work history and keyword list):
 - Company names link to the company URL.
 - No company logos (prototype has none).
 
-| Period | Company | Title | Summary (draft) |
-|---|---|---|---|
-| 2025 — Now | Emmabyte Engineering, Inc. | *open* (e.g. Founder & Principal Engineer) | Run a small engineering company building SaaS products and client software, including a HIPAA-compliant case-management platform, a CRM and client portal, and open-source developer tools. Hire and interview engineers. |
-| 2023 — Now | Haven Ministries | Software Developer | Sole engineer leading a three-phase modernization: performance and reliability, a rebuilt donation system, and a ground-up replacement of a decade-old WordPress site. |
-| 2022 — 2025 | Study Stack | Co-Founder & Lead Engineer | Designed and built a cloud-native learning platform end to end, with full CI test coverage, and mentored a junior developer. Now open source. |
-| 2023 | SpaceX | Software Engineer II | Infrastructure team: containerized dev services, refined CI/CD pipelines, and scripted environment setup to speed up onboarding. |
-| 2016 — 2023 | Haven Ministries | IT & Analytics Advisor | Linux servers, data pipelines and dashboards, and CI/CD support — and led a monolith-to-microservices migration that cut downtime. |
+| Period      | Company                    | Title                                      | Summary (draft)                                                                                                                                                                                                           |
+| ----------- | -------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2025 — Now  | Emmabyte Engineering, Inc. | _open_ (e.g. Founder & Principal Engineer) | Run a small engineering company building SaaS products and client software, including a HIPAA-compliant case-management platform, a CRM and client portal, and open-source developer tools. Hire and interview engineers. |
+| 2023 — Now  | Haven Ministries           | Software Developer                         | Sole engineer leading a three-phase modernization: performance and reliability, a rebuilt donation system, and a ground-up replacement of a decade-old WordPress site.                                                    |
+| 2022 — 2025 | Study Stack                | Co-Founder & Lead Engineer                 | Designed and built a cloud-native learning platform end to end, with full CI test coverage, and mentored a junior developer. Now open source.                                                                             |
+| 2023        | SpaceX                     | Software Engineer II                       | Infrastructure team: containerized dev services, refined CI/CD pipelines, and scripted environment setup to speed up onboarding.                                                                                          |
+| 2016 — 2023 | Haven Ministries           | IT & Analytics Advisor                     | Linux servers, data pipelines and dashboards, and CI/CD support — and led a monolith-to-microservices migration that cut downtime.                                                                                        |
 
 Order: as above. Emmabyte is the single umbrella entry for the freelance and company work (the research's recommendation, which Emma accepted). Its projects appear under Selected work, and its summary links there. The Emmabyte row has no Q&A unless Emma writes some. The 2025 start comes from the first emmabyte.io commit (July 2025).
 
@@ -193,11 +190,11 @@ SpaceX's period is deliberately just "2023". Emma was there about a week and pre
 
 Two-column card on desktop, stacked on mobile.
 
-- **Left:** `05` index; heading (draft) "Building something that needs an engineer? Let's talk."; supporting line (*depends on the availability open item*); coral `mailto:` button showing the email; Copy email button (inline "Copied" state, as in the prototype — no toast needed); link row: LinkedIn (`linkedin.com/in/emmabyte`), GitHub (`github.com/emmabyte`), Résumé (PDF).
+- **Left:** `05` index; heading (draft) "Building something that needs an engineer? Let's talk."; supporting line (_depends on the availability open item_); coral `mailto:` button showing the email; Copy email button (inline "Copied" state, as in the prototype — no toast needed); link row: LinkedIn (`linkedin.com/in/emmabyte`), GitHub (`github.com/emmabyte`), Résumé (PDF).
 - **Right:** the contact form, restyled in prototype vocabulary (rounded inputs with the prototype's border/ring tokens, coral pill submit button).
   - Fields unchanged from `src/lib/schemas/contact.ts`: name, email, organization, position, message.
   - Keep the flow: reCAPTCHA v3 token on submit → `POST /api/contact` → server verifies (score > 0.5) → MailerSend template email. Keep `src/routes/api/contact/*`, `src/lib/mailersend.ts`, `src/lib/recaptcha.ts`.
-  - Success/error feedback: keep `svelte-sonner` toasts, restyled to the prototype's tokens, *or* inline status under the button — builder's choice, but it must be visible and announced to screen readers.
+  - Success/error feedback: keep `svelte-sonner` toasts, restyled to the prototype's tokens, _or_ inline status under the button — builder's choice, but it must be visible and announced to screen readers.
   - Read the reCAPTCHA site key from `PUBLIC_RECAPTCHA_SITE_KEY` (it's currently hard-coded in `contact-form.svelte`).
   - Show reCAPTCHA's required attribution text if the badge is hidden.
   - **Loading (my call):** stop loading the reCAPTCHA script in `<head>` on every page. Load it when the contact section first approaches the viewport (IntersectionObserver with a generous root margin), and also on first focus of any form field as a fallback. This keeps it off the critical path for Lighthouse while still giving v3 time to observe the visitor before submit. The server's score threshold (> 0.5) stays unchanged. If real submissions start failing on score after launch, revisit.
@@ -265,4 +262,4 @@ Build with clearly marked placeholder values (e.g. `TODO(emma): ...` strings in 
 6. **Is Haven still current?** That affects its "Now" end date and the hero intro.
 7. **Badge text.** My recommendation is "Taking on freelance projects".
 8. **AI guardrails.** Confirm the wording of the How I work with AI note.
-9. Review all copy marked *draft* above.
+9. Review all copy marked _draft_ above.

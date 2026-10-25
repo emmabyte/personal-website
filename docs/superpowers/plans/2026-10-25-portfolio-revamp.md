@@ -8,7 +8,7 @@
 
 **Tech Stack:** SvelteKit 2, Svelte 5 (runes), TypeScript, Tailwind CSS v4 (`@tailwindcss/vite`), Geist via `@fontsource-variable`, `@lucide/svelte`, zod 3 + `sveltekit-superforms` (server only), MailerSend, reCAPTCHA v3, Vitest, Playwright, pnpm, `@sveltejs/adapter-vercel`.
 
-**Spec:** `docs/superpowers/specs/2026-10-25-portfolio-revamp-design.md`. Read it alongside this plan. All copy marked *draft* there is copied verbatim into the data modules.
+**Spec:** `docs/superpowers/specs/2026-10-25-portfolio-revamp-design.md`. Read it alongside this plan. All copy marked _draft_ there is copied verbatim into the data modules.
 
 **Design reference:** `/Users/emmalong/Downloads/full-stack-developer-portfolio` (read only). Each task names the prototype files it ports. Port markup and Tailwind classes. Never add React dependencies.
 
@@ -41,11 +41,13 @@
 ### Task 1: Toolchain reset (Tailwind v4, fonts, tokens, strip the old UI)
 
 **Files:**
+
 - Modify: `package.json`, `vite.config.ts`, `tsconfig.json`, `svelte.config.js` (unchanged adapter), `.prettierrc`, `.prettierignore`, `src/app.html`, `src/app.css`, `src/lib/utils.ts`, `src/routes/+layout.svelte`, `src/routes/+page.svelte`, `src/routes/api/contact/+server.ts`, `playwright.config.ts`
 - Create: `src/routes/+layout.ts`, `static/favicon.svg`, `e2e/home.test.ts`
 - Delete: `tailwind.config.ts`, `postcss.config.js`, `components.json`, `src/lib/components/ui/` (all), `src/routes/(components)/` (all), `src/routes/+page.server.ts`, `src/lib/types/social-link.ts` (it imports Font Awesome types), `src/demo.spec.ts`, `e2e/demo.test.ts`, `static/images/` (all), `static/favicon.png`
 
 **Interfaces:**
+
 - Produces: Tailwind v4 theme utilities matching the prototype (`bg-background`, `text-muted-foreground`, `bg-primary`, `border-border`, `font-mono`, `rounded-2xl`, …). Custom classes `.beam`, `.spin`, `.ping`, `.conic-border`, `.spotlight`, `.spotlight-fill`, `.spotlight-border`. `cn(...inputs: ClassValue[]): string` from `$lib/utils`. `export const prerender = true` at the root.
 
 - [ ] **Step 1: Dependencies.** Remove `three @types/three postprocessing vite-plugin-glsl @fortawesome/fontawesome-common-types @fortawesome/free-brands-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-solid-svg-icons svelte-fa svelte-forms-lib mode-watcher tailwindcss-animate @tailwindcss/container-queries @tailwindcss/forms @tailwindcss/typography autoprefixer formsnap bits-ui svelte-sonner tailwind-variants`. Add `tailwindcss@^4 @tailwindcss/vite@^4 @fontsource-variable/geist @fontsource-variable/geist-mono` as dev dependencies. Run `pnpm install`.
@@ -77,41 +79,77 @@
 ### Task 2: Content data modules and the production content guard
 
 **Files:**
+
 - Create: `src/lib/data/types.ts`, `src/lib/data/todo.ts`, `src/lib/data/profile.ts`, `src/lib/data/projects.ts`, `src/lib/data/experience.ts`, `src/lib/data/stack.ts`, `src/lib/data/process.ts`, `src/lib/data/case-studies.ts`, `src/lib/data/launch-gates.ts`, `src/lib/data/data.spec.ts`, `src/lib/build/content-guard.ts`, `src/lib/build/content-guard.spec.ts`
 - Modify: `vite.config.ts`
 - Delete: `src/lib/data/projects.json`, `src/lib/data/work-history.json`, `src/lib/data/keywords.json`. Copy the FAQs out of `work-history.json` before deleting it.
 
 **Interfaces:**
+
 - Produces, in `types.ts` (exact):
 
 ```ts
 export type Link = { label: string; href: string };
 export type Profile = {
-	name: string; role: string; wordmark: string; email: string; location: string;
-	availability: string; intro: string; roles: string[]; siteUrl: string;
-	socials: Link[]; resume: { href: string; filename: string };
-	contactHeading: string; contactLine: string;
+	name: string;
+	role: string;
+	wordmark: string;
+	email: string;
+	location: string;
+	availability: string;
+	intro: string;
+	roles: string[];
+	siteUrl: string;
+	socials: Link[];
+	resume: { href: string; filename: string };
+	contactHeading: string;
+	contactLine: string;
 };
 export type Stat = { value: string; label: string };
 export type StackGroup = { area: string; items: string[] };
 export type ProjectSlug = 'harbor' | 'emmabyte' | 'tarot-tutor' | 'pulse';
 export type FeaturedProject = {
-	slug: ProjectSlug; title: string; year: string; summary: string;
-	role: string; impact: string; tags: string[];
-	liveUrl?: string; repoUrl?: string; // no repoUrl = private repo
+	slug: ProjectSlug;
+	title: string;
+	year: string;
+	summary: string;
+	role: string;
+	impact: string;
+	tags: string[];
+	liveUrl?: string;
+	repoUrl?: string; // no repoUrl = private repo
 };
-export type MoreProject = { title: string; year?: string; description: string; tags: string[]; links: Link[] };
+export type MoreProject = {
+	title: string;
+	year?: string;
+	description: string;
+	tags: string[];
+	links: Link[];
+};
 export type Faq = { question: string; answer: string };
-export type Job = { period: string; company: string; companyUrl?: string; title: string; summary: string; link?: Link; faqs: Faq[] };
+export type Job = {
+	period: string;
+	company: string;
+	companyUrl?: string;
+	title: string;
+	summary: string;
+	link?: Link;
+	faqs: Faq[];
+};
 export type Principle = { title: string; body: string };
 export type DiagramColumn = { label: string; items: string[] };
 export type Decision = { decision: string; rejected: string[]; why: string };
 export type CaseStudy = {
-	slug: ProjectSlug; status: string;
-	problem: string[]; role: string[];
+	slug: ProjectSlug;
+	status: string;
+	problem: string[];
+	role: string[];
 	architecture: { caption: string; description: string; columns: DiagramColumn[] };
-	decisions: Decision[]; testing: string[]; outcome: string[];
-	compliance?: string[]; review?: string; // review: a todo() gate that's never rendered
+	decisions: Decision[];
+	testing: string[];
+	outcome: string[];
+	compliance?: string[];
+	review?: string; // review: a todo() gate that's never rendered
 };
 ```
 
@@ -124,6 +162,7 @@ export type CaseStudy = {
 - `case-studies.ts`: `caseStudies: CaseStudy[]` and `getCaseStudy(slug: string): { project: FeaturedProject; study: CaseStudy; index: number } | undefined`. `index` is 1-based and follows `featuredProjects` order.
 - `launch-gates.ts`: `launchGates: string[]`.
 - `content-guard.ts`:
+
   - `findPendingContent(files: { path: string; content: string }[]): { path: string; line: number; note: string }[]`
   - `shouldEnforce(env: Record<string, string | undefined>): boolean`
   - `contentGuard(): import('vite').Plugin`
@@ -134,7 +173,7 @@ export type CaseStudy = {
   - `shouldEnforce is true only for Vercel production or REQUIRE_CONTENT=1`. Cases: `{VERCEL_ENV:'production'}` → true, `{REQUIRE_CONTENT:'1'}` → true, `{VERCEL_ENV:'preview'}` → false, `{}` → false.
 - [ ] **Step 2: Run** `pnpm test:unit -- --run src/lib/build`. Expected: FAIL (module not found).
 - [ ] **Step 3: Implement `content-guard.ts`.**
-  - `findPendingContent` matches the regex `/\btodo\(\s*(['"`])(.*?)\1/g` line by line.
+  - `findPendingContent` matches the regex `/\btodo\(\s*(['"`])(.\*?)\1/g` line by line.
   - In `buildStart`, `contentGuard()` (when `shouldEnforce(process.env)`) reads every `.ts` file under `src/lib/data/` except `todo.ts`, using `fs.readdirSync(dir, { recursive: true })`. If there are any matches, it throws an `Error` that lists `path:line note` one per line, headed `Launch content still pending (see spec "Launch checklist"):`.
   - Register it first in `vite.config.ts`'s plugins.
 - [ ] **Step 4: Run** the same command. Expected: PASS.
@@ -180,12 +219,15 @@ export type CaseStudy = {
 Ports `site-header.tsx` and `site-footer.tsx`.
 
 **Files:**
+
 - Create: `src/lib/components/site/site-header.svelte`, `src/lib/components/site/site-footer.svelte`, `src/lib/components/site/seo.svelte`, `src/lib/seo.ts`, `src/lib/seo.spec.ts`, `scripts/generate-og-image.mjs`, `static/og.png`, `e2e/shell.test.ts`
 - Modify: `src/routes/+layout.svelte`, `src/routes/+page.svelte`
 
 **Interfaces:**
+
 - Consumes: `profile`, `stack`, `experience` from Task 2.
 - Produces:
+
   - `<Seo title description path jsonLd? />` with props `{ title: string; description: string; path: string; jsonLd?: Record<string, unknown> }`.
   - `jsonLdScript(data: unknown): string`, which returns a full `<script type="application/ld+json">…</script>` string with every `<` escaped as `<`.
   - `personJsonLd(): Record<string, unknown>`.
@@ -228,6 +270,7 @@ Ports `site-header.tsx` and `site-footer.tsx`.
 Uses placeholder data from Task 2.
 
 **Files:**
+
 - Create:
   - `src/lib/components/ui/section-heading.svelte`
   - `src/lib/components/ui/plus-corners.svelte`
@@ -240,8 +283,10 @@ Uses placeholder data from Task 2.
   - `e2e/case-study.test.ts`
 
 **Interfaces:**
+
 - Consumes: `getCaseStudy` and `featuredProjects` (Task 2), and `Seo` (Task 3).
 - Produces:
+
   - `<SectionHeading index title id description? />`, ported from `section-heading.tsx`: `{ index: string; title: string; id: string; description?: string }`. It also takes a `children` snippet placed beside the description; Task 8 uses it for the résumé link.
   - `<PlusCorners />`, ported from `plus-corners.tsx`.
   - `<CopyEmailButton email />`, ported from `copy-email-button.tsx`, with inline "Copied" state and `aria-live="polite"`.
@@ -287,10 +332,12 @@ Uses placeholder data from Task 2.
 Ports `hero.tsx`, `dot-field.tsx`, `scramble-text.tsx` and `code-card.tsx`.
 
 **Files:**
+
 - Create: `src/lib/components/hero/hero.svelte`, `src/lib/components/hero/dot-field.svelte`, `src/lib/components/hero/scramble-text.svelte`, `src/lib/components/hero/code-card.svelte`, `e2e/hero.test.ts`
 - Modify: `src/routes/+page.svelte` (replace the `#top` placeholder)
 
 **Interfaces:**
+
 - Consumes: `profile` and `stats` (Task 2), and `PlusCorners` (Task 4).
 - Produces: `<Hero />`. `<ScrambleText words />` with `{ words: string[] }`, which renders `data-scramble` on its text element.
 
@@ -315,10 +362,12 @@ Ports `hero.tsx`, `dot-field.tsx`, `scramble-text.tsx` and `code-card.tsx`.
 Ports `projects.tsx` and `spotlight-card.tsx`, and adds More projects.
 
 **Files:**
+
 - Create: `src/lib/components/ui/spotlight-card.svelte`, `src/lib/components/work/project-card.svelte`, `src/lib/components/work/more-projects.svelte`, `src/lib/components/work/selected-work.svelte`, `e2e/work.test.ts`
 - Modify: `src/routes/+page.svelte` (replace `#work`)
 
 **Interfaces:**
+
 - Consumes: `featuredProjects` and `moreProjects` (Task 2), and `SectionHeading` (Task 4).
 - Produces: `<SelectedWork />`. `<SpotlightCard class />`, which takes a children snippet and sets `--x`/`--y` on `pointermove`.
 
@@ -346,10 +395,12 @@ Ports `projects.tsx` and `spotlight-card.tsx`, and adds More projects.
 Ports `process.tsx`, `ship-pipeline.tsx` and `stack.tsx`.
 
 **Files:**
+
 - Create: `src/lib/components/process/ship-pipeline.svelte`, `src/lib/components/process/how-i-ship.svelte`, `src/lib/components/stack/stack-section.svelte`, `e2e/process-stack.test.ts`
 - Modify: `src/routes/+page.svelte` (replace `#process` and `#stack`)
 
 **Interfaces:**
+
 - Consumes: `howIShip` and `stack` (Task 2), and `SectionHeading` and `PlusCorners` (Task 4).
 - Produces: `<HowIShip />` and `<StackSection />`.
 
@@ -379,10 +430,12 @@ Ports `process.tsx`, `ship-pipeline.tsx` and `stack.tsx`.
 Ports `experience.tsx`, and adds the Q&A disclosure and the résumé link.
 
 **Files:**
+
 - Create: `src/lib/components/experience/experience-section.svelte`, `src/lib/components/experience/job-qa.svelte`, `e2e/experience.test.ts`
 - Modify: `src/routes/+page.svelte` (replace `#experience`)
 
 **Interfaces:**
+
 - Consumes: `experience` and `profile` (Task 2), and `SectionHeading` (Task 4).
 - Produces: `<ExperienceSection />`, and `<JobQa faqs company />` with `{ faqs: Faq[]; company: string }`, which renders nothing when `faqs` is empty.
 
@@ -407,12 +460,15 @@ Ports `experience.tsx`, and adds the Q&A disclosure and the résumé link.
 Ports `contact.tsx` and keeps `/api/contact`.
 
 **Files:**
+
 - Create: `src/lib/contact/validate.ts`, `src/lib/contact/validate.spec.ts`, `src/lib/contact/recaptcha-client.ts`, `src/lib/contact/recaptcha-client.spec.ts`, `src/lib/schemas/contact.spec.ts`, `src/lib/components/contact/contact-form.svelte`, `src/lib/components/contact/contact-section.svelte`, `e2e/contact.test.ts`
 - Modify: `src/lib/schemas/contact.ts` (messages only), `src/app.d.ts`, `src/routes/+page.svelte` (replace `#contact`), `package.json` (add `jsdom` dev dependency)
 
 **Interfaces:**
+
 - Consumes: `ContactLinks` (Task 4), `profile` (Task 2), and `ContactPostResponse` from `$lib/types/api/contact`.
 - Produces:
+
   - `ContactFields = Omit<ContactFormData, 'gRecaptchaResponse'>`
   - `validateContact(input: Record<string, unknown>): { success: true; data: ContactFields } | { success: false; errors: Partial<Record<keyof ContactFields, string>> }`
   - `loadRecaptcha(siteKey: string): Promise<void>`, which is memoized
@@ -451,9 +507,11 @@ Ports `contact.tsx` and keeps `/api/contact`.
     - `recaptcha script is not requested on initial load`. Track requests matching `recaptcha/api.js` from `page.goto('/')` without scrolling: none are made. After `#contact` scrolls into view, exactly one is made.
 - [ ] **Step 6: Run** `pnpm test:e2e e2e/contact.test.ts`. Expected: FAIL.
 - [ ] **Step 7: Implement the components.**
+
   - **`ContactSection`:** a two-column card, `md:grid-cols-2`, that stacks on mobile. On the left, `ContactLinks` with index `05`, `profile.contactHeading` and `profile.contactLine`. On the right, `ContactForm`. On mount, it starts `loadRecaptcha(PUBLIC_RECAPTCHA_SITE_KEY)` through an `IntersectionObserver` with `rootMargin: '600px'`, firing once. The form also starts it on its first `focusin`. Import the key from `$env/static/public`.
   - **`ContactForm`:** a plain `<form novalidate>` with labelled inputs. Name and email share a row on `md:` screens, as do organization and position; message is a textarea. Inputs are styled `rounded-xl border border-input bg-background px-4 h-11 focus-visible:outline-2 focus-visible:outline-primary`. The submit is a coral pill button with the text `Send message`.
   - **Submit order:**
+
     1. `validateContact`
     2. set `pending = true`
     3. `getRecaptchaToken`
@@ -464,7 +522,9 @@ Ports `contact.tsx` and keeps `/api/contact`.
     8. set `pending = false` in `finally`
 
     A network exception shows `Something went wrong sending your message. Please email me instead.` Status text lives in `<p role="status" aria-live="polite">`.
+
   - **Attribution:** below the button, `This site is protected by reCAPTCHA and the Google <a>Privacy Policy</a> and <a>Terms of Service</a> apply.`
+
 - [ ] **Step 8: Run** `pnpm test:unit -- --run && pnpm test:e2e && pnpm check`. Expected: PASS.
 - [ ] **Step 9: Commit.** `git add -A && git commit -m "feat: contact section with lazy recaptcha and inline status"`
 
@@ -473,18 +533,20 @@ Ports `contact.tsx` and keeps `/api/contact`.
 ### Task 10: Draft the four case studies from the project repos
 
 **Files:**
+
 - Modify: `src/lib/data/case-studies.ts`, `src/lib/data/data.spec.ts`
 
 **Sources (read only, nothing copied verbatim from internal docs):**
 
-| Case study | Read from |
-|---|---|
-| Harbor | `~/Repos/emmabyte/harbor/README.md` and `docs/` (especially `docs/technical/`) |
-| Emmabyte | `~/Repos/emmabyte/emmabyte-io/README.md` and its `src/routes` layout (`(public)`, `(client-portal)`, `admin`, `api`) |
-| Tarot Tutor | `~/Repos/personal/tarot-tutor/docs/` and `CLAUDE.md` |
-| Pulse | `~/Repos/emmabyte/pulse/README.md`, `CONTRIBUTING.md` and `docs/` |
+| Case study  | Read from                                                                                                            |
+| ----------- | -------------------------------------------------------------------------------------------------------------------- |
+| Harbor      | `~/Repos/emmabyte/harbor/README.md` and `docs/` (especially `docs/technical/`)                                       |
+| Emmabyte    | `~/Repos/emmabyte/emmabyte-io/README.md` and its `src/routes` layout (`(public)`, `(client-portal)`, `admin`, `api`) |
+| Tarot Tutor | `~/Repos/personal/tarot-tutor/docs/` and `CLAUDE.md`                                                                 |
+| Pulse       | `~/Repos/emmabyte/pulse/README.md`, `CONTRIBUTING.md` and `docs/`                                                    |
 
 **Interfaces:**
+
 - Consumes: the `CaseStudy` type (Task 2) and the page (Task 4). No interface changes.
 
 - [ ] **Step 1: Write the failing content tests** in `data.spec.ts`:
@@ -509,6 +571,7 @@ Ports `contact.tsx` and keeps `/api/contact`.
 ### Task 11: Final verification
 
 **Files:**
+
 - Create: `e2e/responsive.test.ts`
 - Modify: anything the checks below expose.
 
