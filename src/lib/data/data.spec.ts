@@ -10,10 +10,14 @@ import { stack } from './stack';
 // Pending todo() values are launch-guard markers, never published copy.
 const PENDING_PREFIX = 'TODO(emma):';
 
-function strings(value: unknown): string[] {
-	if (typeof value === 'string') return value.startsWith(PENDING_PREFIX) ? [] : [value];
-	if (Array.isArray(value)) return value.flatMap(strings);
-	if (value && typeof value === 'object') return Object.values(value).flatMap(strings);
+// Every string in a value; pending todo() values are skipped unless includePending is set.
+function strings(value: unknown, includePending = false): string[] {
+	const walk = (item: unknown) => strings(item, includePending);
+	if (typeof value === 'string') {
+		return includePending || !value.startsWith(PENDING_PREFIX) ? [value] : [];
+	}
+	if (Array.isArray(value)) return value.flatMap(walk);
+	if (value && typeof value === 'object') return Object.values(value).flatMap(walk);
 	return [];
 }
 
@@ -97,19 +101,11 @@ describe('content rules', () => {
 });
 
 describe('case studies', () => {
-	// Every string in a study, pending todo() values included.
-	function allStrings(value: unknown): string[] {
-		if (typeof value === 'string') return [value];
-		if (Array.isArray(value)) return value.flatMap(allStrings);
-		if (value && typeof value === 'object') return Object.values(value).flatMap(allStrings);
-		return [];
-	}
-
 	it('every case study is drafted', () => {
 		for (const study of caseStudies) {
-			const drafted = allStrings({ ...study, review: undefined });
+			const drafted = strings({ ...study, review: undefined }, true);
 			expect(
-				drafted.filter((text) => /TODO\(emma\)/.test(text)),
+				drafted.filter((text) => text.includes(PENDING_PREFIX)),
 				study.slug
 			).toEqual([]);
 		}
@@ -139,12 +135,17 @@ describe('case studies', () => {
 	it('case studies contain no hostnames, emails or internal paths', () => {
 		const leak =
 			/\b[\w-]+\.(internal|local|lan)\b|@[\w-]+\.\w+|\b(localhost|127\.0\.0\.1)\b|\/Users\//;
-		expect(allStrings(caseStudies).filter((text) => leak.test(text))).toEqual([]);
+		expect(strings(caseStudies, true).filter((text) => leak.test(text))).toEqual([]);
+	});
+
+	it('case studies never mention AI or the tools behind it', () => {
+		const tooling = /\b(AI|Claude|Copilot|Cursor|LLMs?|agents?)\b/i;
+		expect(strings(caseStudies, true).filter((text) => tooling.test(text))).toEqual([]);
 	});
 
 	it('case studies keep the review gate', () => {
 		for (const study of caseStudies) {
-			expect(study.review, study.slug).toMatch(/^TODO\(emma\): /);
+			expect(study.review?.startsWith(PENDING_PREFIX), study.slug).toBe(true);
 		}
 	});
 

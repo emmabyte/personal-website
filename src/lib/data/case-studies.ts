@@ -8,17 +8,17 @@ export const caseStudies: CaseStudy[] = [
 		slug: 'harbor',
 		status: 'In development — Release 1',
 		problem: [
-			'Day and employment programs for adults with intellectual and developmental disabilities in California are funded through regional centers. A provider takes attendance, writes daily notes, reports each incident to several agencies on different clocks, and produces billing files in the format the regional centers accept. Harbor puts that work in one multi-tenant app. Everything California-specific lives in configurable packs, so the same core can serve other states and other human services later.',
-			"The records are protected health information. Regional centers make providers sign business associate agreements that flow down to their software vendors, and California's Lanterman Act confidentiality rules are stricter than HIPAA. Harbor is built to be HIPAA-compliant, with Security Rule–grade controls for every tenant and no reduced tier.",
-			'Coaches work on personal phones and shared tablets, often on a weak connection, so losing work is not acceptable. With no revenue yet, the infrastructure had to start at the smallest size that is still compliant and grow with customers.'
+			"In California, regional centers fund day and employment services for adults who have intellectual and developmental disabilities. The providers running those programs track attendance, write progress notes, file each incident with several agencies against separate deadlines, and submit billing in the regional centers' format. Harbor brings that work into one multi-tenant app. Rules that apply only in California sit in configurable packs, leaving a core that other states and other kinds of human-services work can reuse later.",
+			"Those records count as protected health information. Regional centers require providers to sign business associate agreements whose terms pass down to any software vendor, and the state's Lanterman Act privacy rules go further than HIPAA does. Harbor is built to be HIPAA-compliant, and every tenant gets the full set of Security Rule safeguards; there is no lighter tier.",
+			'Coaches work on their own phones or on tablets shared between staff, often with poor signal, so nothing they enter can be lost. And because Harbor has no revenue yet, its hosting had to begin as small as compliance allows and grow as customers arrive.'
 		],
 		role: [
-			'Wrote the product definition and the technical design: architecture, infrastructure, and the security and compliance program. Then planned Release 1 as a series of milestones and am building it across the app, the database, infrastructure as code and CI/CD.'
+			'Wrote the product definition and the technical design, covering architecture, infrastructure, security and compliance. Then broke Release 1 into milestones and am building it: app, database, infrastructure as code and CI/CD.'
 		],
 		architecture: {
 			caption: 'Harbor request path, simplified',
 			description:
-				"Diagram of Harbor's architecture: staff and families reach a SvelteKit app behind a TLS proxy, where every request passes through a server-side policy and audit layer; the app and a background worker store data in PostgreSQL with row-level security and in file storage under per-tenant keys; Harbor never connects to funding-agency systems, so staff upload the billing files and submit the reports it prepares.",
+				"Diagram of Harbor's architecture: staff and families use a SvelteKit app behind a TLS proxy, and each request goes through a policy and audit layer on the server; the app and a background worker keep data in PostgreSQL under row-level security and keep files in object storage encrypted with each tenant's own keys; Harbor has no connection to funding-agency systems, so staff carry the billing files and reports it prepares across themselves.",
 			columns: [
 				{
 					label: 'People',
@@ -45,41 +45,43 @@ export const caseStudies: CaseStudy[] = [
 		},
 		decisions: [
 			{
-				decision: 'Start on AWS at the smallest compliant size, and scale up with revenue',
+				decision:
+					'Host on AWS from day one, at the smallest size that stays compliant, and grow with revenue',
 				rejected: ['Vercel + Supabase', 'Vercel for the app, AWS for data', 'Google Cloud'],
-				why: 'AWS signs a business associate agreement at no cost, and that one agreement covers the database, files, keys, email and SMS. Vercel and Supabase each needed a higher plan plus a paid HIPAA add-on before the first customer, and Supabase had no automatic failover or customer-managed keys. Google Cloud would still have needed AWS for email, which means two compliance boundaries. The pilot stage runs on one EC2 host with RDS, and the same container image moves to ECS on Fargate once customers pay, so nothing gets re-platformed.'
+				why: "One free AWS business associate agreement covers the database, file storage, keys, email and SMS. Vercel plus Supabase meant upgrading both plans and paying for HIPAA add-ons before a single customer signed, and Supabase offered neither automatic failover nor customer-managed keys. Keeping only the app on Vercel and the data on AWS roughly halved that bill, but still paid for Vercel's add-on, and Vercel's Pro plan doesn't promise that data stays in the US. Google Cloud would still have needed AWS for email, putting Harbor inside two compliance boundaries. For the pilot, one EC2 host and an RDS database are enough; once customers pay, the same container image moves to ECS on Fargate without a re-platform."
 			},
 			{
 				decision:
-					"One shared database, with tenant_id on every row and row-level security behind the app's own checks",
+					"Every tenant in one database and schema, with tenant_id on each row and Postgres row-level security backing up the app's checks",
 				rejected: ['A database per tenant', 'A schema per tenant'],
-				why: "It has the lowest cost and operational load at this stage. Every service call needs an access context, and the app connects as a database role that can't bypass row-level security, so a query that forgets its tenant filter still can't read another tenant's rows. A large tenant can still move to a dedicated database with the same schema later."
+				why: "At Harbor's size this costs the least and is the simplest to run. No service call happens without an access context, and the app's database role is barred from bypassing row-level security, so even a query missing its tenant filter returns nothing from another tenant. If a big provider ever wants its own database, its rows can move to a separate copy of the schema."
 			},
 			{
-				decision: 'All data access goes through the server',
-				rejected: ['The browser calling the database API directly'],
-				why: 'Every read and write passes through server-side services that decide who can see what, mask sensitive fields and write the audit record. That keeps every access audited and policy-checked in one place.'
+				decision:
+					'The browser never talks to the database; the server handles every read and write',
+				rejected: ['Direct database calls from the browser'],
+				why: 'Server-side services sit on every path to the data. They check whether the person may see a record, hide sensitive fields and log the access, so permissions and the audit trail are enforced in a single layer.'
 			}
 		],
 		testing: [
-			'Every pull request runs lint (including rules that stop routes from querying the database and keep state-specific terms out of the core), type checks, unit tests, and database tests that fail if any tenant table lacks row-level security. Every new tenant table ships with an isolation test.',
-			'Playwright runs the end-to-end flows against the built app on synthetic data at 320, 390 and 1280 px, with axe checks against WCAG 2.2 AA, a check that no page scrolls sideways, and touch-target sizes.',
-			'Billing files and reports have golden-file tests built from a sample month.',
-			'Every commit on main that passes CI deploys to staging, gets smoke-tested, and rolls back to the previous commit if the smoke tests fail. Development and staging hold synthetic data only.'
+			"Each pull request is linted, including custom rules that keep database queries out of routes and California terms out of the shared core. Type checks and unit tests follow, then database tests that fail the build when a tenant table is missing row-level security. No tenant table is added without a test proving tenants can't see each other's rows.",
+			'End-to-end Playwright tests run against the production build, with only synthetic records loaded, at three screen widths from 320 to 1280 px. At each width they run axe accessibility checks (WCAG 2.2 AA), fail on sideways scrolling, and measure touch targets.',
+			'Generated billing files and reports are compared with golden files for a sample month.',
+			'A green commit on main goes to staging automatically and is smoke-tested there; if those checks fail, staging returns to the last good commit. Only synthetic data exists outside production.'
 		],
 		outcome: [
-			'Release 1 is planned as nine milestones, each a vertical slice a design partner could click through on synthetic data in staging. The order follows risk: tenancy and privacy first, because they are expensive to retrofit, then billing, then notes, incidents and offline work.',
-			'The first two milestones, a walking skeleton and then sign-in with real tenants and roles, are done, and the later milestones are under way.',
-			'Infrastructure as code for the AWS organization and staging is applied, and staging deploys automatically from main. No real client data is loaded until the pilot agreements are in place.'
+			'Release 1 is split into nine milestones. Each ends with a working slice a prospective design partner can try in staging, on made-up data. The riskiest foundations come first, tenancy and privacy, since adding them late is costly; billing follows, then notes, incidents and offline use.',
+			'Milestones one and two are complete (a walking skeleton, then real sign-in with tenants and roles), and work on the later ones has started.',
+			"Harbor's AWS organization and its staging environment are described in infrastructure as code and applied, and staging redeploys on its own from main. Real client records stay out until the pilot contracts are signed."
 		],
 		compliance: [
-			'Tenant isolation in layers: an access context on every service call, Postgres row-level security on every tenant table, and per-tenant encryption keys for the most sensitive fields and all files.',
-			'An append-only audit trail of every write in an organization. Staff-console actions are also hash-chained by the database, with a tamper check.',
-			'Two-step sign-in with an authenticator app is required for managers, billing staff and directors, and session timeouts depend on role and device.',
-			"Harbor staff can open a client's records only in a support session, under the client's grant and an access request a second Harbor person approves for a set time. Break-glass access lasts an hour at most, needs a reason, and is reported to the client.",
-			'Client data never appears in URLs, logs, error messages, analytics events, email or SMS bodies, or job payloads. Jobs and audit events carry ids only.',
-			'Data stays in US regions, with backup copies in a second US region, and only production ever holds client data.',
-			'A subcontractor business associate agreement and a California addendum with every California customer, and a HIPAA Security Rule mapping that applies to every tenant whatever its legal status.'
+			"Isolation between tenants at several levels: no service call without an access context, row-level security enforced on each tenant's tables, and separate encryption keys per tenant for files and the most sensitive fields.",
+			"Every change inside an organization lands in an audit trail that can only be appended to. Actions in Harbor's own staff console are also linked into a hash chain in the database, and a tamper check runs over it.",
+			"Managers, billing staff and directors must sign in with a second step from an authenticator app, and how long a session can sit idle depends on the person's role and device.",
+			"Harbor's own team sees client records only during a support session the client has allowed, after a second team member approves the request, and only for a limited window. Emergency break-glass access is capped at one hour, requires a stated reason, and the client is told.",
+			'URLs, logs, error messages, analytics, email and SMS text, and background-job payloads never carry client data; jobs and audit entries hold only ids.',
+			'Everything is stored in US regions, backups are copied to another US region, and production is the only environment that ever holds real client data.',
+			"Each California customer signs Harbor's subcontractor business associate agreement plus a California addendum, and the HIPAA Security Rule mapping applies to every tenant regardless of its legal status."
 		],
 		review: todo('Harbor case study review')
 	},
@@ -130,32 +132,32 @@ export const caseStudies: CaseStudy[] = [
 		decisions: [
 			{
 				decision:
-					'Rotate the production database credential every week through one shared deploy workflow',
-				rejected: ['A longer-lived credential', 'A second copy of the deploy steps'],
-				why: 'The credential lasts 30 days, was minted only during a deploy, and is built into the app. When a quiet stretch went past 30 days without a deploy, it expired and every database query failed, sign-in included. A weekly scheduled run of the same deploy workflow keeps it fresh however often features ship, and reuses the health check and automatic rollback rather than duplicating them. A longer lifetime would have fixed the outage by giving up the short-lived credential.'
+					'Renew the production database credential weekly by rerunning the existing deploy',
+				rejected: ['A longer-lived credential', 'A separate rotation script copying the deploy'],
+				why: 'Each credential expires after 30 days, a new one was only issued as part of a deploy, and the build bakes it in. One month the gap between deploys ran longer than that, the credential lapsed, and every query failed, sign-in with them. A scheduled weekly run now issues a fresh one no matter how often features ship, and because it calls the normal deploy, it gets the same health check and automatic rollback for free. Extending the expiry would have hidden the problem by giving up the short-lived credential.'
 			},
 			{
 				decision:
-					'Retire an old production credential only after the new deployment is live and healthy',
+					'Delete superseded production credentials only once the new deployment has passed its health checks',
 				rejected: ['Purging old credentials as soon as a new one is minted'],
-				why: "The previous deployment keeps serving traffic on its credential until the new one is promoted, pages already open stay on it, and a rollback re-promotes it. Purging early takes the live site's database access with it. Each production deployment is tagged with the credential it uses, so the cleanup always keeps the one that was live when the deploy started."
+				why: 'Until the new deployment is promoted, the old one is still answering requests with its own credential; tabs that were already open keep using it, and a rollback brings it straight back. Deleting it early would cut the running site off from its database. Every production deployment records which credential it was built with, so the cleanup always spares whichever one is serving traffic when a deploy begins.'
 			},
 			{
 				decision:
-					'Rebuild the CRM around tiers and a Due view, so every live relationship has a next step',
+					'Rebuild the CRM around tiers and a Due view, so each active relationship always has something scheduled next',
 				rejected: [
 					'Treating every contact as a lead',
 					'A cap on active contacts',
 					'Reminder emails or crons'
 				],
-				why: "In the old CRM every contact was a lead, so nothing was urgent and nearly every scheduled follow-up was overdue. Contacts now move from an inbox to Active, Keep warm or Archived, the next action is the contact's earliest open task, and the Due view and navigation badges do the reminding. There's no cap, because capacity changes with the size and availability of the team."
+				why: "The old CRM labeled everyone a lead, so nothing felt urgent and almost all of its scheduled follow-ups had lapsed. New contacts land in an inbox and get sorted into Active, Keep warm or Archived. A contact's next action is just its earliest open task, and reminders come from the Due view and badge counts in the navigation. There's no limit on active contacts, since how many the team can handle shifts with its size and availability."
 			}
 		],
 		testing: [
 			'Each pull request gets its own short-lived PlanetScale branch: unit and end-to-end tests run in parallel against fresh databases, schema changes become a deploy request, and a Vercel preview is posted on the PR.',
 			'Tests use reCAPTCHA test keys and a test mode that skips real email sends while still running all validation and logic, so CI never spends API quota or reaches an inbox.',
 			"Playwright covers sign-in, onboarding, the contact API, support tickets, protected pages, and the admin's content, applications and CRM screens. Vitest covers the encryption module, the reCAPTCHA client and the validation schemas.",
-			'Production deploys run a health check and smoke checks, roll back automatically on failure, and open an incident task. An applied schema change can be reverted within 30 minutes.'
+			'Production deploys run a health check and smoke checks, roll back automatically on failure, and open an incident task. A schema change that has been applied stays reversible for half an hour.'
 		],
 		outcome: [
 			'Live, and deployed from main once the test workflow passes. The production database credential now rotates on every deploy and weekly on a schedule.',
@@ -167,9 +169,9 @@ export const caseStudies: CaseStudy[] = [
 		slug: 'tarot-tutor',
 		status: 'Live',
 		problem: [
-			"A study app for learning all 78 tarot cards, upright and reversed, until they can be read without a guidebook. The card meanings come from the owner's own handwritten flashcards and had to be preserved exactly.",
-			'It started as a single-file prototype that kept progress in the browser. The rebuild needed accounts so progress follows the reader across devices, a free tier, and a Pro subscription with a seven-day trial, without slowing the study loop: card flips and keyword reveals have to respond instantly.',
-			"Paid ads then needed a path for visitors arriving in Instagram's in-app browser, where Google sign-in is refused and an emailed link opens in a different browser."
+			'A study app that teaches all 78 tarot cards, each upright and reversed, to the point of reading them without looking anything up. Every meaning is taken word for word from handwritten study flashcards, and that text had to survive the rebuild unchanged.',
+			'It began as a single-file prototype that saved progress in the browser. Rebuilding it meant adding accounts so progress moves between devices, a free tier, and a Pro plan with a seven-day trial, while keeping the study loop instant: card flips and keyword reveals cannot wait on the network.',
+			"Paid ads added another constraint. Their visitors land inside Instagram's built-in browser, which blocks Google sign-in and hands email links off to a separate browser app."
 		],
 		role: [
 			'Sole developer: designed and built it end to end, from porting the study engine and the Supabase schema to Stripe billing, the lesson player and the marketing funnel.'
@@ -204,14 +206,14 @@ export const caseStudies: CaseStudy[] = [
 		},
 		decisions: [
 			{
-				decision: 'Run the seven-day trial on a timestamp the app owns',
+				decision: 'Keep the seven-day trial as an end date stored with the account',
 				rejected: ['A Stripe-native trial'],
-				why: "A Stripe trial would mean creating a Stripe customer and subscription for every sign-up, including readers who never pay, and either asking for a card up front or handling the trial's end behavior. A timestamp set at sign-up is simpler, needs no card, and is easy to adjust. The plan is resolved on the server on every request, because checking it in the browser would let an open tab keep Pro after the trial ended."
+				why: "With Stripe running the trial, every new account, even one that never pays, would need its own Stripe customer and subscription, plus either a card at sign-up or code for what happens when the trial lapses. An end date on the profile is less to build, asks for no card, and can be changed by hand. The server works out the reader's plan on each request; doing that in the browser would let a tab left open hold on to Pro past the end date."
 			},
 			{
-				decision: 'Apply level changes in a database function, computed from the stored row',
-				rejected: ['Upserting an absolute level sent by the client'],
-				why: "Two tabs answering the same card then compose instead of overwriting each other. A last-write-wins upsert would let a stale tab quietly lower a card's level."
+				decision: 'Work out level changes inside Postgres from the saved value',
+				rejected: ['Writing whatever level the client sends'],
+				why: 'The client only reports right, partly right or wrong, and a database function adjusts the level already on file. If a card is open in two tabs, both answers count. Had the client sent a finished level, an out-of-date tab could overwrite newer progress and drag the card back down.'
 			},
 			{
 				decision:
@@ -220,17 +222,17 @@ export const caseStudies: CaseStudy[] = [
 					'Requiring an account first, with a one-card demo',
 					'Google sign-in inside in-app browsers'
 				],
-				why: "A visitor who has finished a lesson already believes the product works; signing up only keeps what they made. Ad traffic arrives in Instagram's in-app browser, where Google refuses sign-in and an emailed link opens a different browser, so a typed code keeps the whole flow on one page. The held answers travel with the new account and the server re-grades them, so a tampered payload earns no more than honest play."
+				why: "Someone who completes a lesson has already seen the app work, so the account becomes a way to save that result rather than a gate in front of it. Inside Instagram's browser, Google won't allow sign-in and an email link escapes to another app; typing a short code avoids both and keeps the visitor on the result card. The lesson's answers carry over into the new account and are scored again on the server, so editing them in the browser can't earn more than playing fairly would."
 			}
 		],
 		testing: [
 			"Database tests run against a local Supabase stack with real signed-in users: a reader can't see or write another reader's rows, raise their own plan, extend their trial or forge a Stripe subscription, and the grants on every table, column and function must match a pinned list.",
-			'Security tests are proven by breaking the code the way they guard against, for example by making a policy too permissive, and they assert the specific row-level security refusal code rather than any error.',
+			'Each security test is checked by deliberately breaking the guard it protects, such as loosening a policy, and confirming it then fails. Assertions name the exact row-level security error code instead of accepting any failure.',
 			'Vitest covers the pure study modules: data integrity across all 78 cards, the review scheduler, exercise construction, every grading branch and each badge at its boundary.',
-			'Playwright walks the real flows: sign-up with email confirmation, a free lesson finished and saved by emailed code, the emailed link opened in a different browser still saving the lesson, and ad landings that keep their campaign through to sign-up.'
+			'Playwright follows the real journeys: signing up and confirming by email, finishing a free lesson and saving it with a code, saving that lesson through the email link from a second browser, and ad landing pages that carry their campaign tags all the way to sign-up.'
 		],
 		outcome: [
-			'Live. Since launch it has added guided lesson tracks, a public library of all 78 card meanings, a free lesson before sign-up, and campaign landing pages for ad tests.',
+			'Live. Since launch it has added guided lesson tracks, a public library covering all 78 meanings, a first lesson that needs no account, and landing pages for ad campaigns.',
 			'The whole Major Arcana is now free to practice, and Pro sells the rest of the practice: every track, suit pathway and lesson.'
 		],
 		review: todo('Tarot Tutor case study review')
@@ -239,7 +241,7 @@ export const caseStudies: CaseStudy[] = [
 		slug: 'pulse',
 		status: 'Open source (AGPL-3.0)',
 		problem: [
-			"Emmabyte had almost no visibility into email deliverability, application errors or events across its stack. The email provider's dashboard showed a high bounce rate, and nothing on the app side recorded which emails bounced, why, or what code sent them.",
+			"Emmabyte couldn't see much of what happened across its stack: whether email was delivered, where the app hit errors, or how an event in one service related to another. MailerSend reported a high bounce rate, yet the app logged nothing that could show which messages failed, the reason, or the code path that sent them.",
 			'Pulse pulls those streams into one place: MailerSend webhooks, Vercel log drains, and events the app sends through an API, including database events for PlanetScale, which has no webhooks of its own. It had to be self-hostable as a single Docker image, with search, filtering and alerting on top.'
 		],
 		role: [
@@ -285,17 +287,17 @@ export const caseStudies: CaseStudy[] = [
 					'A hybrid that forwards most logs to one',
 					'An admin page inside the main app'
 				],
-				why: "An external platform is purpose-built and queries faster at scale, but it adds a vendor dependency and cost, and the data would live outside our control. A separate service also keeps high-volume event data away from the production application's database."
+				why: "A hosted log platform would query large volumes faster and come with alerting, but it means another vendor to pay and depend on, and Emmabyte's events would sit on someone else's servers. Running Pulse separately also keeps a flood of log rows out of the main app's production database."
 			},
 			{
 				decision:
 					"Keep the open-source repo single-tenant, and put the hosted product's features in a private repo",
 				rejected: ['Multi-tenancy and billing in the open-source repo'],
-				why: 'A feature that only makes sense when several organizations exist, like organization management, billing, sign-up and usage metering, belongs to the hosted version. Anything a solo self-hoster would use, such as ingestion, the dashboard, alerting and API keys, stays open source. Organization routing and billing were moved out of the open-source repo to keep that line clean.'
+				why: 'Each feature is placed by who it serves. Organizations, billing, sign-up and usage metering only matter to the hosted service, so they live in the private repo; ingestion, the dashboard, alerting and API keys help anyone running their own copy, so they stay public. Organization routing and billing were later pulled out of the public repo to hold that boundary.'
 			}
 		],
 		testing: [
-			'CI runs type checks, Vitest unit tests (including webhook signature verification), and Playwright end-to-end tests with axe checks against WCAG 2.2 AA on public pages.',
+			'CI runs type checks, Vitest unit tests (including webhook signature verification), and Playwright end-to-end tests that run axe accessibility checks (WCAG 2.2 AA) on the public pages.',
 			'The built Docker image is tested end to end against both SQLite and PostgreSQL (health, sign-in and ingestion), and images are published only after those runs pass.',
 			'Published images are scanned for known vulnerabilities, and the job fails on fixable critical or high issues. The production image carries production dependencies only.'
 		],
