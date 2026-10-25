@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Hero from '$lib/components/hero/hero.svelte';
 	import Seo from '$lib/components/site/seo.svelte';
 	import { profile } from '$lib/data/profile';
 	import { personJsonLd } from '$lib/seo';
@@ -13,9 +14,7 @@
 
 <main>
 	<!-- Placeholder sections: Tasks 5-9 replace these one at a time. -->
-	<section id="top" aria-labelledby="top-title">
-		<h1 id="top-title">Emma Long</h1>
-	</section>
+	<Hero />
 	<section id="work" aria-labelledby="work-title">
 		<h2 id="work-title">Selected work</h2>
 	</section>
