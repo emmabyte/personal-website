@@ -35,7 +35,8 @@ test('reduced motion shows the first role without scrambling', async ({ page }) 
 	await page.goto('/');
 	const scramble = page.locator('[data-scramble]');
 	await expect(scramble).toHaveText('Full-Stack Engineer');
-	await page.waitForTimeout(1500);
+	// The first scramble would start at the 2600 ms interval, so wait past it.
+	await page.waitForTimeout(4000);
 	await expect(scramble).toHaveText('Full-Stack Engineer');
 });
 

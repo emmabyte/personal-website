@@ -13,7 +13,7 @@
 	/>
 	<div class="relative mx-auto max-w-6xl px-5 pt-16 pb-20 md:px-8 md:pt-24 md:pb-28">
 		<div class="relative grid items-center gap-12 lg:grid-cols-[1.25fr_1fr]">
-			<div class="flex min-w-0 flex-col gap-8">
+			<div class="flex flex-col gap-8">
 				<p
 					class="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-xs text-muted-foreground"
 				>

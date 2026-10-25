@@ -53,17 +53,15 @@
 		},
 		{
 			indent: 1,
-			tokens: [
-				{ text: 'values', tone: 'key' },
-				{ text: ': [' },
-				{ text: "'pipelines before features'", tone: 'str' },
-				{ text: ', ' },
-				{ text: "'modernize in phases'", tone: 'str' },
-				{ text: ', ' },
-				{ text: "'sustainable pace, quality code'", tone: 'str' },
-				{ text: ']' }
-			]
+			tokens: [{ text: 'values', tone: 'key' }, { text: ': [' }]
 		},
+		{ indent: 2, tokens: [{ text: "'pipelines before features'", tone: 'str' }, { text: ',' }] },
+		{ indent: 2, tokens: [{ text: "'modernize in phases'", tone: 'str' }, { text: ',' }] },
+		{
+			indent: 2,
+			tokens: [{ text: "'sustainable pace, quality code'", tone: 'str' }, { text: ',' }]
+		},
+		{ indent: 1, tokens: [{ text: '],' }] },
 		{ indent: 0, tokens: [{ text: '};' }] }
 	];
 
@@ -77,7 +75,7 @@
 
 <figure
 	aria-label="Code snippet summarizing my engineering focus"
-	class="conic-border min-w-0 overflow-hidden rounded-2xl border border-border bg-card/90 shadow-2xl shadow-foreground/10 backdrop-blur-md"
+	class="conic-border overflow-hidden rounded-2xl border border-border bg-card/90 shadow-2xl shadow-foreground/10 backdrop-blur-md"
 >
 	<figcaption
 		class="flex items-center gap-2 border-b border-border px-4 py-3 font-mono text-xs text-muted-foreground"
