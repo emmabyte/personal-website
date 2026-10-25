@@ -96,6 +96,82 @@ describe('content rules', () => {
 	});
 });
 
+describe('case studies', () => {
+	// Every string in a study, pending todo() values included.
+	function allStrings(value: unknown): string[] {
+		if (typeof value === 'string') return [value];
+		if (Array.isArray(value)) return value.flatMap(allStrings);
+		if (value && typeof value === 'object') return Object.values(value).flatMap(allStrings);
+		return [];
+	}
+
+	it('every case study is drafted', () => {
+		for (const study of caseStudies) {
+			const drafted = allStrings({ ...study, review: undefined });
+			expect(
+				drafted.filter((text) => /TODO\(emma\)/.test(text)),
+				study.slug
+			).toEqual([]);
+		}
+	});
+
+	it('every case study has the full shape', () => {
+		for (const study of caseStudies) {
+			expect(study.problem.length, study.slug).toBeGreaterThanOrEqual(2);
+			expect(study.role.length, study.slug).toBeGreaterThanOrEqual(1);
+			expect(study.architecture.columns.length, study.slug).toBeGreaterThanOrEqual(3);
+			expect(study.decisions.length, study.slug).toBeGreaterThanOrEqual(2);
+			for (const decision of study.decisions) {
+				expect(decision.rejected.length, decision.decision).toBeGreaterThanOrEqual(1);
+			}
+			expect(study.testing.length, study.slug).toBeGreaterThanOrEqual(2);
+			expect(study.outcome.length, study.slug).toBeGreaterThanOrEqual(1);
+		}
+	});
+
+	it('only harbor has compliance, and it has at least 4 controls', () => {
+		expect(caseStudies.filter((study) => study.compliance).map((study) => study.slug)).toEqual([
+			'harbor'
+		]);
+		expect(getCaseStudy('harbor')?.study.compliance?.length).toBeGreaterThanOrEqual(4);
+	});
+
+	it('case studies contain no hostnames, emails or internal paths', () => {
+		const leak =
+			/\b[\w-]+\.(internal|local|lan)\b|@[\w-]+\.\w+|\b(localhost|127\.0\.0\.1)\b|\/Users\//;
+		expect(allStrings(caseStudies).filter((text) => leak.test(text))).toEqual([]);
+	});
+
+	it('case studies keep the review gate', () => {
+		for (const study of caseStudies) {
+			expect(study.review, study.slug).toMatch(/^TODO\(emma\): /);
+		}
+	});
+
+	it('architecture diagrams fit the drawing: 3–4 columns, short labels, at most 4 short items', () => {
+		for (const study of caseStudies) {
+			const { columns } = study.architecture;
+			expect(columns.length, study.slug).toBeGreaterThanOrEqual(3);
+			expect(columns.length, study.slug).toBeLessThanOrEqual(4);
+			for (const column of columns) {
+				expect(column.label.length, column.label).toBeLessThanOrEqual(18);
+				expect(column.items.length, column.label).toBeGreaterThanOrEqual(1);
+				expect(column.items.length, column.label).toBeLessThanOrEqual(4);
+				for (const item of column.items) {
+					expect(item.length, item).toBeLessThanOrEqual(28);
+				}
+			}
+		}
+	});
+
+	it('status is one short line', () => {
+		for (const study of caseStudies) {
+			expect(study.status, study.slug).not.toMatch(/\n/);
+			expect(study.status.length, study.slug).toBeLessThanOrEqual(40);
+		}
+	});
+});
+
 describe('experience', () => {
 	const spacex = experience.jobs.find((job) => job.company === 'SpaceX');
 
