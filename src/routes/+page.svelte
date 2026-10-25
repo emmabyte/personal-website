@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ExperienceSection from '$lib/components/experience/experience-section.svelte';
 	import Hero from '$lib/components/hero/hero.svelte';
 	import Seo from '$lib/components/site/seo.svelte';
 	import { profile } from '$lib/data/profile';
@@ -21,9 +22,7 @@
 	<SelectedWork />
 	<HowIShip />
 	<StackSection />
-	<section id="experience" aria-labelledby="experience-title">
-		<h2 id="experience-title">Experience</h2>
-	</section>
+	<ExperienceSection />
 	<section id="contact" aria-labelledby="contact-title">
 		<h2 id="contact-title">Contact</h2>
 	</section>
