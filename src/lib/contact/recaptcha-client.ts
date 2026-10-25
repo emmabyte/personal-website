@@ -51,7 +51,20 @@ export async function getRecaptchaToken(siteKey: string, action = 'submit'): Pro
 	await loadRecaptcha(siteKey);
 	const grecaptcha = window.grecaptcha;
 	if (!grecaptcha) throw new Error('reCAPTCHA is unavailable');
-	return grecaptcha.execute(siteKey, { action });
+
+	// execute() makes its own request to Google, so bound it like the load.
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	const timeout = new Promise<never>((_, reject) => {
+		timer = setTimeout(
+			() => reject(new Error('Timed out getting a reCAPTCHA token')),
+			RECAPTCHA_TIMEOUT_MS
+		);
+	});
+	try {
+		return await Promise.race([grecaptcha.execute(siteKey, { action }), timeout]);
+	} finally {
+		clearTimeout(timer);
+	}
 }
 
 /** Test-only: forget the memoized loader. */

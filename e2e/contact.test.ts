@@ -96,8 +96,9 @@ test('server error keeps the typed values and shows the message', async ({ page 
 	await sendButton(page).click();
 
 	const status = page.locator('#contact').getByRole('status');
-	await expect(status).toContainText('Recaptcha verification failed');
-	await expect(status).toContainText('You can also email me at emmalong.dev@gmail.com.');
+	await expect(status).toHaveText(
+		'Recaptcha verification failed. You can also email me at emmalong.dev@gmail.com.'
+	);
 	await expect(page.locator('#contact form [name="name"]')).toHaveValue('Ada Lovelace');
 	await expect(sendButton(page)).toBeEnabled();
 });

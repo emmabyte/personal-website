@@ -101,4 +101,15 @@ describe('recaptcha client', () => {
 		await assertion;
 		expect(scripts()).toHaveLength(0);
 	});
+
+	it('getRecaptchaToken rejects when execute never resolves', async () => {
+		vi.useFakeTimers();
+		const pending = getRecaptchaToken('k');
+		window.grecaptcha = { ready: (cb: () => void) => cb(), execute: () => new Promise(() => {}) };
+		scripts()[0].onload?.(new Event('load'));
+
+		const assertion = expect(pending).rejects.toThrow('Timed out');
+		await vi.advanceTimersByTimeAsync(RECAPTCHA_TIMEOUT_MS);
+		await assertion;
+	});
 });

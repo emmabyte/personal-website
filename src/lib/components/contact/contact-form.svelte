@@ -29,6 +29,11 @@
 	const linkClass =
 		'rounded-sm underline underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
 
+	function withEmailFallback(message: string) {
+		const sentence = /[.!?]$/.test(message) ? message : `${message}.`;
+		return `${sentence} ${EMAIL_FALLBACK_TEXT}`;
+	}
+
 	function warmUpRecaptcha() {
 		// A failed warm-up is fine: submitting retries the load.
 		loadRecaptcha(PUBLIC_RECAPTCHA_SITE_KEY).catch(() => {});
@@ -71,7 +76,7 @@
 			} else {
 				status = {
 					tone: 'error',
-					text: data.message ? `${data.message} ${EMAIL_FALLBACK_TEXT}` : NETWORK_ERROR_TEXT
+					text: data.message ? withEmailFallback(data.message) : NETWORK_ERROR_TEXT
 				};
 			}
 		} catch {
