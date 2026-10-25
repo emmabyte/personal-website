@@ -1,1 +1,34 @@
-<main><h1>Emma Long</h1></main>
+<script lang="ts">
+	import Seo from '$lib/components/site/seo.svelte';
+	import { profile } from '$lib/data/profile';
+	import { personJsonLd } from '$lib/seo';
+</script>
+
+<Seo
+	title="Emma Long — Full-Stack Engineer"
+	description={profile.intro}
+	path="/"
+	jsonLd={personJsonLd()}
+/>
+
+<main>
+	<!-- Placeholder sections: Tasks 5-9 replace these one at a time. -->
+	<section id="top" aria-labelledby="top-title">
+		<h1 id="top-title">Emma Long</h1>
+	</section>
+	<section id="work" aria-labelledby="work-title">
+		<h2 id="work-title">Selected work</h2>
+	</section>
+	<section id="process" aria-labelledby="process-title">
+		<h2 id="process-title">How I ship</h2>
+	</section>
+	<section id="stack" aria-labelledby="stack-title">
+		<h2 id="stack-title">Tools of the trade</h2>
+	</section>
+	<section id="experience" aria-labelledby="experience-title">
+		<h2 id="experience-title">Experience</h2>
+	</section>
+	<section id="contact" aria-labelledby="contact-title">
+		<h2 id="contact-title">Contact</h2>
+	</section>
+</main>
