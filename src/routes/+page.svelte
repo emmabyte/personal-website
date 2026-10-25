@@ -2,6 +2,8 @@
 	import Hero from '$lib/components/hero/hero.svelte';
 	import Seo from '$lib/components/site/seo.svelte';
 	import { profile } from '$lib/data/profile';
+	import HowIShip from '$lib/components/process/how-i-ship.svelte';
+	import StackSection from '$lib/components/stack/stack-section.svelte';
 	import SelectedWork from '$lib/components/work/selected-work.svelte';
 	import { personJsonLd } from '$lib/seo';
 </script>
@@ -17,12 +19,8 @@
 	<!-- Placeholder sections: Tasks 5-9 replace these one at a time. -->
 	<Hero />
 	<SelectedWork />
-	<section id="process" aria-labelledby="process-title">
-		<h2 id="process-title">How I ship</h2>
-	</section>
-	<section id="stack" aria-labelledby="stack-title">
-		<h2 id="stack-title">Tools of the trade</h2>
-	</section>
+	<HowIShip />
+	<StackSection />
 	<section id="experience" aria-labelledby="experience-title">
 		<h2 id="experience-title">Experience</h2>
 	</section>
