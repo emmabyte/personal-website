@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 export const contactFormSchema = z.object({
-	name: z.string().min(2),
-	email: z.string().email(),
-	organization: z.string().min(2),
-	position: z.string().min(2),
-	message: z.string().min(10),
+	name: z.string().min(2, 'Please enter your name'),
+	email: z.string().email('Please enter a valid email'),
+	organization: z.string().min(2, 'Please enter your organization'),
+	position: z.string().min(2, 'Please enter your position'),
+	message: z.string().min(10, 'Please write at least 10 characters'),
 	gRecaptchaResponse: z.string().min(1)
 });
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ContactSection from '$lib/components/contact/contact-section.svelte';
 	import ExperienceSection from '$lib/components/experience/experience-section.svelte';
 	import Hero from '$lib/components/hero/hero.svelte';
 	import Seo from '$lib/components/site/seo.svelte';
@@ -17,13 +18,10 @@
 />
 
 <main>
-	<!-- Placeholder sections: Tasks 5-9 replace these one at a time. -->
 	<Hero />
 	<SelectedWork />
 	<HowIShip />
 	<StackSection />
 	<ExperienceSection />
-	<section id="contact" aria-labelledby="contact-title">
-		<h2 id="contact-title">Contact</h2>
-	</section>
+	<ContactSection />
 </main>
