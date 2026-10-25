@@ -28,6 +28,7 @@ export const caseStudies: CaseStudy[] = [
 		],
 		testing: [todo('Harbor case study: testing')],
 		outcome: [todo('Harbor case study: outcome')],
+		compliance: [todo('Harbor case study: compliance')],
 		review: todo('Harbor case study review')
 	},
 	{
