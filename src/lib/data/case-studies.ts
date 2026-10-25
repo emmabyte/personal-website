@@ -134,7 +134,7 @@ export const caseStudies: CaseStudy[] = [
 				decision:
 					'Renew the production database credential weekly by rerunning the existing deploy',
 				rejected: ['A longer-lived credential', 'A separate rotation script copying the deploy'],
-				why: 'Each credential expires after 30 days, a new one was only issued as part of a deploy, and the build bakes it in. One month the gap between deploys ran longer than that, the credential lapsed, and every query failed, sign-in with them. A scheduled weekly run now issues a fresh one no matter how often features ship, and because it calls the normal deploy, it gets the same health check and automatic rollback for free. Extending the expiry would have hidden the problem by giving up the short-lived credential.'
+				why: 'Each credential expires after 30 days, a new one was only issued as part of a deploy, and the build bakes it in. One month the gap between deploys ran longer than that, the credential lapsed, and every query failed, sign-in included. A scheduled weekly run now issues a fresh one no matter how often features ship, and because it calls the normal deploy, it gets the same health check and automatic rollback for free. Extending the expiry would have hidden the problem by giving up the short-lived credential.'
 			},
 			{
 				decision:

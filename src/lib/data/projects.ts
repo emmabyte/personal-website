@@ -11,7 +11,7 @@ export const featuredProjects: FeaturedProject[] = [
 		role: todo('Harbor role'),
 		impact: todo('Harbor impact'),
 		tags: ['SvelteKit', 'TypeScript', 'PostgreSQL', 'Docker'],
-		liveUrl: 'https://harborcm.io'
+		liveUrl: 'https://harborcasemanagement.com'
 	},
 	{
 		slug: 'emmabyte',
@@ -32,7 +32,7 @@ export const featuredProjects: FeaturedProject[] = [
 		role: todo('Tarot Tutor role'),
 		impact: todo('Tarot Tutor impact'),
 		tags: ['SvelteKit', 'Supabase', 'Stripe', 'PostHog'],
-		liveUrl: 'https://tarot-tutor.vercel.app'
+		liveUrl: 'https://tarottutor.io'
 	},
 	{
 		slug: 'pulse',

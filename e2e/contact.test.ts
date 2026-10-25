@@ -26,6 +26,13 @@ async function fillForm(page: Page) {
 	await form.getByLabel('Message', { exact: true }).fill('Would love to talk about a role.');
 }
 
+// SvelteKit renders #svelte-announcer once the app has hydrated. Clicking before
+// that submits the form natively, so every test waits for it before interacting.
+async function openHome(page: Page) {
+	await page.goto('/');
+	await page.locator('#svelte-announcer').waitFor({ state: 'attached' });
+}
+
 const sendButton = (page: Page) => page.getByRole('button', { name: 'Send message' });
 
 test('empty submit shows field errors and sends nothing', async ({ page }) => {
@@ -33,7 +40,7 @@ test('empty submit shows field errors and sends nothing', async ({ page }) => {
 	page.on('request', (request) => {
 		if (request.url().includes('/api/contact')) posts.push(request.url());
 	});
-	await page.goto('/');
+	await openHome(page);
 	await sendButton(page).click();
 
 	const errors = page.locator('#contact form p[id$="-error"]');
@@ -50,7 +57,7 @@ test('empty submit shows field errors and sends nothing', async ({ page }) => {
 });
 
 test('editing a field clears its error', async ({ page }) => {
-	await page.goto('/');
+	await openHome(page);
 	await sendButton(page).click();
 	const name = page.locator('#contact form [name="name"]');
 	await expect(name).toHaveAttribute('aria-invalid', 'true');
@@ -70,7 +77,7 @@ test('successful submit posts the token and clears the form', async ({ page }) =
 			body: JSON.stringify({ success: true, message: 'Message sent successfully' })
 		});
 	});
-	await page.goto('/');
+	await openHome(page);
 	await fillForm(page);
 	await sendButton(page).click();
 
@@ -91,7 +98,7 @@ test('server error keeps the typed values and shows the message', async ({ page 
 			body: JSON.stringify({ success: false, message: 'Recaptcha verification failed' })
 		})
 	);
-	await page.goto('/');
+	await openHome(page);
 	await fillForm(page);
 	await sendButton(page).click();
 
@@ -105,7 +112,7 @@ test('server error keeps the typed values and shows the message', async ({ page 
 
 test('network failure keeps the typed values and points to email', async ({ page }) => {
 	await page.route('**/api/contact', (route) => route.abort());
-	await page.goto('/');
+	await openHome(page);
 	await fillForm(page);
 	await sendButton(page).click();
 
@@ -127,7 +134,7 @@ test('a reCAPTCHA that never becomes ready falls back to email and re-enables th
 			execute: async () => 'x'
 		};
 	});
-	await page.goto('/');
+	await openHome(page);
 	await fillForm(page);
 	await sendButton(page).click();
 	await expect(sendButton(page)).toBeDisabled();
@@ -149,7 +156,7 @@ test('double submit sends one request', async ({ page }) => {
 			body: JSON.stringify({ success: true, message: 'Message sent successfully' })
 		});
 	});
-	await page.goto('/');
+	await openHome(page);
 	await fillForm(page);
 	await sendButton(page).dblclick();
 
@@ -162,13 +169,13 @@ test('double submit sends one request', async ({ page }) => {
 });
 
 test('copy email shows Copied', async ({ page }) => {
-	await page.goto('/');
+	await openHome(page);
 	await page.locator('#contact').getByRole('button', { name: 'Copy email' }).click();
 	await expect(page.locator('#contact').getByRole('button', { name: 'Copied' })).toBeVisible();
 });
 
 test('recaptcha attribution is visible', async ({ page }) => {
-	await page.goto('/');
+	await openHome(page);
 	const form = page.locator('#contact form');
 	await expect(form).toContainText('protected by reCAPTCHA');
 	await expect(form.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute(
@@ -182,7 +189,7 @@ test('recaptcha attribution is visible', async ({ page }) => {
 });
 
 test('inputs and submit show the solid primary focus outline', async ({ page }) => {
-	await page.goto('/');
+	await openHome(page);
 	await page.keyboard.press('Tab'); // enter keyboard modality so :focus-visible applies
 	for (const target of [
 		page.locator('#contact form [name="name"]'),
@@ -200,7 +207,7 @@ test('recaptcha script is not requested on initial load', async ({ page }) => {
 	page.on('request', (request) => {
 		if (request.url().includes('recaptcha/api.js')) scriptRequests.push(request.url());
 	});
-	await page.goto('/');
+	await openHome(page);
 	await page.waitForLoadState('networkidle');
 	expect(scriptRequests).toHaveLength(0);
 
