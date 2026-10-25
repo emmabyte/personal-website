@@ -1,9 +1,13 @@
+export const RECAPTCHA_TIMEOUT_MS = 12_000;
+
 let loader: Promise<void> | undefined;
 
 /**
  * Injects the reCAPTCHA v3 script once and resolves when `grecaptcha` is ready.
- * The promise is memoized; if the script fails to load it is cleared so a later
- * call can retry. The script is always injected on the first call, even if
+ * The promise is memoized; if the script fails to load, or neither load nor
+ * `ready` completes within RECAPTCHA_TIMEOUT_MS (a blocked second-stage bundle
+ * never fires onerror), the tag is removed and the memo cleared so a later call
+ * can retry. The script is always injected on the first call, even if
  * `window.grecaptcha` already exists.
  */
 export function loadRecaptcha(siteKey: string): Promise<void> {
@@ -11,21 +15,28 @@ export function loadRecaptcha(siteKey: string): Promise<void> {
 
 	const attempt = new Promise<void>((resolve, reject) => {
 		const script = document.createElement('script');
+
+		const fail = (message: string) => {
+			clearTimeout(timer);
+			script.remove();
+			reject(new Error(message));
+		};
+
+		const timer = setTimeout(() => fail('Timed out loading reCAPTCHA'), RECAPTCHA_TIMEOUT_MS);
 		script.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`;
 		script.async = true;
 		script.onload = () => {
 			const grecaptcha = window.grecaptcha;
 			if (!grecaptcha) {
-				script.remove();
-				reject(new Error('reCAPTCHA loaded but grecaptcha is unavailable'));
+				fail('reCAPTCHA loaded but grecaptcha is unavailable');
 				return;
 			}
-			grecaptcha.ready(() => resolve());
+			grecaptcha.ready(() => {
+				clearTimeout(timer);
+				resolve();
+			});
 		};
-		script.onerror = () => {
-			script.remove();
-			reject(new Error('Failed to load reCAPTCHA'));
-		};
+		script.onerror = () => fail('Failed to load reCAPTCHA');
 		document.head.appendChild(script);
 	});
 

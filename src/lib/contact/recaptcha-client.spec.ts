@@ -1,6 +1,11 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getRecaptchaToken, loadRecaptcha, resetRecaptchaLoader } from './recaptcha-client';
+import {
+	RECAPTCHA_TIMEOUT_MS,
+	getRecaptchaToken,
+	loadRecaptcha,
+	resetRecaptchaLoader
+} from './recaptcha-client';
 
 const SRC = 'https://www.google.com/recaptcha/api.js?render=k';
 
@@ -21,6 +26,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+	vi.useRealTimers();
 	resetRecaptchaLoader();
 });
 
@@ -67,5 +73,32 @@ describe('recaptcha client', () => {
 		stubGrecaptcha();
 		scripts()[0].onload?.(new Event('load'));
 		await expect(retry).resolves.toBeUndefined();
+	});
+
+	it('loadRecaptcha rejects when ready never calls back, and a later call re-injects the script', async () => {
+		vi.useFakeTimers();
+		const stalled = loadRecaptcha('k');
+		window.grecaptcha = { ready: () => {}, execute: vi.fn(async () => 'tok') };
+		scripts()[0].onload?.(new Event('load'));
+
+		const assertion = expect(stalled).rejects.toThrow('Timed out');
+		await vi.advanceTimersByTimeAsync(RECAPTCHA_TIMEOUT_MS);
+		await assertion;
+		expect(scripts()).toHaveLength(0);
+
+		const retry = loadRecaptcha('k');
+		expect(scripts()).toHaveLength(1);
+		stubGrecaptcha();
+		scripts()[0].onload?.(new Event('load'));
+		await expect(retry).resolves.toBeUndefined();
+	});
+
+	it('loadRecaptcha rejects when the script request stalls without onerror', async () => {
+		vi.useFakeTimers();
+		const stalled = loadRecaptcha('k');
+		const assertion = expect(stalled).rejects.toThrow('Timed out');
+		await vi.advanceTimersByTimeAsync(RECAPTCHA_TIMEOUT_MS);
+		await assertion;
+		expect(scripts()).toHaveLength(0);
 	});
 });

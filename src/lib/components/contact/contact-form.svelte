@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { PUBLIC_RECAPTCHA_SITE_KEY } from '$env/static/public';
 	import { getRecaptchaToken, loadRecaptcha } from '$lib/contact/recaptcha-client';
+	import { profile } from '$lib/data/profile';
 	import { validateContact, type ContactFields } from '$lib/contact/validate';
 	import type { ContactPostResponse } from '$lib/types/api/contact';
 	import type { FullAutoFill } from 'svelte/elements';
@@ -15,6 +16,8 @@
 		'message'
 	];
 	const SUCCESS_TEXT = 'Thanks — your message is on its way.';
+	const SUBMIT_TIMEOUT_MS = 20_000;
+	const EMAIL_FALLBACK_TEXT = `You can also email me at ${profile.email}.`;
 	const NETWORK_ERROR_TEXT = 'Something went wrong sending your message. Please email me instead.';
 
 	let pending = $state(false);
@@ -56,13 +59,20 @@
 			const token = await getRecaptchaToken(PUBLIC_RECAPTCHA_SITE_KEY);
 			const body = new FormData(form);
 			body.append('gRecaptchaResponse', token);
-			const response = await fetch('/api/contact', { method: 'POST', body });
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				body,
+				signal: AbortSignal.timeout(SUBMIT_TIMEOUT_MS)
+			});
 			const data: ContactPostResponse = await response.json();
 			if (response.ok && data.success) {
 				form.reset();
 				status = { tone: 'success', text: SUCCESS_TEXT };
 			} else {
-				status = { tone: 'error', text: data.message || NETWORK_ERROR_TEXT };
+				status = {
+					tone: 'error',
+					text: data.message ? `${data.message} ${EMAIL_FALLBACK_TEXT}` : NETWORK_ERROR_TEXT
+				};
 			}
 		} catch {
 			status = { tone: 'error', text: NETWORK_ERROR_TEXT };

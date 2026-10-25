@@ -95,9 +95,9 @@ test('server error keeps the typed values and shows the message', async ({ page 
 	await fillForm(page);
 	await sendButton(page).click();
 
-	await expect(page.locator('#contact').getByRole('status')).toContainText(
-		'Recaptcha verification failed'
-	);
+	const status = page.locator('#contact').getByRole('status');
+	await expect(status).toContainText('Recaptcha verification failed');
+	await expect(status).toContainText('You can also email me at emmalong.dev@gmail.com.');
 	await expect(page.locator('#contact form [name="name"]')).toHaveValue('Ada Lovelace');
 	await expect(sendButton(page)).toBeEnabled();
 });
@@ -114,6 +114,28 @@ test('network failure keeps the typed values and points to email', async ({ page
 	await expect(page.locator('#contact form [name="message"]')).toHaveValue(
 		'Would love to talk about a role.'
 	);
+});
+
+test('a reCAPTCHA that never becomes ready falls back to email and re-enables the button', async ({
+	page
+}) => {
+	await page.clock.install();
+	await page.addInitScript(() => {
+		(window as unknown as Record<string, unknown>).grecaptcha = {
+			ready: () => {},
+			execute: async () => 'x'
+		};
+	});
+	await page.goto('/');
+	await fillForm(page);
+	await sendButton(page).click();
+	await expect(sendButton(page)).toBeDisabled();
+
+	await page.clock.runFor(13_000);
+	await expect(page.locator('#contact').getByRole('status')).toContainText(
+		'Please email me instead'
+	);
+	await expect(sendButton(page)).toBeEnabled();
 });
 
 test('double submit sends one request', async ({ page }) => {

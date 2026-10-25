@@ -32,7 +32,7 @@
 	class="mx-auto max-w-6xl px-5 pb-20 md:px-8 md:pb-28"
 >
 	<div
-		class="grid gap-12 rounded-3xl border border-border bg-card p-8 md:grid-cols-2 md:gap-14 md:p-14"
+		class="grid gap-12 rounded-3xl border border-border bg-card p-8 md:p-14 lg:grid-cols-2 lg:gap-14"
 	>
 		<ContactLinks
 			index="05"
