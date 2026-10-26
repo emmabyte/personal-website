@@ -7,7 +7,7 @@ export const profile: Profile = {
 	wordmark: 'emma.long',
 	email: 'emmalong.dev@gmail.com',
 	location: 'Los Angeles Metropolitan Area',
-	availability: todo('badge text — recommended "Taking on freelance projects"'),
+	availability: 'Taking on freelance projects',
 	intro:
 		"I build reliable web products end to end — from CI/CD pipelines and edge APIs to interfaces people enjoy using. Right now I'm the sole engineer modernizing a decade-old platform at Haven Ministries.",
 	metaDescription:
@@ -25,6 +25,6 @@ export const profile: Profile = {
 
 export const stats: Stat[] = [
 	{ value: '2016', label: 'First production work; full-time engineer since 2023' },
-	{ value: '40s → 90s', label: "Page-speed scores after modernizing Haven's platform" },
+	{ value: '40s → 90s', label: "Page-speed scores after modernizing a client's platform" },
 	{ value: '10+ → ~0', label: 'Monthly downtime incidents after the migration' }
 ];

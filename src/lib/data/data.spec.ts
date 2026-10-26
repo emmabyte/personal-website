@@ -82,6 +82,15 @@ describe('projects', () => {
 });
 
 describe('profile', () => {
+	it('badge says Taking on freelance projects', () => {
+		expect(profile.availability).toBe('Taking on freelance projects');
+	});
+
+	it('stats never name a client', () => {
+		for (const stat of stats) expect(stat.label).not.toMatch(/Haven/);
+		expect(stats[1].label).toBe("Page-speed scores after modernizing a client's platform");
+	});
+
 	it('has a meta description that fits a search snippet', () => {
 		expect(profile.metaDescription.length).toBeGreaterThan(0);
 		expect(profile.metaDescription.length).toBeLessThanOrEqual(160);
