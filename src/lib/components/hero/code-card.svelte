@@ -85,11 +85,14 @@
 		<span aria-hidden="true" class="size-2.5 rounded-full bg-muted-foreground/30"></span>
 		<span class="ml-2">about.ts</span>
 	</figcaption>
-	<pre class="overflow-x-auto p-5 font-mono text-[13px] leading-6"><code
+	<!-- Long lines wrap under their own indent instead of scrolling sideways on phones. -->
+	<pre class="p-5 font-mono text-[13px] leading-6"><code
 			>{#each lines as line, i (i)}<div class="flex"><span
 						aria-hidden="true"
 						class="w-8 shrink-0 text-muted-foreground/40 select-none">{i + 1}</span
-					><span style:padding-left="{line.indent * 1.25}rem"
+					><span
+						class="min-w-0 flex-1 break-words whitespace-pre-wrap"
+						style:padding-left="{line.indent * 1.25}rem"
 						>{#each line.tokens as token, j (j)}<span
 								class={token.tone ? toneClass[token.tone] : 'text-muted-foreground'}
 								>{token.text}</span
