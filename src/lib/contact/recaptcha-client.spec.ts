@@ -75,7 +75,7 @@ describe('recaptcha client', () => {
 		await expect(retry).resolves.toBeUndefined();
 	});
 
-	it('loadRecaptcha rejects when ready never calls back, and a later call re-injects the script', async () => {
+	it('loadRecaptcha rejects when ready never calls back, and a retry reuses the loaded script', async () => {
 		vi.useFakeTimers();
 		const stalled = loadRecaptcha('k');
 		window.grecaptcha = { ready: () => {}, execute: vi.fn(async () => 'tok') };
@@ -84,13 +84,29 @@ describe('recaptcha client', () => {
 		const assertion = expect(stalled).rejects.toThrow('Timed out');
 		await vi.advanceTimersByTimeAsync(RECAPTCHA_TIMEOUT_MS);
 		await assertion;
+
+		// api.js already ran and left window.grecaptcha behind; loading it again
+		// on top of that is undefined behaviour, so the retry waits on ready instead.
+		stubGrecaptcha();
+		const retry = loadRecaptcha('k');
 		expect(scripts()).toHaveLength(0);
+		await expect(retry).resolves.toBeUndefined();
+	});
+
+	it('a retry that reuses the loaded script is still bounded by the timeout', async () => {
+		vi.useFakeTimers();
+		const stalled = loadRecaptcha('k');
+		window.grecaptcha = { ready: () => {}, execute: vi.fn(async () => 'tok') };
+		scripts()[0].onload?.(new Event('load'));
+		const first = expect(stalled).rejects.toThrow('Timed out');
+		await vi.advanceTimersByTimeAsync(RECAPTCHA_TIMEOUT_MS);
+		await first;
 
 		const retry = loadRecaptcha('k');
-		expect(scripts()).toHaveLength(1);
-		stubGrecaptcha();
-		scripts()[0].onload?.(new Event('load'));
-		await expect(retry).resolves.toBeUndefined();
+		const second = expect(retry).rejects.toThrow('Timed out');
+		await vi.advanceTimersByTimeAsync(RECAPTCHA_TIMEOUT_MS);
+		await second;
+		expect(scripts()).toHaveLength(0);
 	});
 
 	it('loadRecaptcha rejects when the script request stalls without onerror', async () => {
