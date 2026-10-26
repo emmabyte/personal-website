@@ -18,6 +18,32 @@ test('the role line has no space before the closing dot', async ({ page }) => {
 	expect(roleLine).not.toMatch(/\s\./);
 });
 
+for (const width of [360, 768]) {
+	test(`the page below the role line stays still while it scrambles at ${width}px`, async ({
+		page
+	}) => {
+		await page.setViewportSize({ width, height: 800 });
+		await page.goto('/');
+		await page.locator('#svelte-announcer').waitFor({ state: 'attached' });
+		const tops = await page.evaluate(
+			() =>
+				new Promise<number[]>((resolve) => {
+					const intro = document.querySelector('#top-title')!.nextElementSibling!;
+					const seen = new Set<number>();
+					const started = performance.now();
+					const timer = setInterval(() => {
+						seen.add(Math.round(intro.getBoundingClientRect().top));
+						if (performance.now() - started > 6500) {
+							clearInterval(timer);
+							resolve([...seen]);
+						}
+					}, 40);
+				})
+		);
+		expect(tops).toHaveLength(1);
+	});
+}
+
 test('hero buttons point at work and contact', async ({ page }) => {
 	await page.goto('/');
 	const hero = page.locator('#top');

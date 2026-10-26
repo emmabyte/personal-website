@@ -16,6 +16,7 @@
 			<div class="flex flex-col gap-8">
 				{#if profile.availability}
 					<p
+						data-dot-clear
 						class="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-xs text-muted-foreground"
 					>
 						<span class="relative flex size-2">
@@ -30,6 +31,7 @@
 
 				<div class="flex flex-col gap-5">
 					<h1
+						data-dot-clear
 						id="top-title"
 						class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl md:text-7xl"
 					>
@@ -38,24 +40,29 @@
 						>
 							{profile.name}
 						</span>
-						<span class="block min-h-[1.1em] text-muted-foreground">
+						<span class="block text-muted-foreground">
 							<span class="sr-only">{profile.role}</span>
-							<ScrambleText words={profile.roles} /><span
-								aria-hidden="true"
-								class="text-primary-text">.</span
-							>
+							<ScrambleText words={profile.roles}>
+								{#snippet suffix()}<span class="text-primary-text">.</span>{/snippet}
+							</ScrambleText>
 						</span>
 					</h1>
-					<p class="max-w-xl text-lg leading-relaxed text-pretty text-muted-foreground">
+					<p
+						data-dot-clear
+						class="max-w-xl text-lg leading-relaxed text-pretty text-muted-foreground"
+					>
 						{profile.intro}
 					</p>
-					<p class="flex items-center gap-2 font-mono text-sm text-muted-foreground">
+					<p
+						data-dot-clear
+						class="flex w-fit items-center gap-2 font-mono text-sm text-muted-foreground"
+					>
 						<MapPin class="size-4" aria-hidden="true" />
 						{profile.location}
 					</p>
 				</div>
 
-				<div class="flex flex-wrap items-center gap-3">
+				<div data-dot-clear class="flex w-fit flex-wrap items-center gap-3">
 					<a
 						href="#work"
 						class="inline-flex h-11 items-center gap-2 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
