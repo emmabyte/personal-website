@@ -96,7 +96,7 @@
 				/>
 			{/each}
 
-			{#each layout.placed as column (column.x)}
+			{#each layout.placed as column, col (col)}
 				<foreignObject x={column.x} y={16} width={layout.boxW} height="32">
 					<div class="truncate font-mono text-[12px] leading-8 text-primary-text">
 						{column.label}
@@ -128,7 +128,7 @@
 		aria-label={description}
 		class="flex flex-col bg-[linear-gradient(color-mix(in_oklab,var(--border)_60%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--border)_60%,transparent)_1px,transparent_1px)] bg-[size:25px_25px] px-5 py-6 md:hidden"
 	>
-		{#each columns as column, i (column.label)}
+		{#each columns as column, i (i)}
 			{#if i > 0}
 				<svg
 					aria-hidden="true"
@@ -150,7 +150,7 @@
 			<div class="flex flex-col gap-2">
 				<p class="font-mono text-xs text-primary-text">{column.label}</p>
 				<ul class="grid gap-2 sm:grid-cols-2">
-					{#each column.items as item (item)}
+					{#each column.items as item, row (row)}
 						<li
 							class="rounded-xl border border-border bg-card px-3 py-2.5 font-mono text-xs text-foreground"
 						>
