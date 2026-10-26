@@ -1,9 +1,14 @@
 <script lang="ts">
+	import { clearance, type ClearRect } from './dot-clearance';
+
 	const GAP = 24;
 	const POINTER_RADIUS = 170;
 	const RIPPLE_DURATION = 1800;
 	const RIPPLE_SPEED = 0.38;
 	const ACCENT = '249, 88, 108';
+	// Elements inside the host marked with this attribute push the dots away.
+	const CLEAR_SELECTOR = '[data-dot-clear]';
+	const CLEAR_PADDING = 6;
 
 	type Ripple = { x: number; y: number; start: number };
 
@@ -24,8 +29,24 @@
 		let height = 0;
 		let frame = 0;
 		let inView = true;
+		let cleared: ClearRect[] = [];
+		const clearTargets = [...host.querySelectorAll<HTMLElement>(CLEAR_SELECTOR)];
+
+		const measureCleared = () => {
+			const origin = target.getBoundingClientRect();
+			cleared = clearTargets.map((el) => {
+				const r = el.getBoundingClientRect();
+				return {
+					left: r.left - origin.left - CLEAR_PADDING,
+					top: r.top - origin.top - CLEAR_PADDING,
+					right: r.right - origin.left + CLEAR_PADDING,
+					bottom: r.bottom - origin.top + CLEAR_PADDING
+				};
+			});
+		};
 
 		const resize = () => {
+			measureCleared();
 			const rect = target.getBoundingClientRect();
 			const dpr = Math.min(window.devicePixelRatio || 1, 2);
 			width = rect.width;
@@ -54,6 +75,8 @@
 				for (let c = 0; c < cols; c++) {
 					let x = offsetX + c * GAP;
 					let y = offsetY + r * GAP;
+					const visibility = clearance(x, y, cleared);
+					if (visibility === 0) continue;
 					const wave = reduceMotion
 						? 0.4
 						: Math.sin(c * 0.32 + r * 0.21 + time * 0.0011) * 0.5 + 0.5;
@@ -78,11 +101,12 @@
 						y += (dy / dist) * push;
 					}
 
+					glow *= visibility;
 					const size = 1.1 + wave * 0.5 + glow * 2.4;
 					ctx.fillStyle =
 						glow > 0.03
-							? `rgba(${ACCENT}, ${0.3 + glow * 0.7})`
-							: `rgba(23, 24, 28, ${0.08 + wave * 0.12})`;
+							? `rgba(${ACCENT}, ${(0.3 + glow * 0.7) * visibility})`
+							: `rgba(23, 24, 28, ${(0.08 + wave * 0.12) * visibility})`;
 					ctx.fillRect(x - size / 2, y - size / 2, size, size);
 				}
 			}
@@ -133,6 +157,7 @@
 
 		const resizeObserver = new ResizeObserver(resize);
 		resizeObserver.observe(target);
+		for (const el of clearTargets) resizeObserver.observe(el);
 		const intersectionObserver = new IntersectionObserver(([entry]) => {
 			inView = entry.isIntersecting;
 			if (inView) start();
