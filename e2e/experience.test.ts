@@ -5,7 +5,7 @@ test('five rows in spec order with periods', async ({ page }) => {
 	const periods = await page
 		.locator('#experience ol > li')
 		.evaluateAll((rows) => rows.map((row) => row.querySelector('span')?.textContent?.trim()));
-	expect(periods).toEqual(['2025 — Now', '2023 — Now', '2022 — 2025', '2023', '2016 — 2023']);
+	expect(periods).toEqual(['2025 — Now', '2023 — 2025', '2022 — 2025', '2023', '2016 — 2023']);
 });
 
 test('résumé link downloads the pdf quietly', async ({ page }) => {

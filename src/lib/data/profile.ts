@@ -1,4 +1,3 @@
-import { todo } from './todo';
 import type { Profile, Stat } from './types';
 
 export const profile: Profile = {
@@ -9,7 +8,7 @@ export const profile: Profile = {
 	location: 'Los Angeles Metropolitan Area',
 	availability: 'Taking on freelance projects',
 	intro:
-		"I build reliable web products end to end — from CI/CD pipelines and edge APIs to interfaces people enjoy using. Right now I'm the sole engineer modernizing a decade-old platform at Haven Ministries.",
+		"I build reliable web products end to end — from CI/CD pipelines and edge APIs to interfaces people enjoy using. Right now I run Emmabyte Engineering, where I'm the lead engineer on a client's production ERP and I'm building Harbor, a case-management platform for disability-services providers.",
 	metaDescription:
 		'Full-stack engineer building reliable web products end to end, from CI/CD pipelines and edge APIs to interfaces people enjoy using.',
 	roles: ['Full-Stack Engineer', 'Systems Architect', 'DevOps Tinkerer', 'Interface Builder'],
@@ -20,11 +19,15 @@ export const profile: Profile = {
 	],
 	resume: { href: '/documents/resume.pdf', filename: 'resume-emma-long.pdf' },
 	contactHeading: "Building something that needs an engineer? Let's talk.",
-	contactLine: todo('contact supporting line, matches the badge')
+	contactLine:
+		"Tell me a bit about what you're building, and I'll get back to you within a couple of days."
 };
 
 export const stats: Stat[] = [
 	{ value: '2016', label: 'First production work; full-time engineer since 2023' },
-	{ value: '40s → 90s', label: "Page-speed scores after modernizing a client's platform" },
-	{ value: '10+ → ~0', label: 'Monthly downtime incidents after the migration' }
+	{
+		value: '2–4 → 0',
+		label: 'Days a month of missed donation data, before and after my webhook pipeline'
+	},
+	{ value: '1,000+', label: 'Automated tests and security scans on every Harbor pull request' }
 ];

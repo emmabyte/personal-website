@@ -1,4 +1,3 @@
-import { todo } from './todo';
 import type { FeaturedProject, MoreProject } from './types';
 
 export const featuredProjects: FeaturedProject[] = [
@@ -8,42 +7,37 @@ export const featuredProjects: FeaturedProject[] = [
 		year: '2026',
 		summary:
 			'Multi-tenant case-management SaaS for California human-services providers, starting with day and employment programs for adults with intellectual and developmental disabilities. Built to be HIPAA-compliant. In active development (Release 1).',
-		role: todo('Harbor role'),
-		impact: todo('Harbor impact'),
-		tags: ['SvelteKit', 'TypeScript', 'PostgreSQL', 'Docker'],
+		role: 'Product definition, technical design and the build: app, database, infrastructure as code and CI/CD.',
+		impact:
+			'Pre-launch, with staging redeploying itself from main and 1,000+ tests and security scans on every pull request.',
+		tags: ['SvelteKit', 'TypeScript', 'PostgreSQL', 'AWS'],
 		liveUrl: 'https://harborcasemanagement.com'
 	},
 	{
 		slug: 'emmabyte',
 		title: 'Emmabyte platform',
 		year: '2025',
-		summary: "emmabyte.io: the company's marketing site plus a full CRM, client portal and admin.",
-		role: todo('Emmabyte platform role'),
-		impact: todo('Emmabyte platform impact'),
+		summary:
+			"emmabyte.io, the company's ERP. Clients see invoices, tasks and retainer hours and file support tickets; staff get a custom CRM, WYSIWYG page and blog editors, a hiring pipeline, and automated reports and invoices with Mercury billing.",
+		role: 'Main developer: the public site, client portal and admin, plus the CI/CD and database workflow.',
+		impact:
+			'Runs the company day to day, from client invoices and retainer hours to the CRM and hiring.',
 		tags: ['SvelteKit', 'TypeScript', 'Tailwind CSS', 'PlanetScale'],
-		liveUrl: 'https://www.emmabyte.io'
+		liveUrl: 'https://www.emmabyte.io',
+		walkthrough: true
 	},
 	{
 		slug: 'tarot-tutor',
 		title: 'Tarot Tutor',
 		year: '2026',
 		summary:
-			'Subscription learning app with guided lesson tracks, a free in-browser first lesson, and Stripe-backed Pro plans.',
-		role: todo('Tarot Tutor role'),
-		impact: todo('Tarot Tutor impact'),
+			'A Brilliant-style learning platform for tarot: game-style interactive lessons across all 78 cards, a free first lesson with no sign-up, and Pro plans billed through Stripe.',
+		role: 'Sole developer: designed and built it end to end, from the study engine to billing and the marketing funnel.',
+		impact:
+			'Live, with guided lesson tracks, a public library of all 78 meanings, and 2,000+ tests.',
 		tags: ['SvelteKit', 'Supabase', 'Stripe', 'PostHog'],
-		liveUrl: 'https://tarottutor.io'
-	},
-	{
-		slug: 'pulse',
-		title: 'Pulse',
-		year: '2026',
-		summary:
-			'Open-source observability platform that pulls logs, events and metrics from MailerSend, Vercel, PlanetScale and app code into one dashboard with search and alerting. It also has a hosted version, Pulse Cloud.',
-		role: todo('Pulse role'),
-		impact: todo('Pulse impact'),
-		tags: ['SvelteKit', 'Prisma', 'PostgreSQL', 'Docker'],
-		repoUrl: 'https://github.com/emmabyte-engineering/pulse'
+		liveUrl: 'https://tarottutor.io',
+		walkthrough: true
 	}
 ];
 
@@ -53,7 +47,7 @@ export const moreProjects: MoreProject[] = [
 		year: '2026',
 		description: 'Syncs tasks between ClickUp, Jira and Asana.',
 		tags: ['SvelteKit', 'Prisma', 'PostgreSQL', 'Docker'],
-		links: [{ label: 'Private repo', href: '/#contact' }]
+		links: []
 	},
 	{
 		title: 'Accessibility Widget',

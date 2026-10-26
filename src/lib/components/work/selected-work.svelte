@@ -16,7 +16,7 @@
 		title="Selected work"
 		description="Products I've designed, built, and shipped, from schema to deploy."
 	/>
-	<div class="grid gap-5 md:grid-cols-2">
+	<div class="grid gap-5 md:grid-cols-2 md:[&>:last-child:nth-child(odd)]:col-span-2">
 		{#each featuredProjects as project, i (project.slug)}
 			<ProjectCard {project} index={i} />
 		{/each}

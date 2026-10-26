@@ -34,12 +34,11 @@ const everything = {
 };
 
 describe('projects', () => {
-	it('featured projects are harbor, emmabyte, tarot-tutor, pulse in that order', () => {
+	it('featured projects are harbor, emmabyte, tarot-tutor in that order', () => {
 		expect(featuredProjects.map((project) => project.slug)).toEqual([
 			'harbor',
 			'emmabyte',
-			'tarot-tutor',
-			'pulse'
+			'tarot-tutor'
 		]);
 	});
 
@@ -51,14 +50,15 @@ describe('projects', () => {
 		expect(getCaseStudy('nope')).toBeUndefined();
 	});
 
-	it('getCaseStudy("pulse") returns index 4', () => {
-		expect(getCaseStudy('pulse')?.index).toBe(4);
+	it('getCaseStudy("tarot-tutor") returns index 3', () => {
+		expect(getCaseStudy('tarot-tutor')?.index).toBe(3);
 	});
 
-	it('only Pulse has a repoUrl among featured projects', () => {
-		const withRepo = featuredProjects.filter((project) => project.repoUrl);
-		expect(withRepo.map((project) => project.slug)).toEqual(['pulse']);
-		expect(withRepo[0].repoUrl).toBe('https://github.com/emmabyte-engineering/pulse');
+	it('no featured project links a repo, and only emmabyte and tarot-tutor offer a walkthrough', () => {
+		expect(featuredProjects.filter((project) => project.repoUrl)).toEqual([]);
+		expect(
+			featuredProjects.filter((project) => project.walkthrough).map((project) => project.slug)
+		).toEqual(['emmabyte', 'tarot-tutor']);
 	});
 
 	it('harbor has no repoUrl and its copy never says "certified"', () => {
@@ -88,7 +88,7 @@ describe('profile', () => {
 
 	it('stats never name a client', () => {
 		for (const stat of stats) expect(stat.label).not.toMatch(/Haven/);
-		expect(stats[1].label).toBe("Page-speed scores after modernizing a client's platform");
+		expect(stats.map((stat) => stat.value)).toEqual(['2016', '2–4 → 0', '1,000+']);
 	});
 
 	it('has a meta description that fits a search snippet', () => {

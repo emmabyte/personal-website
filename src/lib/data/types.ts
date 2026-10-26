@@ -17,7 +17,7 @@ export type Profile = {
 };
 export type Stat = { value: string; label: string };
 export type StackGroup = { area: string; items: string[] };
-export type ProjectSlug = 'harbor' | 'emmabyte' | 'tarot-tutor' | 'pulse';
+export type ProjectSlug = 'harbor' | 'emmabyte' | 'tarot-tutor';
 export type FeaturedProject = {
 	slug: ProjectSlug;
 	title: string;
@@ -28,6 +28,7 @@ export type FeaturedProject = {
 	tags: string[];
 	liveUrl?: string;
 	repoUrl?: string; // no repoUrl = private repo
+	walkthrough?: boolean; // private code Emma will walk an employer through; otherwise proprietary
 };
 export type MoreProject = {
 	title: string;

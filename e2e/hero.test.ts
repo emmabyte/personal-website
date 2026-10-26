@@ -73,7 +73,7 @@ test('hero buttons point at work and contact', async ({ page }) => {
 test('hero shows location and the three stats', async ({ page }) => {
 	await page.goto('/');
 	const hero = page.locator('#top');
-	for (const text of ['Los Angeles Metropolitan Area', '2016', '40s → 90s', '10+ → ~0']) {
+	for (const text of ['Los Angeles Metropolitan Area', '2016', '2–4 → 0', '1,000+']) {
 		await expect(hero).toContainText(text);
 	}
 });

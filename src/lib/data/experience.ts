@@ -1,4 +1,3 @@
-import { todo } from './todo';
 import type { Job } from './types';
 
 export const experience: { description: string; jobs: Job[] } = {
@@ -8,19 +7,19 @@ export const experience: { description: string; jobs: Job[] } = {
 			period: '2025 — Now',
 			company: 'Emmabyte Engineering, Inc.',
 			companyUrl: 'https://www.emmabyte.io',
-			title: todo('Emmabyte title, e.g. Founder & Principal Engineer'),
+			title: 'Software Engineer',
 			summary:
-				'Run a small engineering company building SaaS products and client software, including a HIPAA-compliant case-management platform, a CRM and client portal, and open-source developer tools. Hire and interview engineers.',
+				"Independent engineering company. I'm the lead engineer on a client's core ERP (Laravel, PostgreSQL), used daily on its production floor; I'm building Harbor, a case-management SaaS built to be HIPAA-compliant; and I built and run emmabyte.io, the company's own ERP and client portal. Haven Ministries stays on as a retainer client.",
 			link: { label: 'See selected work', href: '/#work' },
 			faqs: []
 		},
 		{
-			period: '2023 — Now',
+			period: '2023 — 2025',
 			company: 'Haven Ministries',
 			companyUrl: 'https://haventoday.org',
 			title: 'Software Developer',
 			summary:
-				'Sole engineer leading a three-phase modernization: performance and reliability, a rebuilt donation system, and a ground-up replacement of a decade-old WordPress site.',
+				'Sole in-house engineer. Built Haven Bridge (SvelteKit, Supabase, Prisma), the internal platform staff use daily, which merges donation, store and website webhooks into real-time analytics dashboards. Planned a three-phase modernization and delivered the first two.',
 			faqs: [
 				{
 					question: 'What kinds of problems were you hired to solve at Haven?',
@@ -28,14 +27,14 @@ export const experience: { description: string; jobs: Job[] } = {
 						'Haven Ministries had a number of legacy systems that were underperforming or unstable. I was brought on to lead a multi-phase initiative to modernize the organization’s digital infrastructure—starting with performance and reliability issues, then revamping core giving flows and content systems, and finally rebuilding the entire site from the ground up with a modern tech stack.'
 				},
 				{
-					question: 'What has your role involved beyond writing code?',
+					question: 'What did your role involve beyond writing code?',
 					answer:
-						'As the only full-time engineer, I take full ownership over software development across Haven’s digital properties. That includes architecture decisions, infrastructure setup, DevOps, contractor coordination, and long-term project planning. I also serve as the primary technical advisor to leadership and content teams, helping shape the organization’s digital strategy.'
+						'As the only full-time engineer, I took full ownership over software development across Haven’s digital properties. That included architecture decisions, infrastructure setup, DevOps, contractor coordination, and long-term project planning. I also served as the primary technical advisor to leadership and content teams, helping shape the organization’s digital strategy.'
 				},
 				{
 					question: 'What were the outcomes of the first phase of your modernization work?',
 					answer:
-						'I refactored and containerized critical portions of our legacy codebase and migrated our infrastructure to a managed hosting platform with auto-scaling. This brought our average page speed scores from the 40s to the high 90s, and cut downtime incidents from 10+ per month to nearly zero.'
+						'I refactored and containerized critical portions of our legacy codebase and migrated our infrastructure to a managed hosting platform with auto-scaling. I also added uptime monitoring, and average page speed scores went from the 40s to the high 90s.'
 				},
 				{
 					question: 'How did you improve the donations experience?',
@@ -43,9 +42,9 @@ export const experience: { description: string; jobs: Job[] } = {
 						'In phase two of the rebuild, I architected a fully integrated donation system—combining a managed donation platform with custom CMS syncing and a rebuilt Shopify storefront. This significantly reduced overhead for our content managers and gave donors a more seamless and trustworthy giving experience.'
 				},
 				{
-					question: 'What’s happening in phase three?',
+					question: 'What was planned for phase three?',
 					answer:
-						'Phase three involves rebuilding the Haven website from the ground up using a modern web stack, moving away from over a decade of WordPress legacy architecture. My focus has been on making the new platform more performant, maintainable, and flexible for future content and donation strategies.'
+						'Phase three is a ground-up rebuild of the Haven website on a modern web stack, moving away from over a decade of WordPress legacy architecture. I planned it to make the platform more performant, maintainable, and flexible for future content and donation strategies, and delivered the first two phases before going independent in September 2025.'
 				}
 			]
 		},
@@ -55,7 +54,7 @@ export const experience: { description: string; jobs: Job[] } = {
 			companyUrl: 'https://study-stack-demo.vercel.app',
 			title: 'Co-Founder & Lead Engineer',
 			summary:
-				'Designed and built a cloud-native learning platform end to end, with full CI test coverage, and mentored a junior developer. Now open source.',
+				'Co-founded and led engineering on an online learning platform (SvelteKit, TypeScript, Prisma, Stripe). Wrote most of the code myself and mentored an intern. Now open source.',
 			faqs: [
 				{
 					question: 'Why did the original project end?',
@@ -85,7 +84,7 @@ export const experience: { description: string; jobs: Job[] } = {
 			companyUrl: 'https://spacex.com',
 			title: 'Software Engineer II',
 			summary:
-				'Infrastructure team: containerized dev services, refined CI/CD pipelines, and scripted environment setup to speed up onboarding.',
+				'Software Infrastructure team: built a C# CLI tool that scripted dev-environment setup for a backend monolith.',
 			faqs: [
 				{
 					question: 'Why was this role so short?',
@@ -115,7 +114,7 @@ export const experience: { description: string; jobs: Job[] } = {
 			companyUrl: 'https://haventoday.org',
 			title: 'IT & Analytics Advisor',
 			summary:
-				'Linux servers, data pipelines and dashboards, and CI/CD support — and led a monolith-to-microservices migration that cut downtime.',
+				'Grew from IT and analytics into engineering: built a Python/Prefect ETL pipeline from the CRM into PostgreSQL for Metabase and Tableau, and containerized the WordPress development environment with Docker.',
 			faqs: [
 				{
 					question: 'How does this role relate to your current engineering work?',

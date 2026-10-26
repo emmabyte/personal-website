@@ -7,7 +7,7 @@ async function openHydrated(page: Page, path: string) {
 	await page.locator('#svelte-announcer').waitFor({ state: 'attached' });
 }
 
-const PAGES = ['/', '/work/harbor', '/work/emmabyte', '/work/tarot-tutor', '/work/pulse'];
+const PAGES = ['/', '/work/harbor', '/work/emmabyte', '/work/tarot-tutor'];
 
 test.use({ viewport: { width: WIDTH, height: 800 } });
 

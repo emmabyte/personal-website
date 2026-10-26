@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { getCaseStudy } from '../src/lib/data/case-studies';
 
-const slugs = ['harbor', 'emmabyte', 'tarot-tutor', 'pulse'];
+const slugs = ['harbor', 'emmabyte', 'tarot-tutor'];
 
 test('each featured slug prerenders a page with the project title as h1', async ({ page }) => {
 	for (const slug of slugs) {
@@ -15,7 +15,7 @@ test('each featured slug prerenders a page with the project title as h1', async 
 });
 
 test('case study has back link, section labels, and contact CTA', async ({ page }) => {
-	await page.goto('/work/pulse');
+	await page.goto('/work/tarot-tutor');
 	await expect(page.getByRole('link', { name: '← All work' })).toHaveAttribute('href', '/#work');
 	for (const name of [
 		'Problem & constraints',
@@ -33,15 +33,15 @@ test('case study has back link, section labels, and contact CTA', async ({ page 
 test('only harbor shows a Compliance section', async ({ page }) => {
 	await page.goto('/work/harbor');
 	await expect(page.getByRole('heading', { name: 'Compliance', exact: true })).toBeVisible();
-	await page.goto('/work/pulse');
+	await page.goto('/work/tarot-tutor');
 	await expect(page.getByRole('heading', { name: 'Compliance', exact: true })).toHaveCount(0);
 });
 
 test('canonical is the case study url', async ({ page }) => {
-	await page.goto('/work/pulse');
+	await page.goto('/work/tarot-tutor');
 	await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
 		'href',
-		'https://emma-long.vercel.app/work/pulse'
+		'https://emma-long.vercel.app/work/tarot-tutor'
 	);
 });
 
@@ -60,7 +60,7 @@ test('unknown slug is a 404', async ({ page }) => {
 });
 
 test('header links on a case study go to home sections', async ({ page }) => {
-	await page.goto('/work/pulse');
+	await page.goto('/work/tarot-tutor');
 	await page
 		.getByRole('banner')
 		.getByRole('navigation', { name: 'Primary' })
@@ -71,9 +71,9 @@ test('header links on a case study go to home sections', async ({ page }) => {
 });
 
 test('architecture diagram exposes its description', async ({ page }) => {
-	const entry = getCaseStudy('pulse');
-	if (!entry) throw new Error('no case study for pulse');
-	await page.goto('/work/pulse');
+	const entry = getCaseStudy('tarot-tutor');
+	if (!entry) throw new Error('no case study for tarot-tutor');
+	await page.goto('/work/tarot-tutor');
 	await expect(page.locator('figure svg[role=img]')).toHaveAttribute(
 		'aria-label',
 		entry.study.architecture.description

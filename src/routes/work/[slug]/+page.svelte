@@ -81,10 +81,12 @@
 									<ArrowUpRight class="size-3.5" aria-hidden="true" />
 								</a>
 							</li>
-						{:else}
+						{:else if project.walkthrough}
 							<li>
 								<a href="/#contact" class={linkClass}>Private repo · walkthrough on request</a>
 							</li>
+						{:else}
+							<li class="text-muted-foreground">Proprietary</li>
 						{/if}
 					</ul>
 				</dd>

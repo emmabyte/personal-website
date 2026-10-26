@@ -65,10 +65,12 @@
 				<a href={project.repoUrl} target="_blank" rel="noreferrer" class={linkClass}>
 					Source code<span class="sr-only"> for {project.title}</span>
 				</a>
-			{:else}
+			{:else if project.walkthrough}
 				<a href="#contact" class={linkClass}>
 					Private repo · walkthrough on request<span class="sr-only"> for {project.title}</span>
 				</a>
+			{:else}
+				<span class="font-mono text-xs text-muted-foreground">Proprietary</span>
 			{/if}
 		</div>
 	</div>
