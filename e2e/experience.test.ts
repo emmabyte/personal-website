@@ -56,10 +56,15 @@ test('Q&A opens with a height animation, and instantly under reduced motion', as
 	await toggle.click();
 	const midHeight = await heightAfterClick();
 	await expect(row.getByText('Why was this role so short?')).toBeVisible();
-	await page.waitForTimeout(600);
-	const fullHeight = await page
-		.locator(`#${panelId}`)
-		.evaluate((el) => el.getBoundingClientRect().height);
+	// Wait for the transition to finish: the panel settles at its content's height.
+	const panel = page.locator(`#${panelId}`);
+	const settled = () =>
+		panel.evaluate((el) => {
+			const { height } = el.getBoundingClientRect();
+			return Math.abs(height - (el.firstElementChild as HTMLElement).scrollHeight) < 0.5;
+		});
+	await expect.poll(settled).toBe(true);
+	const fullHeight = await panel.evaluate((el) => el.getBoundingClientRect().height);
 	expect(midHeight).toBeGreaterThanOrEqual(0);
 	expect(midHeight).toBeLessThan(fullHeight);
 

@@ -54,6 +54,8 @@ test('unknown slug is a 404', async ({ page }) => {
 	const response = await page.goto('/work/nope');
 	expect(response?.status()).toBe(404);
 	await expect(page.getByText('404', { exact: true })).toBeVisible();
+	await expect(page).toHaveTitle('Page not found · Emma Long');
+	await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
 	await expect(page.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/');
 });
 

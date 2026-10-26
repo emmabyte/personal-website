@@ -2,6 +2,11 @@
 	import { page } from '$app/state';
 </script>
 
+<svelte:head>
+	<title>{page.status === 404 ? 'Page not found' : 'Something went wrong'} · Emma Long</title>
+	<meta name="robots" content="noindex" />
+</svelte:head>
+
 <main class="mx-auto flex min-h-[60vh] max-w-6xl flex-col justify-center gap-6 px-5 py-20 md:px-8">
 	<p class="font-mono text-6xl font-semibold text-primary-text md:text-8xl">{page.status}</p>
 	<h1 class="text-3xl font-semibold tracking-tight md:text-5xl">
