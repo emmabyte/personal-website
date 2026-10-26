@@ -6,7 +6,7 @@
 	let { project, index }: { project: FeaturedProject; index: number } = $props();
 
 	const linkClass =
-		'relative z-10 font-mono text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline';
+		'relative z-10 font-mono text-xs text-muted-foreground underline-offset-4 hover:text-primary-text hover:underline';
 </script>
 
 <SpotlightCard

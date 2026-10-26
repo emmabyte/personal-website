@@ -67,7 +67,7 @@
 
 	const toneClass: Record<Tone, string> = {
 		key: 'text-foreground',
-		str: 'text-primary',
+		str: 'text-primary-text',
 		fn: 'text-foreground font-semibold',
 		dim: 'text-muted-foreground'
 	};

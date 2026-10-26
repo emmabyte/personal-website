@@ -17,7 +17,7 @@
 <div class="flex flex-col gap-10">
 	<div class="flex flex-col gap-4">
 		{#if index}
-			<span class="font-mono text-xs text-primary">{index}</span>
+			<span class="font-mono text-xs text-primary-text">{index}</span>
 		{/if}
 		<h2
 			id={headingId}

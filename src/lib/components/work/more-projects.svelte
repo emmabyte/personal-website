@@ -39,14 +39,14 @@
 								href={link.href}
 								target="_blank"
 								rel="noreferrer"
-								class="font-mono text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+								class="font-mono text-xs text-muted-foreground underline-offset-4 hover:text-primary-text hover:underline"
 							>
 								{link.label}<span class="sr-only"> for {project.title}</span>
 							</a>
 						{:else}
 							<a
 								href={link.href}
-								class="font-mono text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+								class="font-mono text-xs text-muted-foreground underline-offset-4 hover:text-primary-text hover:underline"
 							>
 								{link.label}<span class="sr-only"> for {project.title}</span>
 							</a>

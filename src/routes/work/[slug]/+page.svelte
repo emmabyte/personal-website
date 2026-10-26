@@ -30,7 +30,7 @@
 		>
 
 		<header class="flex flex-col gap-4">
-			<span class="font-mono text-xs text-primary">{number} / {project.year}</span>
+			<span class="font-mono text-xs text-primary-text">{number} / {project.year}</span>
 			<h1 class="text-4xl font-semibold tracking-tight text-balance md:text-6xl">
 				{project.title}
 			</h1>
@@ -110,7 +110,7 @@
 			aria-labelledby="architecture-title"
 			class="flex flex-col gap-5 border-t border-border pt-8"
 		>
-			<h2 id="architecture-title" class="font-mono text-sm text-primary">Architecture</h2>
+			<h2 id="architecture-title" class="font-mono text-sm text-primary-text">Architecture</h2>
 			<ArchitectureDiagram
 				caption={study.architecture.caption}
 				description={study.architecture.description}

@@ -21,7 +21,7 @@
 	>
 		{#each howIShip.principles as item, i (item.title)}
 			<li class="flex flex-col gap-2 bg-background p-6">
-				<span class="font-mono text-xs text-primary">0{i + 1}</span>
+				<span class="font-mono text-xs text-primary-text">0{i + 1}</span>
 				<h3 class="font-medium">{item.title}</h3>
 				<p class="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
 			</li>

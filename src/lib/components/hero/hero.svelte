@@ -39,7 +39,7 @@
 						<span class="block min-h-[1.1em] text-muted-foreground">
 							<span class="sr-only">{profile.role}</span>
 							<ScrambleText words={profile.roles} />
-							<span aria-hidden="true" class="text-primary">.</span>
+							<span aria-hidden="true" class="text-primary-text">.</span>
 						</span>
 					</h1>
 					<p class="max-w-xl text-lg leading-relaxed text-pretty text-muted-foreground">

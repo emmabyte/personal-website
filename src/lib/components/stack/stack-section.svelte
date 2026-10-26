@@ -16,7 +16,7 @@
 		>
 			{#each stack.groups as group (group.area)}
 				<div class="flex flex-col gap-5 bg-background p-6">
-					<h3 class="font-mono text-sm text-primary">{'// '}{group.area}</h3>
+					<h3 class="font-mono text-sm text-primary-text">{'// '}{group.area}</h3>
 					<ul class="flex flex-col gap-2.5">
 						{#each group.items as item (item)}
 							<li class="flex items-center gap-3 text-sm">

@@ -22,7 +22,7 @@
 		<a
 			href={profile.resume.href}
 			download={profile.resume.filename}
-			class="rounded-sm font-mono text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline {focusRing}"
+			class="rounded-sm font-mono text-sm text-muted-foreground underline-offset-4 hover:text-primary-text hover:underline {focusRing}"
 		>
 			Full résumé (PDF) ↓
 		</a>
@@ -38,7 +38,7 @@
 								href={job.companyUrl}
 								target="_blank"
 								rel="noreferrer"
-								class="rounded-sm underline-offset-4 hover:text-primary hover:underline {focusRing}"
+								class="rounded-sm underline-offset-4 hover:text-primary-text hover:underline {focusRing}"
 							>
 								{job.company}
 							</a>
@@ -53,7 +53,7 @@
 					{#if job.link}
 						<a
 							href={job.link.href}
-							class="mt-3 rounded-sm font-mono text-xs text-primary underline-offset-4 hover:underline {focusRing}"
+							class="mt-3 rounded-sm font-mono text-xs text-primary-text underline-offset-4 hover:underline {focusRing}"
 						>
 							{job.link.label}
 						</a>

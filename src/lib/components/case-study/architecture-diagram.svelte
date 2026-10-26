@@ -97,7 +97,9 @@
 
 			{#each layout.placed as column (column.x)}
 				<foreignObject x={column.x} y={16} width={layout.boxW} height="32">
-					<div class="truncate font-mono text-[12px] leading-8 text-primary">{column.label}</div>
+					<div class="truncate font-mono text-[12px] leading-8 text-primary-text">
+						{column.label}
+					</div>
 				</foreignObject>
 				{#each column.items as item, row (row)}
 					{@const y = TOP + row * (ITEM_H + ITEM_GAP)}
