@@ -4,23 +4,118 @@
 	// Unique per instance so the <defs> ids can't collide with other inline SVGs on the page.
 	const uid = $props.id();
 
-	const targets = [
-		{ id: 'preview', y: 95 },
-		{ id: 'production', y: 205 }
-	];
-
-	const fanPath = (y: number) => `M528 150 C 640 150 650 ${y} 760 ${y}`;
-
 	const LABEL =
-		'Diagram: a git push triggers tests and a build on GitHub Actions, then deploys to a preview URL and to production on Vercel.';
+		'Diagram: a git push runs lint and type checks, unit tests, an AI code review and a security scan in parallel on GitHub Actions, then a build with end-to-end tests. Pull requests deploy to a preview that gets smoke-tested; merges to main run database migrations, deploy to production, and smoke-test it with automatic rollback.';
 
-	// Stacked drawing: the build fans out downward to two pills side by side.
-	const stackedTargets = [
-		{ id: 'preview', x: 95 },
-		{ id: 'production', x: 265 }
+	const checks = ['lint & types', 'unit tests', 'AI review', 'security scan'];
+	// Pull requests stop at a preview; merges to main go on to production.
+	const lanes = [
+		{ id: 'preview', stages: ['preview', 'smoke tests'] },
+		{ id: 'production', stages: ['migrate db', 'production', 'smoke · rollback'] }
 	];
-	const stackedFanPath = (x: number) => `M180 342 C 180 400 ${x} 390 ${x} 440`;
+
+	// The beam takes 1.2s to cross a segment (40% of the 3s loop), so each hop starts ~0.5s after the last.
+	const HOP = 0.5;
+	const beamDelay = (hop: number) => `${hop * HOP}s`;
+	const pingDelay = (hop: number) => `${hop * HOP + 0.45}s`;
+
+	// Wide drawing: push fans out to the checks, they fan back into the build, which fans out to two lanes.
+	const wide = {
+		checkX: 210,
+		checkW: 160,
+		checkYs: [86, 142, 198, 254],
+		core: { x: 470, y: 170 },
+		laneX: 600,
+		laneYs: [100, 240],
+		widths: { 'smoke · rollback': 160, 'smoke tests': 140 } as Record<string, number>,
+		gap: 30
+	};
+	const pillW = (stage: string) => wide.widths[stage] ?? 120;
+	const laneStages = (stages: string[]) => {
+		let x = wide.laneX;
+		return stages.map((stage) => {
+			const pill = { stage, x, w: pillW(stage) };
+			x += pill.w + wide.gap;
+			return pill;
+		});
+	};
+
+	// Stacked drawing: checks sit in one card, and the two lanes run down side by side.
+	const stacked = {
+		checkSpots: [
+			{ x: 40, y: 150 },
+			{ x: 196, y: 150 },
+			{ x: 40, y: 186 },
+			{ x: 196, y: 186 }
+		],
+		core: { x: 180, y: 320 },
+		laneXs: [96, 264],
+		laneTop: 440,
+		pillH: 36,
+		step: 60
+	};
 </script>
+
+{#snippet defs(prefix: string)}
+	<defs>
+		<pattern id="{prefix}-grid" width="25" height="25" patternUnits="userSpaceOnUse">
+			<path d="M25 0H0V25" fill="none" class="stroke-border" stroke-width="1" />
+		</pattern>
+		<radialGradient id="{prefix}-core" cx="50%" cy="50%" r="50%">
+			<stop offset="0%" stop-color="var(--brand)" stop-opacity="0.3" />
+			<stop offset="100%" stop-color="var(--brand)" stop-opacity="0" />
+		</radialGradient>
+		<filter id="{prefix}-glow" x="-50%" y="-50%" width="200%" height="200%">
+			<feGaussianBlur stdDeviation="3" result="blur" />
+			<feMerge>
+				<feMergeNode in="blur" />
+				<feMergeNode in="SourceGraphic" />
+			</feMerge>
+		</filter>
+	</defs>
+{/snippet}
+
+{#snippet wire(d: string, prefix: string, hop: number)}
+	<path {d} fill="none" class="stroke-border" stroke-width="1.5" />
+	<path
+		{d}
+		pathLength="1"
+		fill="none"
+		class="beam stroke-primary"
+		stroke-width="2"
+		stroke-linecap="round"
+		filter="url(#{prefix}-glow)"
+		style:animation-delay={beamDelay(hop)}
+	/>
+{/snippet}
+
+{#snippet dot(cx: number, cy: number, hop: number)}
+	<circle {cx} {cy} r="4" class="ping fill-primary" style:animation-delay={pingDelay(hop)} />
+	<circle {cx} {cy} r="4" class="fill-primary" />
+{/snippet}
+
+{#snippet pill(x: number, y: number, w: number, label: string, hop: number)}
+	<rect {x} y={y - 18} width={w} height="36" rx="18" class="fill-card stroke-border" />
+	{@render dot(x + 18, y, hop)}
+	<text x={x + 32} y={y + 4} class="fill-foreground font-mono text-[12px]">{label}</text>
+{/snippet}
+
+{#snippet core(x: number, y: number, prefix: string)}
+	<circle cx={x} cy={y} r="110" fill="url(#{prefix}-core)" />
+	<circle
+		cx={x}
+		cy={y}
+		r="72"
+		fill="none"
+		class="spin stroke-primary"
+		stroke-opacity="0.5"
+		stroke-dasharray="2 7"
+	/>
+	<circle cx={x} cy={y} r="58" class="fill-card stroke-border" />
+	<text {x} y={y + 5} text-anchor="middle" class="fill-foreground font-mono text-[14px]">
+		build &amp; e2e
+	</text>
+{/snippet}
 
 <figure class="relative rounded-2xl border border-border bg-background">
 	<figcaption class="border-b border-border px-5 py-3 font-mono text-xs text-muted-foreground">
@@ -28,208 +123,117 @@
 	</figcaption>
 	<!-- Wide drawing from laptop width up; the stacked one below covers phones and tablets. -->
 	<div data-pipeline="wide" class="hidden lg:block">
-		<svg viewBox="0 0 1000 300" role="img" aria-label={LABEL} class="block w-full">
-			<defs>
-				<pattern id="{uid}-grid" width="25" height="25" patternUnits="userSpaceOnUse">
-					<path d="M25 0H0V25" fill="none" class="stroke-border" stroke-width="1" />
-				</pattern>
-				<radialGradient id="{uid}-core" cx="50%" cy="50%" r="50%">
-					<stop offset="0%" stop-color="var(--brand)" stop-opacity="0.3" />
-					<stop offset="100%" stop-color="var(--brand)" stop-opacity="0" />
-				</radialGradient>
-				<filter id="{uid}-glow" x="-50%" y="-50%" width="200%" height="200%">
-					<feGaussianBlur stdDeviation="3" result="blur" />
-					<feMerge>
-						<feMergeNode in="blur" />
-						<feMergeNode in="SourceGraphic" />
-					</feMerge>
-				</filter>
-			</defs>
+		<svg viewBox="0 0 1100 340" role="img" aria-label={LABEL} class="block w-full">
+			{@render defs(uid)}
+			<rect width="1100" height="340" fill="url(#{uid}-grid)" opacity="0.6" />
 
-			<rect width="1000" height="300" fill="url(#{uid}-grid)" opacity="0.6" />
-
-			<path d="M220 150 H412" fill="none" class="stroke-border" stroke-width="1.5" />
-			<path
-				d="M220 150 H412"
-				pathLength="1"
-				fill="none"
-				class="beam stroke-primary"
-				stroke-width="2"
-				stroke-linecap="round"
-				filter="url(#{uid}-glow)"
-			/>
-
-			{#each targets as target, i (target.id)}
-				<g>
-					<path d={fanPath(target.y)} fill="none" class="stroke-border" stroke-width="1.5" />
-					<path
-						d={fanPath(target.y)}
-						pathLength="1"
-						fill="none"
-						class="beam stroke-primary"
-						stroke-width="2"
-						stroke-linecap="round"
-						filter="url(#{uid}-glow)"
-						style:animation-delay="{1.15 + i * 0.08}s"
-					/>
-				</g>
+			{#each wide.checkYs as y (y)}
+				{@render wire(`M150 170 C 180 170 180 ${y} ${wide.checkX} ${y}`, uid, 0)}
+				{@render wire(
+					`M${wide.checkX + wide.checkW} ${y} C 400 ${y} 395 ${wide.core.y} 412 ${wide.core.y}`,
+					uid,
+					1
+				)}
+			{/each}
+			{#each lanes as lane, i (lane.id)}
+				{@const y = wide.laneYs[i]}
+				{@const pills = laneStages(lane.stages)}
+				{@render wire(
+					`M528 ${wide.core.y} C 565 ${wide.core.y} 565 ${y} ${wide.laneX} ${y}`,
+					uid,
+					2
+				)}
+				{#each pills.slice(1) as next, j (next.stage)}
+					{@const prev = pills[j]}
+					{@render wire(`M${prev.x + prev.w} ${y} H${next.x}`, uid, 3 + j)}
+				{/each}
 			{/each}
 
 			<g>
-				<rect x="20" y="118" width="200" height="64" rx="12" class="fill-card stroke-border" />
-				<text x="40" y="155" class="fill-foreground font-mono text-[14px]">git push</text>
+				<rect x="20" y="142" width="130" height="56" rx="12" class="fill-card stroke-border" />
+				<text x="38" y="175" class="fill-foreground font-mono text-[14px]">git push</text>
 			</g>
 
-			<g>
-				<circle cx="470" cy="150" r="110" fill="url(#{uid}-core)" />
-				<circle
-					cx="470"
-					cy="150"
-					r="72"
-					fill="none"
-					class="spin stroke-primary"
-					stroke-opacity="0.5"
-					stroke-dasharray="2 7"
-				/>
-				<circle cx="470" cy="150" r="58" class="fill-card stroke-border" />
-				<text x="470" y="155" text-anchor="middle" class="fill-foreground font-mono text-[14px]">
-					test &amp; build
-				</text>
-				<text
-					x="470"
-					y="270"
-					text-anchor="middle"
-					class="fill-muted-foreground font-mono text-[12px]"
-				>
-					Vitest · Playwright · GitHub Actions
-				</text>
-			</g>
-
-			{#each targets as target, i (target.id)}
-				<g>
-					<rect
-						x="760"
-						y={target.y - 20}
-						width="220"
-						height="40"
-						rx="20"
-						class="fill-card stroke-border"
-					/>
-					<circle
-						cx="782"
-						cy={target.y}
-						r="4"
-						class="ping fill-primary"
-						style:animation-delay="{1.95 + i * 0.08}s"
-					/>
-					<circle cx="782" cy={target.y} r="4" class="fill-primary" />
-					<text x="798" y={target.y + 4} class="fill-foreground font-mono text-[12px]">
-						{target.id}
-					</text>
-				</g>
+			{#each checks as check, i (check)}
+				<g>{@render pill(wide.checkX, wide.checkYs[i], wide.checkW, check, 0)}</g>
 			{/each}
+
+			<g>{@render core(wide.core.x, wide.core.y, uid)}</g>
+
+			{#each lanes as lane, i (lane.id)}
+				{#each laneStages(lane.stages) as stage, j (stage.stage)}
+					<g>{@render pill(stage.x, wide.laneYs[i], stage.w, stage.stage, 2 + j)}</g>
+				{/each}
+			{/each}
+
+			<text
+				x={wide.core.x}
+				y="318"
+				text-anchor="middle"
+				class="fill-muted-foreground font-mono text-[12px]"
+			>
+				Vitest · Playwright · GitHub Actions
+			</text>
 		</svg>
 	</div>
 
 	<div data-pipeline="stacked" class="lg:hidden">
-		<svg viewBox="0 0 360 560" role="img" aria-label={LABEL} class="mx-auto block w-full max-w-sm">
-			<defs>
-				<pattern id="{uid}-s-grid" width="25" height="25" patternUnits="userSpaceOnUse">
-					<path d="M25 0H0V25" fill="none" class="stroke-border" stroke-width="1" />
-				</pattern>
-				<radialGradient id="{uid}-s-core" cx="50%" cy="50%" r="50%">
-					<stop offset="0%" stop-color="var(--brand)" stop-opacity="0.3" />
-					<stop offset="100%" stop-color="var(--brand)" stop-opacity="0" />
-				</radialGradient>
-				<filter id="{uid}-s-glow" x="-50%" y="-50%" width="200%" height="200%">
-					<feGaussianBlur stdDeviation="3" result="blur" />
-					<feMerge>
-						<feMergeNode in="blur" />
-						<feMergeNode in="SourceGraphic" />
-					</feMerge>
-				</filter>
-			</defs>
+		<svg viewBox="0 0 360 640" role="img" aria-label={LABEL} class="mx-auto block w-full max-w-sm">
+			{@render defs(`${uid}-s`)}
+			<rect width="360" height="640" fill="url(#{uid}-s-grid)" opacity="0.6" />
 
-			<rect width="360" height="560" fill="url(#{uid}-s-grid)" opacity="0.6" />
-
-			<path d="M180 80 V198" fill="none" class="stroke-border" stroke-width="1.5" />
-			<path
-				d="M180 80 V198"
-				pathLength="1"
-				fill="none"
-				class="beam stroke-primary"
-				stroke-width="2"
-				stroke-linecap="round"
-				filter="url(#{uid}-s-glow)"
-			/>
-
-			{#each stackedTargets as target, i (target.id)}
-				<g>
-					<path d={stackedFanPath(target.x)} fill="none" class="stroke-border" stroke-width="1.5" />
-					<path
-						d={stackedFanPath(target.x)}
-						pathLength="1"
-						fill="none"
-						class="beam stroke-primary"
-						stroke-width="2"
-						stroke-linecap="round"
-						filter="url(#{uid}-s-glow)"
-						style:animation-delay="{1.15 + i * 0.08}s"
-					/>
-				</g>
+			{@render wire('M180 72 V112', `${uid}-s`, 0)}
+			{@render wire(`M180 212 V${stacked.core.y - 58}`, `${uid}-s`, 1)}
+			{#each lanes as lane, i (lane.id)}
+				{@const x = stacked.laneXs[i]}
+				{@render wire(
+					`M180 ${stacked.core.y + 58} C 180 410 ${x} 400 ${x} ${stacked.laneTop - 18}`,
+					`${uid}-s`,
+					2
+				)}
+				{#each lane.stages.slice(1) as stage, j (stage)}
+					{@const top = stacked.laneTop + j * stacked.step}
+					{@render wire(`M${x} ${top + 18} V${top + stacked.step - 18}`, `${uid}-s`, 3 + j)}
+				{/each}
 			{/each}
 
 			<g>
-				<rect x="80" y="24" width="200" height="56" rx="12" class="fill-card stroke-border" />
-				<text x="180" y="57" text-anchor="middle" class="fill-foreground font-mono text-[14px]">
+				<rect x="90" y="20" width="180" height="52" rx="12" class="fill-card stroke-border" />
+				<text x="180" y="51" text-anchor="middle" class="fill-foreground font-mono text-[14px]">
 					git push
 				</text>
 			</g>
 
 			<g>
-				<circle cx="180" cy="270" r="110" fill="url(#{uid}-s-core)" />
-				<circle
-					cx="180"
-					cy="270"
-					r="72"
-					fill="none"
-					class="spin stroke-primary"
-					stroke-opacity="0.5"
-					stroke-dasharray="2 7"
-				/>
-				<circle cx="180" cy="270" r="58" class="fill-card stroke-border" />
-				<text x="180" y="275" text-anchor="middle" class="fill-foreground font-mono text-[14px]">
-					test &amp; build
-				</text>
+				<rect x="18" y="112" width="324" height="100" rx="14" class="fill-card stroke-border" />
+				{#each checks as check, i (check)}
+					{@const spot = stacked.checkSpots[i]}
+					{@render dot(spot.x, spot.y, 0)}
+					<text x={spot.x + 14} y={spot.y + 4} class="fill-foreground font-mono text-[12px]">
+						{check}
+					</text>
+				{/each}
 			</g>
 
-			{#each stackedTargets as target, i (target.id)}
-				<g>
-					<rect
-						x={target.x - 76}
-						y="440"
-						width="152"
-						height="40"
-						rx="20"
-						class="fill-card stroke-border"
-					/>
-					<circle
-						cx={target.x - 54}
-						cy="460"
-						r="4"
-						class="ping fill-primary"
-						style:animation-delay="{1.95 + i * 0.08}s"
-					/>
-					<circle cx={target.x - 54} cy="460" r="4" class="fill-primary" />
-					<text x={target.x - 40} y="464" class="fill-foreground font-mono text-[12px]">
-						{target.id}
-					</text>
-				</g>
+			<g>{@render core(stacked.core.x, stacked.core.y, `${uid}-s`)}</g>
+
+			{#each lanes as lane, i (lane.id)}
+				{#each lane.stages as stage, j (stage)}
+					<g>
+						{@render pill(
+							stacked.laneXs[i] - 78,
+							stacked.laneTop + j * stacked.step,
+							156,
+							stage,
+							2 + j
+						)}
+					</g>
+				{/each}
 			{/each}
 
 			<text
 				x="180"
-				y="528"
+				y="618"
 				text-anchor="middle"
 				class="fill-muted-foreground font-mono text-[12px]"
 			>

@@ -71,6 +71,8 @@
 	}
 	::selection {
 		@apply bg-primary text-primary-foreground;
+		/* SVG text paints with fill, not color, so the diagrams need it set too. */
+		fill: var(--primary-foreground);
 	}
 }
 

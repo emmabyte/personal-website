@@ -6,7 +6,7 @@ export const profile: Profile = {
 	wordmark: 'emma.long',
 	email: 'emmalong.dev@gmail.com',
 	location: 'Los Angeles Metropolitan Area',
-	availability: 'Taking on freelance projects',
+	availability: 'Open to work',
 	intro:
 		"I build reliable web products end to end — from CI/CD pipelines and edge APIs to interfaces people enjoy using. Right now I run Emmabyte Engineering, where I'm the lead engineer on a client's production ERP and I'm building Harbor, a case-management platform for disability-services providers.",
 	metaDescription:

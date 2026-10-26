@@ -82,8 +82,8 @@ describe('projects', () => {
 });
 
 describe('profile', () => {
-	it('badge says Taking on freelance projects', () => {
-		expect(profile.availability).toBe('Taking on freelance projects');
+	it('badge says Open to work', () => {
+		expect(profile.availability).toBe('Open to work');
 	});
 
 	it('stats never name a client', () => {

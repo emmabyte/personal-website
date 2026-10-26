@@ -11,7 +11,19 @@ test('pipeline diagram contains no invented figures', async ({ page }) => {
 		expect(label).not.toMatch(/\d/);
 		const text = (await diagram.textContent()) ?? '';
 		expect(text).not.toMatch(/\d+\s?m?s\b|iad1|sfo1|lhr1|hnd1|gru1|a1f9c3e/);
-		for (const stage of ['git push', 'test & build', 'preview', 'production']) {
+		for (const stage of [
+			'git push',
+			'lint & types',
+			'unit tests',
+			'AI review',
+			'security scan',
+			'build & e2e',
+			'preview',
+			'smoke tests',
+			'migrate db',
+			'production',
+			'smoke · rollback'
+		]) {
 			expect(text).toContain(stage);
 		}
 	}
@@ -43,9 +55,13 @@ test('three principles and the AI note render', async ({ page }) => {
 	await expect(page.locator('#process p.mt-6')).toHaveText(howIShip.aiNote);
 });
 
-test('the home page mentions AI exactly once', async ({ page }) => {
+test('outside the pipeline diagram, the home page mentions AI exactly once', async ({ page }) => {
 	await page.goto('/');
-	const text = await page.locator('main').innerText();
+	const text = await page.locator('main').evaluate((main) => {
+		const copy = main.cloneNode(true) as HTMLElement;
+		copy.querySelector('#process figure')?.remove();
+		return copy.textContent ?? '';
+	});
 	expect(text.match(/\bAI\b/g)).toHaveLength(1);
 });
 
@@ -56,4 +72,18 @@ test('stack shows four labelled columns', async ({ page }) => {
 		await expect(heading).toBeVisible();
 		await expect(heading.locator('xpath=..').locator('li')).toHaveCount(5);
 	}
+});
+
+test('selected diagram text turns white on the red highlight', async ({ page }) => {
+	await page.goto('/');
+	// SVG text paints with fill, so it must match the white text color selections use elsewhere.
+	const { fill, color } = await page
+		.locator('#process svg text')
+		.first()
+		.evaluate((el) => {
+			const selection = getComputedStyle(el, '::selection');
+			return { fill: selection.fill, color: selection.color };
+		});
+	expect(fill).toBe(color);
+	expect(fill).toBe('oklch(1 0 0)');
 });
