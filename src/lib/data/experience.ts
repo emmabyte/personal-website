@@ -7,7 +7,7 @@ export const experience: { description: string; jobs: Job[] } = {
 			period: '2025 — Now',
 			company: 'Emmabyte Engineering, Inc.',
 			companyUrl: 'https://www.emmabyte.io',
-			title: 'Software Engineer',
+			title: 'Founder & Software Engineer',
 			summary:
 				"Independent engineering company. I'm the lead engineer on a client's core ERP (Laravel, PostgreSQL), used daily on its production floor; I'm building Harbor, a case-management SaaS built to be HIPAA-compliant; and I built and run emmabyte.io, the company's own ERP and client portal. Haven Ministries stays on as a retainer client.",
 			link: { label: 'See selected work', href: '/#work' },
