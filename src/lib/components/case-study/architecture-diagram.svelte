@@ -43,12 +43,13 @@
 	<figcaption class="border-b border-border px-5 py-3 font-mono text-xs text-muted-foreground">
 		{'// '}{caption}
 	</figcaption>
-	<div class="overflow-x-auto">
+	<!-- Wide drawing from tablet width up; phones get the same columns stacked below. -->
+	<div data-diagram="wide" class="hidden md:block">
 		<svg
 			viewBox="0 0 {WIDTH} {layout.height}"
 			role="img"
 			aria-label={description}
-			class="block w-full min-w-[640px]"
+			class="block w-full"
 		>
 			<defs>
 				<pattern id="{uid}-grid" width="25" height="25" patternUnits="userSpaceOnUse">
@@ -119,6 +120,46 @@
 				{/each}
 			{/each}
 		</svg>
+	</div>
+
+	<div
+		data-diagram="stacked"
+		role="img"
+		aria-label={description}
+		class="flex flex-col bg-[linear-gradient(color-mix(in_oklab,var(--border)_60%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--border)_60%,transparent)_1px,transparent_1px)] bg-[size:25px_25px] px-5 py-6 md:hidden"
+	>
+		{#each columns as column, i (column.label)}
+			{#if i > 0}
+				<svg
+					aria-hidden="true"
+					viewBox="0 0 8 32"
+					class="mx-auto my-2 block h-8 w-2 overflow-visible"
+				>
+					<path d="M4 0V32" fill="none" class="stroke-border" stroke-width="1.5" />
+					<path
+						d="M4 0V32"
+						pathLength="1"
+						fill="none"
+						class="beam stroke-primary"
+						stroke-width="2"
+						stroke-linecap="round"
+						style="animation-delay: {(i - 1) * 0.4}s"
+					/>
+				</svg>
+			{/if}
+			<div class="flex flex-col gap-2">
+				<p class="font-mono text-xs text-primary-text">{column.label}</p>
+				<ul class="grid gap-2 sm:grid-cols-2">
+					{#each column.items as item (item)}
+						<li
+							class="rounded-xl border border-border bg-card px-3 py-2.5 font-mono text-xs text-foreground"
+						>
+							{item}
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/each}
 	</div>
 	<PlusCorners />
 </figure>
