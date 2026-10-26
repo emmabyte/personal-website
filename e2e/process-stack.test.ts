@@ -3,15 +3,32 @@ import { howIShip } from '../src/lib/data/process';
 
 test('pipeline diagram contains no invented figures', async ({ page }) => {
 	await page.goto('/');
-	const diagram = page.locator('#process svg[role=img]');
-	const label = (await diagram.getAttribute('aria-label')) ?? '';
-	expect(label).not.toMatch(/\d/);
-	const text = (await diagram.textContent()) ?? '';
-	expect(text).not.toMatch(/\d+\s?m?s\b|iad1|sfo1|lhr1|hnd1|gru1|a1f9c3e/);
-	for (const stage of ['git push', 'test & build', 'preview', 'production']) {
-		expect(text).toContain(stage);
+	// One wide drawing for desktop, one stacked drawing for smaller screens.
+	const diagrams = page.locator('#process svg[role=img]');
+	await expect(diagrams).toHaveCount(2);
+	for (const diagram of await diagrams.all()) {
+		const label = (await diagram.getAttribute('aria-label')) ?? '';
+		expect(label).not.toMatch(/\d/);
+		const text = (await diagram.textContent()) ?? '';
+		expect(text).not.toMatch(/\d+\s?m?s\b|iad1|sfo1|lhr1|hnd1|gru1|a1f9c3e/);
+		for (const stage of ['git push', 'test & build', 'preview', 'production']) {
+			expect(text).toContain(stage);
+		}
 	}
 });
+
+for (const [width, visible] of [
+	[375, 'stacked'],
+	[1280, 'wide']
+] as const) {
+	test(`pipeline shows the ${visible} drawing at ${width}px`, async ({ page }) => {
+		await page.setViewportSize({ width, height: 900 });
+		await page.goto('/');
+		await expect(page.locator(`#process [data-pipeline="${visible}"]`)).toBeVisible();
+		const other = visible === 'wide' ? 'stacked' : 'wide';
+		await expect(page.locator(`#process [data-pipeline="${other}"]`)).toBeHidden();
+	});
+}
 
 test('pipeline caption reads from commit to production', async ({ page }) => {
 	await page.goto('/');
