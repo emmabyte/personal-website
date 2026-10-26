@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
 const FIELDS = ['name', 'email', 'organization', 'position', 'message'] as const;
+const REQUIRED = ['name', 'email', 'message'] as const;
 
 test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
 
@@ -21,8 +22,8 @@ async function fillForm(page: Page) {
 	const form = page.locator('#contact form');
 	await form.getByLabel('Name', { exact: true }).fill('Ada Lovelace');
 	await form.getByLabel('Email', { exact: true }).fill('ada@example.com');
-	await form.getByLabel('Organization', { exact: true }).fill('Analytical Engines');
-	await form.getByLabel('Position', { exact: true }).fill('Engineering Manager');
+	await form.getByLabel('Organization (optional)', { exact: true }).fill('Analytical Engines');
+	await form.getByLabel('Position (optional)', { exact: true }).fill('Engineering Manager');
 	await form.getByLabel('Message', { exact: true }).fill('Would love to talk about a role.');
 }
 
@@ -51,8 +52,8 @@ test('empty submit shows field errors and sends nothing', async ({ page }) => {
 	await sendButton(page).click();
 
 	const errors = page.locator('#contact form p[id$="-error"]');
-	await expect(errors).toHaveCount(5);
-	for (const field of FIELDS) {
+	await expect(errors).toHaveCount(3);
+	for (const field of REQUIRED) {
 		const input = page.locator(`#contact form [name="${field}"]`);
 		await expect(input).toHaveAttribute('aria-invalid', 'true');
 		const describedBy = await input.getAttribute('aria-describedby');
@@ -72,7 +73,57 @@ test('editing a field clears its error', async ({ page }) => {
 	await expect(name).not.toHaveAttribute('aria-invalid', 'true');
 	await expect(name).not.toHaveAttribute('aria-describedby', /.*/);
 	await expect(page.locator('#contact-name-error')).toHaveCount(0);
-	await expect(page.locator('#contact form p[id$="-error"]')).toHaveCount(4);
+	await expect(page.locator('#contact form p[id$="-error"]')).toHaveCount(2);
+});
+
+test('organization and position are optional', async ({ page }) => {
+	let postData = '';
+	await page.route('**/api/contact', async (route) => {
+		postData = route.request().postData() ?? '';
+		await route.fulfill({
+			status: 200,
+			body: JSON.stringify({ success: true, message: 'Message sent successfully' })
+		});
+	});
+	await openHome(page);
+	const form = page.locator('#contact form');
+	await form.getByLabel('Name', { exact: true }).fill('Ada Lovelace');
+	await form.getByLabel('Email', { exact: true }).fill('ada@example.com');
+	await form.getByLabel('Message', { exact: true }).fill('Looking for help with a side project.');
+	await sendButton(page).click();
+	await expect(page.locator('#contact').getByRole('status')).toHaveText(
+		'Thanks — your message is on its way.'
+	);
+	expect(postData).toContain('Ada Lovelace');
+});
+
+test('whitespace-only answers count as empty', async ({ page }) => {
+	await openHome(page);
+	const form = page.locator('#contact form');
+	await form.getByLabel('Name', { exact: true }).fill('   ');
+	await form.getByLabel('Email', { exact: true }).fill('ada@example.com');
+	await form.getByLabel('Message', { exact: true }).fill('              ');
+	await sendButton(page).click();
+	await expect(page.locator('#contact-name-error')).toHaveText('Please enter your name');
+	await expect(page.locator('#contact-message-error')).toHaveText(
+		'Please write at least 10 characters'
+	);
+});
+
+test('the form is only marked busy while sending', async ({ page }) => {
+	let release: () => void = () => {};
+	await page.route('**/api/contact', async (route) => {
+		await new Promise<void>((resolve) => (release = resolve));
+		await route.fulfill({ status: 200, body: JSON.stringify({ success: true, message: 'ok' }) });
+	});
+	await openHome(page);
+	const form = page.locator('#contact form');
+	await expect(form).not.toHaveAttribute('aria-busy', /.*/);
+	await fillForm(page);
+	await sendButton(page).click();
+	await expect(form).toHaveAttribute('aria-busy', 'true');
+	release();
+	await expect(form).not.toHaveAttribute('aria-busy', /.*/);
 });
 
 test('successful submit posts the token and clears the form', async ({ page }) => {
@@ -179,6 +230,19 @@ test('copy email shows Copied', async ({ page }) => {
 	await openHome(page);
 	await page.locator('#contact').getByRole('button', { name: 'Copy email' }).click();
 	await expect(page.locator('#contact').getByRole('button', { name: 'Copied' })).toBeVisible();
+});
+
+test('copy email says so when the clipboard is unavailable', async ({ page }) => {
+	await page.addInitScript(() => {
+		Object.defineProperty(navigator, 'clipboard', {
+			value: { writeText: () => Promise.reject(new Error('denied')) }
+		});
+	});
+	await openHome(page);
+	await page.locator('#contact').getByRole('button', { name: 'Copy email' }).click();
+	await expect(
+		page.locator('#contact').getByRole('button', { name: "Couldn't copy — select the address" })
+	).toBeVisible();
 });
 
 test('recaptcha attribution is visible', async ({ page }) => {

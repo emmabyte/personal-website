@@ -90,10 +90,14 @@
 	name: keyof ContactFields,
 	label: string,
 	autocomplete: FullAutoFill,
-	type: 'text' | 'email' = 'text'
+	type: 'text' | 'email' = 'text',
+	optional = false
 )}
 	<div class="flex flex-col gap-1.5">
-		<label for="contact-{name}" class="text-sm font-medium">{label}</label>
+		<label for="contact-{name}" class="text-sm font-medium"
+			>{label}{#if optional}{' '}<span class="font-normal text-muted-foreground">(optional)</span
+				>{/if}</label
+		>
 		<input
 			id="contact-{name}"
 			{name}
@@ -118,7 +122,7 @@
 	method="post"
 	action="/api/contact"
 	novalidate
-	aria-busy={pending}
+	aria-busy={pending || undefined}
 	onsubmit={handleSubmit}
 	onfocusin={warmUpRecaptcha}
 	class="flex flex-col gap-5"
@@ -128,8 +132,8 @@
 		{@render field('email', 'Email', 'email', 'email')}
 	</div>
 	<div class="grid gap-5 md:grid-cols-2">
-		{@render field('organization', 'Organization', 'organization')}
-		{@render field('position', 'Position', 'organization-title')}
+		{@render field('organization', 'Organization', 'organization', 'text', true)}
+		{@render field('position', 'Position', 'organization-title', 'text', true)}
 	</div>
 	<div class="flex flex-col gap-1.5">
 		<label for="contact-message" class="text-sm font-medium">Message</label>
