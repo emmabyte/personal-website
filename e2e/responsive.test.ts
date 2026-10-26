@@ -21,20 +21,36 @@ for (const path of PAGES) {
 
 test(`hero content stays inside ${WIDTH}px`, async ({ page }) => {
 	// #top is overflow-hidden, so document scrollWidth cannot see overflow inside it.
-	// The code card scrolls inside its own <pre>, so elements in a scroll container don't count.
 	await openHydrated(page, '/');
 	const overflowing = await page.evaluate((limit) => {
 		const hero = document.querySelector('#top');
 		if (!hero) return ['#top missing'];
-		const inScroller = (el: Element) => {
-			for (let node = el.parentElement; node && node !== hero; node = node.parentElement) {
-				if (['auto', 'scroll'].includes(getComputedStyle(node).overflowX)) return true;
-			}
-			return false;
-		};
 		return [...hero.querySelectorAll('*')]
-			.filter((el) => el.getBoundingClientRect().right > limit + 0.5 && !inScroller(el))
+			.filter((el) => el.getBoundingClientRect().right > limit + 0.5)
 			.map((el) => `${el.tagName.toLowerCase()}.${el.className}`);
 	}, WIDTH);
 	expect(overflowing).toEqual([]);
 });
+
+// Phones never get a sideways-scrolling box: diagrams stack and code wraps instead.
+for (const width of [320, 375, 414]) {
+	for (const path of PAGES) {
+		test(`no sideways scrollers at ${width}px on ${path}`, async ({ page }) => {
+			await page.setViewportSize({ width, height: 800 });
+			await openHydrated(page, path);
+			const scrollers = await page.evaluate(() =>
+				[...document.querySelectorAll('body *')]
+					.filter((el) => {
+						const { overflowX, display } = getComputedStyle(el);
+						return (
+							display !== 'none' &&
+							['auto', 'scroll'].includes(overflowX) &&
+							el.scrollWidth > el.clientWidth + 1
+						);
+					})
+					.map((el) => `${el.tagName.toLowerCase()}.${String(el.className).slice(0, 40)}`)
+			);
+			expect(scrollers).toEqual([]);
+		});
+	}
+}
