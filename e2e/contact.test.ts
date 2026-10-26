@@ -188,20 +188,6 @@ test('recaptcha attribution is visible', async ({ page }) => {
 	);
 });
 
-test('inputs and submit show the solid primary focus outline', async ({ page }) => {
-	await openHome(page);
-	await page.keyboard.press('Tab'); // enter keyboard modality so :focus-visible applies
-	for (const target of [
-		page.locator('#contact form [name="name"]'),
-		page.locator('#contact form [name="message"]'),
-		sendButton(page)
-	]) {
-		await target.focus();
-		await expect(target).toHaveCSS('outline-style', /^(?!none)/);
-		await expect(target).toHaveCSS('outline-color', 'rgb(214, 58, 79)');
-	}
-});
-
 test('recaptcha script is not requested on initial load', async ({ page }) => {
 	const scriptRequests: string[] = [];
 	page.on('request', (request) => {

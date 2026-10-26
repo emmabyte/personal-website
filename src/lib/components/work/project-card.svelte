@@ -20,7 +20,7 @@
 			<h3 class="text-2xl font-semibold tracking-tight">
 				<a
 					href="/work/{project.slug}"
-					class="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-primary"
+					class="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-primary"
 				>
 					{project.title}
 				</a>

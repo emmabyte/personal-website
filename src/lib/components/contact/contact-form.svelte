@@ -25,9 +25,9 @@
 	let status = $state<Status | null>(null);
 
 	const controlClass =
-		'w-full rounded-xl border border-input bg-background px-4 text-base text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-invalid:border-destructive';
+		'w-full rounded-xl border border-input bg-background px-4 text-base text-foreground aria-invalid:border-destructive';
 	const linkClass =
-		'rounded-sm underline underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+		'rounded-sm underline underline-offset-4 hover:text-foreground';
 
 	function withEmailFallback(message: string) {
 		const sentence = /[.!?]$/.test(message) ? message : `${message}.`;
@@ -148,7 +148,7 @@
 		<button
 			type="submit"
 			disabled={pending}
-			class="inline-flex h-12 items-center justify-center self-start rounded-full bg-primary px-6 font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
+			class="inline-flex h-12 items-center justify-center self-start rounded-full bg-primary px-6 font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
 		>
 			Send message
 		</button>

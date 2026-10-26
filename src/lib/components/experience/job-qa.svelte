@@ -8,7 +8,7 @@
 {#if faqs.length > 0}
 	<details class="group mt-4">
 		<summary
-			class="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-sm font-mono text-xs text-muted-foreground transition-colors hover:text-primary-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden"
+			class="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-sm font-mono text-xs text-muted-foreground transition-colors hover:text-primary-text [&::-webkit-details-marker]:hidden"
 		>
 			Q&amp;A<span class="sr-only"> about {company}</span>
 			<ChevronDown

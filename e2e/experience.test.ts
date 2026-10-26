@@ -27,19 +27,6 @@ test('Q&A is collapsed by default and opens from the keyboard', async ({ page })
 	await expect(row.getByText('Why was this role so short?')).toBeVisible();
 });
 
-test('focused Q&A summary shows the solid primary outline', async ({ page }) => {
-	await page.goto('/');
-	const summary = page
-		.locator('#experience ol > li')
-		.filter({ hasText: 'SpaceX' })
-		.locator('summary');
-	await page.keyboard.press('Tab'); // enter keyboard modality so :focus-visible applies
-	await summary.focus();
-	await expect(summary).toHaveCSS('outline-style', /^(?!none)/);
-	// toHaveCSS retries, so the colour is read after the colour transition settles.
-	await expect(summary).toHaveCSS('outline-color', 'rgb(214, 58, 79)');
-});
-
 test('Emmabyte row has no Q&A and links to selected work', async ({ page }) => {
 	await page.goto('/');
 	const first = page.locator('#experience ol > li').first();

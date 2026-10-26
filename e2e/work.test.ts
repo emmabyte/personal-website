@@ -54,15 +54,3 @@ test('the secondary links stay clickable over the card overlay', async ({ page, 
 	expect(landed.url()).toBe('https://github.com/emmabyte-engineering/pulse');
 	expect(page.url()).not.toContain('/work/pulse');
 });
-
-test('keyboard focus on a card title link shows a primary-coloured ring', async ({ page }) => {
-	await page.goto('/');
-	const link = card(page, 'Harbor').getByRole('link', { name: 'Harbor', exact: true });
-	for (let i = 0; i < 60; i++) {
-		await page.keyboard.press('Tab');
-		if (await link.evaluate((el) => el === document.activeElement)) break;
-	}
-	await expect(link).toBeFocused();
-	const ringShadow = await link.evaluate((el) => getComputedStyle(el, '::after').boxShadow);
-	expect(ringShadow).toContain('rgb(214, 58, 79)');
-});

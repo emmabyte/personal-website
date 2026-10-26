@@ -23,7 +23,7 @@
 <button
 	type="button"
 	onclick={handleCopy}
-	class="inline-flex h-12 items-center gap-2 rounded-full border border-border px-6 text-sm font-medium transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+	class="inline-flex h-12 items-center gap-2 rounded-full border border-border px-6 text-sm font-medium transition-colors hover:bg-secondary"
 >
 	{#if copied}
 		<Check class="size-4 text-primary" aria-hidden="true" />

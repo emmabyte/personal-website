@@ -3,9 +3,6 @@
 	import SectionHeading from '$lib/components/ui/section-heading.svelte';
 	import { experience } from '$lib/data/experience';
 	import { profile } from '$lib/data/profile';
-
-	const focusRing =
-		'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
 </script>
 
 <section
@@ -22,7 +19,7 @@
 		<a
 			href={profile.resume.href}
 			download={profile.resume.filename}
-			class="rounded-sm font-mono text-sm text-muted-foreground underline-offset-4 hover:text-primary-text hover:underline {focusRing}"
+			class="rounded-sm font-mono text-sm text-muted-foreground underline-offset-4 hover:text-primary-text hover:underline"
 		>
 			Full résumé (PDF) ↓
 		</a>
@@ -38,7 +35,7 @@
 								href={job.companyUrl}
 								target="_blank"
 								rel="noreferrer"
-								class="rounded-sm underline-offset-4 hover:text-primary-text hover:underline {focusRing}"
+								class="rounded-sm underline-offset-4 hover:text-primary-text hover:underline"
 							>
 								{job.company}
 							</a>
@@ -53,7 +50,7 @@
 					{#if job.link}
 						<a
 							href={job.link.href}
-							class="mt-3 rounded-sm font-mono text-xs text-primary-text underline-offset-4 hover:underline {focusRing}"
+							class="mt-3 rounded-sm font-mono text-xs text-primary-text underline-offset-4 hover:underline"
 						>
 							{job.link.label}
 						</a>
