@@ -14,17 +14,19 @@
 	<div class="relative mx-auto max-w-6xl px-5 pt-16 pb-20 md:px-8 md:pt-24 md:pb-28">
 		<div class="relative grid items-center gap-12 lg:grid-cols-[1.25fr_1fr]">
 			<div class="flex flex-col gap-8">
-				<p
-					class="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-xs text-muted-foreground"
-				>
-					<span class="relative flex size-2">
-						<span
-							class="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:animate-none"
-						></span>
-						<span class="relative inline-flex size-2 rounded-full bg-primary"></span>
-					</span>
-					{profile.availability}
-				</p>
+				{#if profile.availability}
+					<p
+						class="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-xs text-muted-foreground"
+					>
+						<span class="relative flex size-2">
+							<span
+								class="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:animate-none"
+							></span>
+							<span class="relative inline-flex size-2 rounded-full bg-primary"></span>
+						</span>
+						{profile.availability}
+					</p>
+				{/if}
 
 				<div class="flex flex-col gap-5">
 					<h1
@@ -38,8 +40,10 @@
 						</span>
 						<span class="block min-h-[1.1em] text-muted-foreground">
 							<span class="sr-only">{profile.role}</span>
-							<ScrambleText words={profile.roles} />
-							<span aria-hidden="true" class="text-primary-text">.</span>
+							<ScrambleText words={profile.roles} /><span
+								aria-hidden="true"
+								class="text-primary-text">.</span
+							>
 						</span>
 					</h1>
 					<p class="max-w-xl text-lg leading-relaxed text-pretty text-muted-foreground">

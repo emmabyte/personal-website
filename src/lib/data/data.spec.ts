@@ -81,6 +81,13 @@ describe('projects', () => {
 	});
 });
 
+describe('profile', () => {
+	it('has a meta description that fits a search snippet', () => {
+		expect(profile.metaDescription.length).toBeGreaterThan(0);
+		expect(profile.metaDescription.length).toBeLessThanOrEqual(160);
+	});
+});
+
 describe('content rules', () => {
 	it('the AI note is the only content mentioning AI', () => {
 		const AI = /\b(AI|Claude|Copilot|Cursor|LLM)\b/;

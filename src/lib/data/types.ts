@@ -5,14 +5,15 @@ export type Profile = {
 	wordmark: string;
 	email: string;
 	location: string;
-	availability: string;
+	availability?: string; // omit to hide the hero badge
 	intro: string;
+	metaDescription: string;
 	roles: string[];
 	siteUrl: string;
 	socials: Link[];
 	resume: { href: string; filename: string };
 	contactHeading: string;
-	contactLine: string;
+	contactLine?: string; // omit to hide the line under the contact heading
 };
 export type Stat = { value: string; label: string };
 export type StackGroup = { area: string; items: string[] };

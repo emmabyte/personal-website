@@ -35,6 +35,13 @@ async function openHome(page: Page) {
 
 const sendButton = (page: Page) => page.getByRole('button', { name: 'Send message' });
 
+test('the form posts to the contact endpoint if it submits before JS runs', async ({ page }) => {
+	await page.goto('/');
+	const form = page.locator('#contact form');
+	await expect(form).toHaveAttribute('method', 'post');
+	await expect(form).toHaveAttribute('action', '/api/contact');
+});
+
 test('empty submit shows field errors and sends nothing', async ({ page }) => {
 	const posts: string[] = [];
 	page.on('request', (request) => {

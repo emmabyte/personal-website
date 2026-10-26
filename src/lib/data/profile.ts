@@ -10,6 +10,8 @@ export const profile: Profile = {
 	availability: todo('badge text — recommended "Taking on freelance projects"'),
 	intro:
 		"I build reliable web products end to end — from CI/CD pipelines and edge APIs to interfaces people enjoy using. Right now I'm the sole engineer modernizing a decade-old platform at Haven Ministries.",
+	metaDescription:
+		'Full-stack engineer building reliable web products end to end, from CI/CD pipelines and edge APIs to interfaces people enjoy using.',
 	roles: ['Full-Stack Engineer', 'Systems Architect', 'DevOps Tinkerer', 'Interface Builder'],
 	siteUrl: 'https://emma-long.vercel.app',
 	socials: [

@@ -8,7 +8,7 @@
 		line,
 		headingId,
 		index
-	}: { heading: string; line: string; headingId: string; index?: string } = $props();
+	}: { heading: string; line?: string; headingId: string; index?: string } = $props();
 
 	const linkClass =
 		'group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground';
@@ -25,7 +25,9 @@
 		>
 			{heading}
 		</h2>
-		<p class="max-w-xl text-lg text-pretty text-muted-foreground">{line}</p>
+		{#if line}
+			<p class="max-w-xl text-lg text-pretty text-muted-foreground">{line}</p>
+		{/if}
 	</div>
 
 	<div class="flex flex-wrap items-center gap-3">

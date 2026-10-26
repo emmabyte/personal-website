@@ -7,6 +7,17 @@ test('hero h1 contains the name and the screen-reader role', async ({ page }) =>
 	await expect(h1.locator('.sr-only')).toHaveText('Full-Stack Engineer');
 });
 
+test('the role line has no space before the closing dot', async ({ page }) => {
+	await page.goto('/');
+	const scramble = page.locator('#top h1 [data-scramble]');
+	const nextSiblingIsText = await scramble.evaluate(
+		(el) => el.nextSibling?.nodeType === Node.TEXT_NODE
+	);
+	expect(nextSiblingIsText).toBe(false);
+	const roleLine = await scramble.evaluate((el) => el.parentElement?.textContent ?? '');
+	expect(roleLine).not.toMatch(/\s\./);
+});
+
 test('hero buttons point at work and contact', async ({ page }) => {
 	await page.goto('/');
 	const hero = page.locator('#top');

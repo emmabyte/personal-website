@@ -115,6 +115,8 @@
 {/snippet}
 
 <form
+	method="post"
+	action="/api/contact"
 	novalidate
 	aria-busy={pending}
 	onsubmit={handleSubmit}

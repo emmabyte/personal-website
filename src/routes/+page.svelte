@@ -12,7 +12,7 @@
 
 <Seo
 	title="Emma Long — Full-Stack Engineer"
-	description={profile.intro}
+	description={profile.metaDescription}
 	path="/"
 	jsonLd={personJsonLd()}
 />
