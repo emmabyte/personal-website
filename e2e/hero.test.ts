@@ -18,31 +18,42 @@ test('the role line has no space before the closing dot', async ({ page }) => {
 	expect(roleLine).not.toMatch(/\s\./);
 });
 
-for (const width of [360, 768]) {
+for (const width of [320, 360, 768]) {
 	test(`the page below the role line stays still while it scrambles at ${width}px`, async ({
 		page
 	}) => {
+		// Drive the scramble with Playwright's clock instead of waiting in real time.
+		await page.clock.install();
 		await page.setViewportSize({ width, height: 800 });
 		await page.goto('/');
 		await page.locator('#svelte-announcer').waitFor({ state: 'attached' });
-		const tops = await page.evaluate(
-			() =>
-				new Promise<number[]>((resolve) => {
-					const intro = document.querySelector('#top-title')!.nextElementSibling!;
-					const seen = new Set<number>();
-					const started = performance.now();
-					const timer = setInterval(() => {
-						seen.add(Math.round(intro.getBoundingClientRect().top));
-						if (performance.now() - started > 6500) {
-							clearInterval(timer);
-							resolve([...seen]);
-						}
-					}, 40);
-				})
-		);
-		expect(tops).toHaveLength(1);
+		const intro = page.locator('#top-title + p');
+		const tops = new Set<number>();
+		for (let elapsed = 0; elapsed < 6500; elapsed += 50) {
+			await page.clock.runFor(50);
+			tops.add(Math.round((await intro.boundingBox())!.y));
+		}
+		expect([...tops]).toHaveLength(1);
 	});
 }
+
+test('the h1 carries no hidden copies of the other roles', async ({ page }) => {
+	const html = await (await page.request.get('/')).text();
+	// Text content only: tags and attributes are stripped, as a crawler reads the heading.
+	const h1 = html.slice(html.indexOf('<h1'), html.indexOf('</h1>')).replace(/<[^>]*>/g, '');
+	for (const role of ['Systems Architect', 'DevOps Tinkerer', 'Interface Builder']) {
+		expect(h1).not.toContain(role);
+	}
+});
+
+test('the scramble animation is clipped to the box reserved for it', async ({ page }) => {
+	await page.goto('/');
+	const overlay = page.locator('#top h1 [data-scramble]').locator('..');
+	await expect(overlay).toHaveCSS('overflow', 'hidden');
+	const box = await overlay.boundingBox();
+	const reserved = await overlay.locator('..').boundingBox();
+	expect(box).toEqual(reserved);
+});
 
 test('hero buttons point at work and contact', async ({ page }) => {
 	await page.goto('/');

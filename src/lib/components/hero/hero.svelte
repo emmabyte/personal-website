@@ -42,9 +42,7 @@
 						</span>
 						<span class="block text-muted-foreground">
 							<span class="sr-only">{profile.role}</span>
-							<ScrambleText words={profile.roles}>
-								{#snippet suffix()}<span class="text-primary-text">.</span>{/snippet}
-							</ScrambleText>
+							<ScrambleText words={profile.roles} suffix="." suffixClass="text-primary-text" />
 						</span>
 					</h1>
 					<p

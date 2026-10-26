@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { untrack, type Snippet } from 'svelte';
+	import { untrack } from 'svelte';
 
 	const GLYPHS = '!<>-_\\/[]{}=+*^?#01';
 
@@ -11,8 +11,9 @@
 	let {
 		words,
 		interval = 2600,
-		suffix
-	}: { words: string[]; interval?: number; suffix?: Snippet } = $props();
+		suffix = '',
+		suffixClass
+	}: { words: string[]; interval?: number; suffix?: string; suffixClass?: string } = $props();
 
 	let glyphs = $state<Glyph[]>(untrack(() => toGlyphs(words[0])));
 
@@ -73,19 +74,24 @@
 </script>
 
 <!--
-	Every word sits invisibly in the same grid cell, so the box is always as tall
-	as the longest one wraps to. The animated text floats over that box and can
-	never push the rest of the page around.
+	Each sizer cell draws a word with CSS generated content, so the box is always as
+	tall as the longest role wraps to without putting hidden copies of the roles in
+	the heading's text. The animated layer floats over that box, clipped to it, so a
+	scramble can never push or paint over the rest of the page. The bottom padding
+	leaves room for descenders, since the heading's line-height is 1.
 -->
-<span aria-hidden="true" class="relative grid">
+<span aria-hidden="true" class="relative grid pb-[0.15em]">
 	{#each words as word (word)}
-		<span class="invisible col-start-1 row-start-1">{word}{@render suffix?.()}</span>
+		<span
+			data-word={word + suffix}
+			class="invisible col-start-1 row-start-1 before:content-[attr(data-word)]"
+		></span>
 	{/each}
-	<span class="absolute inset-0"
+	<span class="absolute inset-0 overflow-hidden"
 		><span data-scramble
 			>{#each glyphs as glyph, i (i)}<span
 					class={glyph.scrambling ? 'font-mono text-primary' : undefined}>{glyph.char}</span
 				>{/each}</span
-		>{@render suffix?.()}</span
+		>{#if suffix}<span class={suffixClass}>{suffix}</span>{/if}</span
 	>
 </span>
