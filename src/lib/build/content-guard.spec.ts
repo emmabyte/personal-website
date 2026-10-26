@@ -33,10 +33,15 @@ describe('findPendingContent', () => {
 });
 
 describe('shouldEnforce', () => {
-	it('is true only for Vercel production or REQUIRE_CONTENT=1', () => {
-		expect(shouldEnforce({ VERCEL_ENV: 'production' })).toBe(true);
+	it('fails closed on Vercel unless the environment is preview or development', () => {
+		expect(shouldEnforce({ VERCEL: '1' })).toBe(true);
+		expect(shouldEnforce({ VERCEL: '1', VERCEL_ENV: 'production' })).toBe(true);
+		expect(shouldEnforce({ VERCEL: '1', VERCEL_ENV: 'preview' })).toBe(false);
+		expect(shouldEnforce({ VERCEL: '1', VERCEL_ENV: 'development' })).toBe(false);
+	});
+
+	it('enforces when REQUIRE_CONTENT=1 and not for a plain local build', () => {
 		expect(shouldEnforce({ REQUIRE_CONTENT: '1' })).toBe(true);
-		expect(shouldEnforce({ VERCEL_ENV: 'preview' })).toBe(false);
 		expect(shouldEnforce({})).toBe(false);
 	});
 });

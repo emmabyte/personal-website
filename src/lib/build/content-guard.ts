@@ -20,7 +20,11 @@ export function findPendingContent(files: { path: string; content: string }[]): 
 }
 
 export function shouldEnforce(env: Record<string, string | undefined>): boolean {
-	return env.VERCEL_ENV === 'production' || env.REQUIRE_CONTENT === '1';
+	// Fail closed: on Vercel, only an explicit preview or development environment skips the guard,
+	// so a build where VERCEL_ENV isn't exposed is still enforced.
+	const onVercelLive =
+		env.VERCEL === '1' && env.VERCEL_ENV !== 'preview' && env.VERCEL_ENV !== 'development';
+	return env.REQUIRE_CONTENT === '1' || onVercelLive;
 }
 
 function readDataFiles(root: string) {

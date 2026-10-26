@@ -26,8 +26,7 @@
 
 	const controlClass =
 		'w-full rounded-xl border border-input bg-background px-4 text-base text-foreground aria-invalid:border-destructive';
-	const linkClass =
-		'rounded-sm underline underline-offset-4 hover:text-foreground';
+	const linkClass = 'rounded-sm underline underline-offset-4 hover:text-foreground';
 
 	function withEmailFallback(message: string) {
 		const sentence = /[.!?]$/.test(message) ? message : `${message}.`;
