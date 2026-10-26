@@ -71,7 +71,7 @@ async function tabThroughPage(page: Page, path: string) {
 
 // Landmarks that prove the walk reached each kind of focusable, so it cannot pass vacuously.
 const LANDMARKS = {
-	'/': ['<a> Contact', '<a> Harbor', '<summary> Q&A', '<input>', '<button> Send message'],
+	'/': ['<a> Contact', '<a> Harbor', '<button> Q&A', '<input>', '<button> Send message'],
 	'/work/pulse': ['<a> Contact', '<a> ← All work', '<button> Copy email', '<a> Or send a message']
 };
 
