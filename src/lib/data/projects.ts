@@ -67,10 +67,7 @@ export const moreProjects: MoreProject[] = [
 		description:
 			'Online learning platform with an admin panel, user authentication, and features for students and instructors.',
 		tags: ['SvelteKit', 'Vercel Edge', 'PlanetScale', 'Stripe'],
-		links: [
-			{ label: 'Demo', href: 'https://study-stack-demo.vercel.app' },
-			{ label: 'Source code', href: 'https://github.com/emmabyte/study-stack' }
-		]
+		links: [{ label: 'Source code', href: 'https://github.com/emmabyte/study-stack' }]
 	},
 	{
 		title: 'MiniFTP',

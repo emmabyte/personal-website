@@ -51,7 +51,7 @@ export const experience: { description: string; jobs: Job[] } = {
 		{
 			period: '2022 — 2025',
 			company: 'Study Stack',
-			companyUrl: 'https://study-stack-demo.vercel.app',
+			companyUrl: 'https://github.com/emmabyte/study-stack',
 			title: 'Co-Founder & Lead Engineer',
 			summary:
 				'Co-founded and led engineering on an online learning platform (SvelteKit, TypeScript, Prisma, Stripe). Wrote most of the code myself and mentored an intern. Now open source.',
