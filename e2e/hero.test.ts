@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import ts from 'typescript';
 
 test('hero h1 contains the name and the screen-reader role', async ({ page }) => {
 	await page.goto('/');
@@ -95,4 +96,19 @@ test('code card is labelled and shows about.ts', async ({ page }) => {
 	});
 	await expect(card).toBeVisible();
 	await expect(card.locator('figcaption')).toHaveText('about.ts');
+});
+
+test('the code card is valid TypeScript, with one quote style', async ({ page }) => {
+	await page.goto('/');
+	const card = page.getByRole('figure', { name: 'Code snippet summarizing my engineering focus' });
+	// Each row is a line number then the code; indentation is padding, so join the code with newlines.
+	const source = (
+		await card
+			.locator('code > div')
+			.evaluateAll((rows) => rows.map((row) => row.lastElementChild?.textContent ?? ''))
+	).join('\n');
+	const { diagnostics } = ts.transpileModule(source, { reportDiagnostics: true });
+	expect(diagnostics?.map((d) => ts.flattenDiagnosticMessageText(d.messageText, '\n'))).toEqual([]);
+	expect(source).toContain("'dont be evil', // rip");
+	expect(source).not.toContain('"');
 });

@@ -44,7 +44,7 @@
 		item("'if it can break, it will'"),
 		item("'no tests, no trust. lots of tests, barely trust.'"),
 		item("'human in the loop, always'"),
-		item('"don\'t be evil"', 'rip'),
+		item("'dont be evil'", 'rip'),
 		{ indent: 1, tokens: [{ text: '],' }] },
 		list('prefers', ['UX > UI', 'simple > complex', 'joy > features']),
 		{ indent: 0, tokens: [{ text: '};' }] }
