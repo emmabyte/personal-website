@@ -67,11 +67,27 @@ test('outside the pipeline diagram, the home page mentions AI exactly once', asy
 
 test('stack shows four labelled columns', async ({ page }) => {
 	await page.goto('/');
-	for (const area of ['Frontend', 'Backend', 'Data', 'Infra']) {
+	for (const [area, count] of [
+		['Frontend', 5],
+		['Backend', 3],
+		['Data', 5],
+		['Infra', 6]
+	] as const) {
 		const heading = page.getByRole('heading', { name: `// ${area}`, exact: true });
 		await expect(heading).toBeVisible();
-		await expect(heading.locator('xpath=..').locator('li')).toHaveCount(5);
+		await expect(heading.locator('xpath=..').locator('li')).toHaveCount(count);
 	}
+});
+
+test('the default stack is marked and the extras are listed', async ({ page }) => {
+	await page.goto('/');
+	const defaults = page.locator('#stack li[data-default]');
+	await expect(defaults).toHaveText(
+		['TypeScript', 'SvelteKit', 'Tailwind CSS', 'Supabase', 'Vercel'].map(
+			(tool) => `${tool} (default stack)`
+		)
+	);
+	await expect(page.locator('#stack')).toContainText('Also shipped with: React, Next.js');
 });
 
 test('selected diagram text turns white on the red highlight', async ({ page }) => {

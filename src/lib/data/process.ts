@@ -18,5 +18,5 @@ export const howIShip: { description: string; principles: Principle[]; aiNote: s
 		}
 	],
 	aiNote:
-		'I use AI coding agents for much of the implementation work. Architecture, security-sensitive code, test design and code review stay with me, and patient data and secrets stay out of prompts.'
+		'I use AI coding agents for much of the implementation work, which means more vigilance against tech debt, not less. Architecture, security-sensitive code, test design and code review stay with me, and patient data and secrets stay out of prompts.'
 };

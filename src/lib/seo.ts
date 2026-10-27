@@ -19,6 +19,6 @@ export function personJsonLd(): Record<string, unknown> {
 		worksFor: experience.jobs
 			.filter((job) => job.period.endsWith('Now'))
 			.map((job) => ({ '@type': 'Organization', name: job.company })),
-		knowsAbout: stack.groups.flatMap((group) => group.items)
+		knowsAbout: [...stack.groups.flatMap((group) => group.items), ...stack.also]
 	};
 }

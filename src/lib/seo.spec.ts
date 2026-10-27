@@ -20,6 +20,6 @@ describe('personJsonLd', () => {
 		expect(data.sameAs).toEqual(profile.socials.map((s) => s.href));
 		const worksFor = data.worksFor as { name: string }[];
 		expect(worksFor.map((o) => o.name)).toEqual(['Emmabyte Engineering, Inc.']);
-		expect(data.knowsAbout).toEqual(stack.groups.flatMap((g) => g.items));
+		expect(data.knowsAbout).toEqual([...stack.groups.flatMap((g) => g.items), ...stack.also]);
 	});
 });

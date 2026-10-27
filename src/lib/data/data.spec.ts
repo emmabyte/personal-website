@@ -97,6 +97,14 @@ describe('profile', () => {
 	});
 });
 
+describe('stack', () => {
+	it('every default-stack tool is listed in a column, and none is also in the extras', () => {
+		const listed = stack.groups.flatMap((group) => group.items);
+		for (const tool of stack.defaults) expect(listed).toContain(tool);
+		for (const tool of stack.also) expect(listed).not.toContain(tool);
+	});
+});
+
 describe('content rules', () => {
 	it('the AI note is the only content mentioning AI', () => {
 		const AI = /\b(AI|Claude|Copilot|Cursor|LLM)\b/;
