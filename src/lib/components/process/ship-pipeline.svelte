@@ -18,6 +18,8 @@
 	const HOP = 0.5;
 	const beamDelay = (hop: number) => `${hop * HOP}s`;
 	const pingDelay = (hop: number) => `${hop * HOP + 0.45}s`;
+	// Each stage glows as the beam reaches it; git push glows just before the first beam leaves.
+	const glowDelay = (hop: number) => (hop < 0 ? '-0.3s' : pingDelay(hop));
 
 	// Wide drawing: push fans out to the checks, they fan back into the build, which fans out to two lanes.
 	const wide = {
@@ -65,6 +67,9 @@
 			<stop offset="0%" stop-color="var(--brand)" stop-opacity="0.3" />
 			<stop offset="100%" stop-color="var(--brand)" stop-opacity="0" />
 		</radialGradient>
+		<filter id="{prefix}-halo" x="-50%" y="-100%" width="200%" height="300%">
+			<feGaussianBlur stdDeviation="9" />
+		</filter>
 		<filter id="{prefix}-glow" x="-50%" y="-50%" width="200%" height="200%">
 			<feGaussianBlur stdDeviation="3" result="blur" />
 			<feMerge>
@@ -75,13 +80,14 @@
 	</defs>
 {/snippet}
 
-{#snippet wire(d: string, prefix: string, hop: number)}
+<!-- short: a straight hop of a few dozen px, which needs a longer beam to be visible -->
+{#snippet wire(d: string, prefix: string, hop: number, short = false)}
 	<path {d} fill="none" class="stroke-border" stroke-width="1.5" />
 	<path
 		{d}
 		pathLength="1"
 		fill="none"
-		class="beam stroke-primary"
+		class={['beam stroke-primary', short && 'beam-short']}
 		stroke-width="2"
 		stroke-linecap="round"
 		filter="url(#{prefix}-glow)"
@@ -94,14 +100,37 @@
 	<circle {cx} {cy} r="4" class="fill-primary" />
 {/snippet}
 
-{#snippet pill(x: number, y: number, w: number, label: string, hop: number)}
+{#snippet halo(x: number, y: number, w: number, h: number, prefix: string, hop: number)}
+	<rect
+		x={x - 4}
+		y={y - 4}
+		width={w + 8}
+		height={h + 8}
+		rx={h / 2}
+		fill="var(--brand)"
+		fill-opacity="0.45"
+		filter="url(#{prefix}-halo)"
+		class="glow"
+		style:animation-delay={glowDelay(hop)}
+	/>
+{/snippet}
+
+{#snippet pill(x: number, y: number, w: number, label: string, hop: number, prefix: string)}
+	{@render halo(x, y - 18, w, 36, prefix, hop)}
 	<rect {x} y={y - 18} width={w} height="36" rx="18" class="fill-card stroke-border" />
 	{@render dot(x + 18, y, hop)}
 	<text x={x + 32} y={y + 4} class="fill-foreground font-mono text-[12px]">{label}</text>
 {/snippet}
 
 {#snippet core(x: number, y: number, prefix: string)}
-	<circle cx={x} cy={y} r="110" fill="url(#{prefix}-core)" />
+	<circle
+		cx={x}
+		cy={y}
+		r="110"
+		fill="url(#{prefix}-core)"
+		class="glow glow-core"
+		style:animation-delay={glowDelay(1)}
+	/>
 	<circle
 		cx={x}
 		cy={y}
@@ -145,24 +174,25 @@
 				)}
 				{#each pills.slice(1) as next, j (next.stage)}
 					{@const prev = pills[j]}
-					{@render wire(`M${prev.x + prev.w} ${y} H${next.x}`, uid, 3 + j)}
+					{@render wire(`M${prev.x + prev.w} ${y} H${next.x}`, uid, 3 + j, true)}
 				{/each}
 			{/each}
 
 			<g>
+				{@render halo(20, 142, 130, 56, uid, -1)}
 				<rect x="20" y="142" width="130" height="56" rx="12" class="fill-card stroke-border" />
 				<text x="38" y="175" class="fill-foreground font-mono text-[14px]">git push</text>
 			</g>
 
 			{#each checks as check, i (check)}
-				<g>{@render pill(wide.checkX, wide.checkYs[i], wide.checkW, check, 0)}</g>
+				<g>{@render pill(wide.checkX, wide.checkYs[i], wide.checkW, check, 0, uid)}</g>
 			{/each}
 
 			<g>{@render core(wide.core.x, wide.core.y, uid)}</g>
 
 			{#each lanes as lane, i (lane.id)}
 				{#each laneStages(lane.stages) as stage, j (stage.stage)}
-					<g>{@render pill(stage.x, wide.laneYs[i], stage.w, stage.stage, 2 + j)}</g>
+					<g>{@render pill(stage.x, wide.laneYs[i], stage.w, stage.stage, 2 + j, uid)}</g>
 				{/each}
 			{/each}
 
@@ -178,12 +208,12 @@
 	</div>
 
 	<div data-pipeline="stacked" class="lg:hidden">
-		<svg viewBox="0 0 360 640" role="img" aria-label={LABEL} class="mx-auto block w-full max-w-sm">
+		<svg viewBox="0 0 360 600" role="img" aria-label={LABEL} class="mx-auto block w-full max-w-sm">
 			{@render defs(`${uid}-s`)}
-			<rect width="360" height="640" fill="url(#{uid}-s-grid)" opacity="0.6" />
+			<rect width="360" height="600" fill="url(#{uid}-s-grid)" opacity="0.6" />
 
-			{@render wire('M180 72 V112', `${uid}-s`, 0)}
-			{@render wire(`M180 212 V${stacked.core.y - 58}`, `${uid}-s`, 1)}
+			{@render wire('M180 72 V112', `${uid}-s`, 0, true)}
+			{@render wire(`M180 212 V${stacked.core.y - 58}`, `${uid}-s`, 1, true)}
 			{#each lanes as lane, i (lane.id)}
 				{@const x = stacked.laneXs[i]}
 				{@render wire(
@@ -193,11 +223,12 @@
 				)}
 				{#each lane.stages.slice(1) as stage, j (stage)}
 					{@const top = stacked.laneTop + j * stacked.step}
-					{@render wire(`M${x} ${top + 18} V${top + stacked.step - 18}`, `${uid}-s`, 3 + j)}
+					{@render wire(`M${x} ${top + 18} V${top + stacked.step - 18}`, `${uid}-s`, 3 + j, true)}
 				{/each}
 			{/each}
 
 			<g>
+				{@render halo(90, 20, 180, 52, `${uid}-s`, -1)}
 				<rect x="90" y="20" width="180" height="52" rx="12" class="fill-card stroke-border" />
 				<text x="180" y="51" text-anchor="middle" class="fill-foreground font-mono text-[14px]">
 					git push
@@ -205,6 +236,7 @@
 			</g>
 
 			<g>
+				{@render halo(18, 112, 324, 100, `${uid}-s`, 0)}
 				<rect x="18" y="112" width="324" height="100" rx="14" class="fill-card stroke-border" />
 				{#each checks as check, i (check)}
 					{@const spot = stacked.checkSpots[i]}
@@ -225,20 +257,12 @@
 							stacked.laneTop + j * stacked.step,
 							156,
 							stage,
-							2 + j
+							2 + j,
+							`${uid}-s`
 						)}
 					</g>
 				{/each}
 			{/each}
-
-			<text
-				x="180"
-				y="618"
-				text-anchor="middle"
-				class="fill-muted-foreground font-mono text-[12px]"
-			>
-				Vitest · Playwright · GitHub Actions
-			</text>
 		</svg>
 	</div>
 	<PlusCorners />

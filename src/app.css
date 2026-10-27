@@ -98,9 +98,32 @@
 	}
 }
 
+@keyframes beam-short {
+	0% {
+		stroke-dashoffset: 0.6;
+	}
+	40%,
+	100% {
+		stroke-dashoffset: -1;
+	}
+}
+
 @keyframes spin-slow {
 	to {
 		transform: rotate(360deg);
+	}
+}
+
+@keyframes glow-pulse {
+	0% {
+		opacity: 0;
+	}
+	12% {
+		opacity: 1;
+	}
+	45%,
+	100% {
+		opacity: 0;
 	}
 }
 
@@ -123,6 +146,12 @@
 		animation: beam 3s cubic-bezier(0.6, 0, 0.4, 1) infinite;
 	}
 
+	.beam-short {
+		stroke-dasharray: 0.6 1.7;
+		stroke-dashoffset: 0.6;
+		animation-name: beam-short;
+	}
+
 	.spin {
 		transform-box: fill-box;
 		transform-origin: center;
@@ -134,6 +163,11 @@
 		transform-origin: center;
 		opacity: 0;
 		animation: ping-dot 3s ease-out infinite;
+	}
+
+	.glow {
+		opacity: 0;
+		animation: glow-pulse 3s ease-out infinite;
 	}
 
 	.conic-border {
@@ -205,8 +239,13 @@
 	.beam,
 	.spin,
 	.ping,
+	.glow,
 	.conic-border::before {
 		animation: none;
+	}
+	/* Held still, only the build keeps its glow. */
+	.glow-core {
+		opacity: 1;
 	}
 	.beam {
 		stroke-dashoffset: 0;
