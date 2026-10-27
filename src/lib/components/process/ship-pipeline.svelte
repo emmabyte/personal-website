@@ -70,7 +70,16 @@
 		<filter id="{prefix}-halo" x="-50%" y="-100%" width="200%" height="300%">
 			<feGaussianBlur stdDeviation="9" />
 		</filter>
-		<filter id="{prefix}-glow" x="-50%" y="-50%" width="200%" height="200%">
+		<!-- User-space region: a straight wire has a zero-height (or zero-width) bounding box, so a
+		     percentage region would be empty and the beam would never paint. -->
+		<filter
+			id="{prefix}-glow"
+			filterUnits="userSpaceOnUse"
+			x="-50"
+			y="-50"
+			width="1200"
+			height="1200"
+		>
 			<feGaussianBlur stdDeviation="3" result="blur" />
 			<feMerge>
 				<feMergeNode in="blur" />

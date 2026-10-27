@@ -103,3 +103,28 @@ test('selected diagram text turns white on the red highlight', async ({ page }) 
 	expect(fill).toBe(color);
 	expect(fill).toBe('oklch(1 0 0)');
 });
+
+// A filter sized relative to its shape renders nothing on a perfectly straight line,
+// because the line's bounding box has zero height or width.
+test('every pipeline beam can paint, straight wires included', async ({ page }) => {
+	for (const width of [375, 1280]) {
+		await page.setViewportSize({ width, height: 900 });
+		await page.goto('/');
+		const unpaintable = await page
+			.locator('#process svg')
+			.filter({ visible: true })
+			.locator('path.beam')
+			.evaluateAll((beams) =>
+				beams
+					.filter((beam) => {
+						const box = (beam as SVGGraphicsElement).getBBox();
+						if (box.width > 0 && box.height > 0) return false;
+						const id = beam.getAttribute('filter')?.match(/url\(#(.+)\)/)?.[1];
+						const filter = id ? (document.getElementById(id) as SVGFilterElement | null) : null;
+						return filter?.filterUnits.baseVal !== SVGUnitTypes.SVG_UNIT_TYPE_USERSPACEONUSE;
+					})
+					.map((beam) => beam.getAttribute('d'))
+			);
+		expect(unpaintable, `at ${width}px`).toEqual([]);
+	}
+});
