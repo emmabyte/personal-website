@@ -45,7 +45,7 @@
 		item("'human in the loop, always'"),
 		item("'dont be evil'", 'rip'),
 		{ indent: 1, tokens: [{ text: '],' }] },
-		list('prefers', ['UX > UI', 'tests != trust', 'joy > features']),
+		list('prefers', ['UX > UI', 'joy > features']),
 		{ indent: 0, tokens: [{ text: '};' }] }
 	];
 
