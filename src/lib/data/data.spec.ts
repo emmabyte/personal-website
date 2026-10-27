@@ -167,10 +167,8 @@ describe('case studies', () => {
 		expect(strings(caseStudies, true).filter((text) => tooling.test(text))).toEqual([]);
 	});
 
-	it('case studies keep the review gate', () => {
-		for (const study of caseStudies) {
-			expect(study.review?.startsWith(PENDING_PREFIX), study.slug).toBe(true);
-		}
+	it('every review gate is cleared, so the production build can ship', () => {
+		expect(strings(everything, true).filter((text) => text.startsWith(PENDING_PREFIX))).toEqual([]);
 	});
 
 	it('architecture diagrams fit the drawing: 3–4 columns, short labels, at most 4 short items', () => {

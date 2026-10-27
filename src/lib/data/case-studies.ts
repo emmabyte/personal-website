@@ -1,8 +1,7 @@
 import { featuredProjects } from './projects';
-import { todo } from './todo';
 import type { CaseStudy, FeaturedProject } from './types';
 
-// Drafted from each project's own repo docs. Each study keeps its review gate until Emma has read it.
+// Drafted from each project's own repo docs and reviewed by Emma.
 export const caseStudies: CaseStudy[] = [
 	{
 		slug: 'harbor',
@@ -82,8 +81,7 @@ export const caseStudies: CaseStudy[] = [
 			'URLs, logs, error messages, analytics, email and SMS text, and background-job payloads never carry client data; jobs and audit entries hold only ids.',
 			'Everything is stored in US regions, backups are copied to another US region, and production is the only environment that ever holds real client data.',
 			"Each California customer signs Harbor's subcontractor business associate agreement plus a California addendum, and the HIPAA Security Rule mapping applies to every tenant regardless of its legal status."
-		],
-		review: todo('Harbor case study review')
+		]
 	},
 	{
 		slug: 'emmabyte',
@@ -162,8 +160,7 @@ export const caseStudies: CaseStudy[] = [
 		outcome: [
 			'Live, and deployed from main once the test workflow passes. The production database credential now rotates on every deploy and weekly on a schedule.',
 			"The CRM's first rebuild phase, covering capture and the daily follow-up loop, has shipped, and invoice paid status now syncs automatically."
-		],
-		review: todo('Emmabyte platform case study review')
+		]
 	},
 	{
 		slug: 'tarot-tutor',
@@ -234,8 +231,7 @@ export const caseStudies: CaseStudy[] = [
 		outcome: [
 			'Live. Since launch it has added guided lesson tracks, a public library covering all 78 meanings, a first lesson that needs no account, and landing pages for ad campaigns.',
 			'The whole Major Arcana is now free to practice, and Pro sells the rest of the practice: every track, suit pathway and lesson.'
-		],
-		review: todo('Tarot Tutor case study review')
+		]
 	}
 ];
 
