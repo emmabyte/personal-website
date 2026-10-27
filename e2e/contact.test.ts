@@ -1,0 +1,274 @@
+import { expect, test, type Page } from '@playwright/test';
+
+const FIELDS = ['name', 'email', 'organization', 'position', 'message'] as const;
+const REQUIRED = ['name', 'email', 'message'] as const;
+
+test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
+
+test.beforeEach(async ({ page }) => {
+	// Never reach Google: the script request is stubbed and grecaptcha is a stub.
+	await page.addInitScript(() => {
+		(window as unknown as Record<string, unknown>).grecaptcha = {
+			ready: (cb: () => void) => cb(),
+			execute: async () => 'test-token'
+		};
+	});
+	await page.route('**/recaptcha/api.js*', (route) =>
+		route.fulfill({ contentType: 'text/javascript', body: '' })
+	);
+});
+
+async function fillForm(page: Page) {
+	const form = page.locator('#contact form');
+	await form.getByLabel('Name', { exact: true }).fill('Ada Lovelace');
+	await form.getByLabel('Email', { exact: true }).fill('ada@example.com');
+	await form.getByLabel('Organization (optional)', { exact: true }).fill('Analytical Engines');
+	await form.getByLabel('Position (optional)', { exact: true }).fill('Engineering Manager');
+	await form.getByLabel('Message', { exact: true }).fill('Would love to talk about a role.');
+}
+
+// SvelteKit renders #svelte-announcer once the app has hydrated. Clicking before
+// that submits the form natively, so every test waits for it before interacting.
+async function openHome(page: Page) {
+	await page.goto('/');
+	await page.locator('#svelte-announcer').waitFor({ state: 'attached' });
+}
+
+const sendButton = (page: Page) => page.getByRole('button', { name: 'Send message' });
+
+test('the form posts to the contact endpoint if it submits before JS runs', async ({ page }) => {
+	await page.goto('/');
+	const form = page.locator('#contact form');
+	await expect(form).toHaveAttribute('method', 'post');
+	await expect(form).toHaveAttribute('action', '/api/contact');
+});
+
+test('empty submit shows field errors and sends nothing', async ({ page }) => {
+	const posts: string[] = [];
+	page.on('request', (request) => {
+		if (request.url().includes('/api/contact')) posts.push(request.url());
+	});
+	await openHome(page);
+	await sendButton(page).click();
+
+	const errors = page.locator('#contact form p[id$="-error"]');
+	await expect(errors).toHaveCount(3);
+	for (const field of REQUIRED) {
+		const input = page.locator(`#contact form [name="${field}"]`);
+		await expect(input).toHaveAttribute('aria-invalid', 'true');
+		const describedBy = await input.getAttribute('aria-describedby');
+		expect(describedBy).toBeTruthy();
+		await expect(page.locator(`#${describedBy}`)).toBeVisible();
+		await expect(page.locator(`#${describedBy}`)).not.toBeEmpty();
+	}
+	expect(posts).toHaveLength(0);
+});
+
+test('editing a field clears its error', async ({ page }) => {
+	await openHome(page);
+	await sendButton(page).click();
+	const name = page.locator('#contact form [name="name"]');
+	await expect(name).toHaveAttribute('aria-invalid', 'true');
+	await name.fill('Ada');
+	await expect(name).not.toHaveAttribute('aria-invalid', 'true');
+	await expect(name).not.toHaveAttribute('aria-describedby', /.*/);
+	await expect(page.locator('#contact-name-error')).toHaveCount(0);
+	await expect(page.locator('#contact form p[id$="-error"]')).toHaveCount(2);
+});
+
+test('organization and position are optional', async ({ page }) => {
+	let postData = '';
+	await page.route('**/api/contact', async (route) => {
+		postData = route.request().postData() ?? '';
+		await route.fulfill({
+			status: 200,
+			body: JSON.stringify({ success: true, message: 'Message sent successfully' })
+		});
+	});
+	await openHome(page);
+	const form = page.locator('#contact form');
+	await form.getByLabel('Name', { exact: true }).fill('Ada Lovelace');
+	await form.getByLabel('Email', { exact: true }).fill('ada@example.com');
+	await form.getByLabel('Message', { exact: true }).fill('Looking for help with a side project.');
+	await sendButton(page).click();
+	await expect(page.locator('#contact').getByRole('status')).toHaveText(
+		'Thanks — your message is on its way.'
+	);
+	expect(postData).toContain('Ada Lovelace');
+});
+
+test('whitespace-only answers count as empty', async ({ page }) => {
+	await openHome(page);
+	const form = page.locator('#contact form');
+	await form.getByLabel('Name', { exact: true }).fill('   ');
+	await form.getByLabel('Email', { exact: true }).fill('ada@example.com');
+	await form.getByLabel('Message', { exact: true }).fill('              ');
+	await sendButton(page).click();
+	await expect(page.locator('#contact-name-error')).toHaveText('Please enter your name');
+	await expect(page.locator('#contact-message-error')).toHaveText(
+		'Please write at least 10 characters'
+	);
+});
+
+test('the form is only marked busy while sending', async ({ page }) => {
+	let release: () => void = () => {};
+	await page.route('**/api/contact', async (route) => {
+		await new Promise<void>((resolve) => (release = resolve));
+		await route.fulfill({ status: 200, body: JSON.stringify({ success: true, message: 'ok' }) });
+	});
+	await openHome(page);
+	const form = page.locator('#contact form');
+	await expect(form).not.toHaveAttribute('aria-busy', /.*/);
+	await fillForm(page);
+	await sendButton(page).click();
+	await expect(form).toHaveAttribute('aria-busy', 'true');
+	release();
+	await expect(form).not.toHaveAttribute('aria-busy', /.*/);
+});
+
+test('successful submit posts the token and clears the form', async ({ page }) => {
+	let postData = '';
+	await page.route('**/api/contact', async (route) => {
+		postData = route.request().postData() ?? '';
+		await route.fulfill({
+			status: 200,
+			body: JSON.stringify({ success: true, message: 'Message sent successfully' })
+		});
+	});
+	await openHome(page);
+	await fillForm(page);
+	await sendButton(page).click();
+
+	await expect(page.locator('#contact').getByRole('status')).toHaveText(
+		'Thanks — your message is on its way.'
+	);
+	expect(postData).toContain('name="gRecaptchaResponse"');
+	expect(postData).toContain('test-token');
+	for (const field of FIELDS) {
+		await expect(page.locator(`#contact form [name="${field}"]`)).toHaveValue('');
+	}
+});
+
+test('server error keeps the typed values and shows the message', async ({ page }) => {
+	await page.route('**/api/contact', (route) =>
+		route.fulfill({
+			status: 400,
+			body: JSON.stringify({ success: false, message: 'Recaptcha verification failed' })
+		})
+	);
+	await openHome(page);
+	await fillForm(page);
+	await sendButton(page).click();
+
+	const status = page.locator('#contact').getByRole('status');
+	await expect(status).toHaveText(
+		'Recaptcha verification failed. You can also email me at emmalong.dev@gmail.com.'
+	);
+	await expect(page.locator('#contact form [name="name"]')).toHaveValue('Ada Lovelace');
+	await expect(sendButton(page)).toBeEnabled();
+});
+
+test('network failure keeps the typed values and points to email', async ({ page }) => {
+	await page.route('**/api/contact', (route) => route.abort());
+	await openHome(page);
+	await fillForm(page);
+	await sendButton(page).click();
+
+	await expect(page.locator('#contact').getByRole('status')).toContainText(
+		'Something went wrong sending your message. Please email me instead.'
+	);
+	await expect(page.locator('#contact form [name="message"]')).toHaveValue(
+		'Would love to talk about a role.'
+	);
+});
+
+test('a reCAPTCHA that never becomes ready falls back to email and re-enables the button', async ({
+	page
+}) => {
+	await page.clock.install();
+	await page.addInitScript(() => {
+		(window as unknown as Record<string, unknown>).grecaptcha = {
+			ready: () => {},
+			execute: async () => 'x'
+		};
+	});
+	await openHome(page);
+	await fillForm(page);
+	await sendButton(page).click();
+	await expect(sendButton(page)).toBeDisabled();
+
+	await page.clock.runFor(13_000);
+	await expect(page.locator('#contact').getByRole('status')).toContainText(
+		'Please email me instead'
+	);
+	await expect(sendButton(page)).toBeEnabled();
+});
+
+test('double submit sends one request', async ({ page }) => {
+	let count = 0;
+	await page.route('**/api/contact', async (route) => {
+		count += 1;
+		await new Promise((resolve) => setTimeout(resolve, 500));
+		await route.fulfill({
+			status: 200,
+			body: JSON.stringify({ success: true, message: 'Message sent successfully' })
+		});
+	});
+	await openHome(page);
+	await fillForm(page);
+	await sendButton(page).dblclick();
+
+	await expect(sendButton(page)).toBeDisabled();
+	await expect(page.locator('#contact form')).toHaveAttribute('aria-busy', 'true');
+	await expect(page.locator('#contact').getByRole('status')).toHaveText(
+		'Thanks — your message is on its way.'
+	);
+	expect(count).toBe(1);
+});
+
+test('copy email shows Copied', async ({ page }) => {
+	await openHome(page);
+	await page.locator('#contact').getByRole('button', { name: 'Copy email' }).click();
+	await expect(page.locator('#contact').getByRole('button', { name: 'Copied' })).toBeVisible();
+});
+
+test('copy email says so when the clipboard is unavailable', async ({ page }) => {
+	await page.addInitScript(() => {
+		Object.defineProperty(navigator, 'clipboard', {
+			value: { writeText: () => Promise.reject(new Error('denied')) }
+		});
+	});
+	await openHome(page);
+	await page.locator('#contact').getByRole('button', { name: 'Copy email' }).click();
+	await expect(
+		page.locator('#contact').getByRole('button', { name: "Couldn't copy — select the address" })
+	).toBeVisible();
+});
+
+test('recaptcha attribution is visible', async ({ page }) => {
+	await openHome(page);
+	const form = page.locator('#contact form');
+	await expect(form).toContainText('protected by reCAPTCHA');
+	await expect(form.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute(
+		'href',
+		'https://policies.google.com/privacy'
+	);
+	await expect(form.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute(
+		'href',
+		'https://policies.google.com/terms'
+	);
+});
+
+test('recaptcha script is not requested on initial load', async ({ page }) => {
+	const scriptRequests: string[] = [];
+	page.on('request', (request) => {
+		if (request.url().includes('recaptcha/api.js')) scriptRequests.push(request.url());
+	});
+	await openHome(page);
+	await page.waitForLoadState('networkidle');
+	expect(scriptRequests).toHaveLength(0);
+
+	await page.locator('#contact').scrollIntoViewIfNeeded();
+	await expect.poll(() => scriptRequests.length).toBe(1);
+	expect(scriptRequests[0]).toContain('render=test-site-key');
+});

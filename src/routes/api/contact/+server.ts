@@ -6,6 +6,8 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { sendEmail } from './send-email';
 
+export const prerender = false;
+
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const data = await request.formData();

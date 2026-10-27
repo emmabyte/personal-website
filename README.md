@@ -1,38 +1,48 @@
-# sv
+# Emma Long — portfolio
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Personal portfolio at https://emma-long.vercel.app. A SvelteKit 2 / Svelte 5 (runes) site styled with Tailwind CSS v4, deployed to Vercel with `@sveltejs/adapter-vercel`. The contact form posts to `/api/contact`, which verifies reCAPTCHA v3 and sends mail through MailerSend.
 
-## Creating a project
+## Commands
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+```sh
+pnpm dev                # dev server
+pnpm build              # production build
+pnpm test:unit --run    # Vitest (no "--" separator, or Vitest stays in watch mode)
+pnpm test:e2e           # Playwright; builds and previews the site on :4173
 ```
 
-## Developing
+`pnpm lint` runs Prettier and ESLint, and `pnpm check` runs svelte-check.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Environment variables
 
-```bash
-npm run dev
+| Variable                    | Used for                           |
+| --------------------------- | ---------------------------------- |
+| `MAILERSEND_API_KEY`        | Sending contact-form mail          |
+| `RECAPTCHA_SECRET_KEY`      | Server-side reCAPTCHA verification |
+| `PUBLIC_RECAPTCHA_SITE_KEY` | Loading reCAPTCHA in the browser   |
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+All three are needed at build time, so set them locally (for example in `.env`) before running `pnpm build`. On Vercel, `PUBLIC_RECAPTCHA_SITE_KEY` must exist for both Production and Preview.
+
+## Launch content guard
+
+Copy Emma hasn't supplied yet is written as `todo('note')` in `src/lib/data`. Production builds on Vercel fail while any `todo()` remains; Preview and Development builds do not.
+
+To see what is pending locally:
+
+```sh
+REQUIRE_CONTENT=1 pnpm build
 ```
 
-## Building
+The error lists each marker as `file:line note`.
 
-To create a production version of your app:
+## Social image
 
-```bash
-npm run build
+`static/og.png` is generated, not drawn by hand. To regenerate it:
+
+```sh
+node scripts/generate-og-image.mjs
 ```
 
-You can preview the production build with `npm run preview`.
+## Design spec
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+The design spec, which is the authority for content and behaviour, is in `docs/superpowers/specs/2026-10-25-portfolio-revamp-design.md`.
