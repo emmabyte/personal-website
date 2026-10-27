@@ -42,11 +42,10 @@
 		list('stack', ['SvelteKit', 'TypeScript', 'Tailwind', 'Supabase', 'Vercel']),
 		{ indent: 1, tokens: [{ text: 'believes', tone: 'key' }, { text: ': [' }] },
 		item("'if it can break, it will'"),
-		item("'no tests, no trust. many tests, barely trust.'"),
 		item("'human in the loop, always'"),
 		item("'dont be evil'", 'rip'),
 		{ indent: 1, tokens: [{ text: '],' }] },
-		list('prefers', ['UX > UI', 'simple > complex', 'joy > features']),
+		list('prefers', ['UX > UI', 'tests != trust', 'joy > features']),
 		{ indent: 0, tokens: [{ text: '};' }] }
 	];
 
