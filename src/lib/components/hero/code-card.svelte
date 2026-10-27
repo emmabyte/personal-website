@@ -1,5 +1,5 @@
 <script lang="ts">
-	type Tone = 'key' | 'str' | 'fn' | 'dim';
+	type Tone = 'key' | 'str' | 'fn' | 'dim' | 'comment';
 	type Token = { text: string; tone?: Tone; nowrap?: boolean }; // nowrap: keep short phrases whole
 
 	const str = (text: string): Token => ({ text, tone: 'str' });
@@ -9,7 +9,7 @@
 		tokens: [
 			{ ...str(text), nowrap: text.length <= 18 },
 			{ text: ',' },
-			...(comment ? [{ text: ` // ${comment}`, tone: 'dim' as const, nowrap: true }] : [])
+			...(comment ? [{ text: ` // ${comment}`, tone: 'comment' as const, nowrap: true }] : [])
 		]
 	});
 	// An inline array of quoted strings after a key.
@@ -42,7 +42,7 @@
 		list('stack', ['SvelteKit', 'TypeScript', 'Tailwind', 'Supabase', 'Vercel']),
 		{ indent: 1, tokens: [{ text: 'believes', tone: 'key' }, { text: ': [' }] },
 		item("'if it can break, it will'"),
-		item("'no tests, no trust. lots of tests, barely trust.'"),
+		item("'no tests, no trust. many tests, barely trust.'"),
 		item("'human in the loop, always'"),
 		item("'dont be evil'", 'rip'),
 		{ indent: 1, tokens: [{ text: '],' }] },
@@ -54,7 +54,8 @@
 		key: 'text-foreground',
 		str: 'text-primary-text',
 		fn: 'text-foreground font-semibold',
-		dim: 'text-muted-foreground'
+		dim: 'text-muted-foreground',
+		comment: 'text-muted-foreground/85 italic'
 	};
 </script>
 

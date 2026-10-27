@@ -111,4 +111,7 @@ test('the code card is valid TypeScript, with one quote style', async ({ page })
 	expect(diagnostics?.map((d) => ts.flattenDiagnosticMessageText(d.messageText, '\n'))).toEqual([]);
 	expect(source).toContain("'dont be evil', // rip");
 	expect(source).not.toContain('"');
+	// The comment is lighter than the rest of the card but still readable.
+	const comment = card.getByText('// rip');
+	await expect(comment).toHaveCSS('font-style', 'italic');
 });
